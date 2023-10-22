@@ -11,25 +11,79 @@ const router = express.Router();
 // Handles Ajax request for user information if user is authenticated
 router.get('/', rejectUnauthenticated, (req, res) => {
   // Send back user object from the session (previously queried from the database)
+  // TODO: MIGHT NEED TO CHANGE THE QUERY FOR USER TO BE MORE DATA RICH IN ORDER TO BETTER SERVE CLIENT SIDE REQUESTS/AUTHORIZATIONS
   res.send(req.user);
 });
 
 // Handles POST request with new user data
-// The only thing different from this and every other post we've seen
-// is that the password gets encrypted before being inserted
-router.post('/register', (req, res, next) => {
-  const username = req.body.username;
-  const password = encryptLib.encryptPassword(req.body.password);
+// async post to guest_info table after user create profile for themselves
+router.post('/register', async (req, res, next) => {
+	const {
+		first_name,
+		last_name,
+		phone_number,
+		street_address,
+		unit,
+		city,
+		state,
+		zip,
+		allergies,
+		accomodations,
+	} = req.body;
+	// user_id might only need to be req.user
+	const user_id = req.user.id;
 
-  const queryText = `INSERT INTO "user" (username, password)
-    VALUES ($1, $2) RETURNING id`;
-  pool
-    .query(queryText, [username, password])
-    .then(() => res.sendStatus(201))
-    .catch((err) => {
-      console.log('User registration failed: ', err);
-      res.sendStatus(500);
-    });
+	const username = req.body.username;
+	const password = encryptLib.encryptPassword(req.body.password);
+
+	const authData = [username, password];
+
+	const userDetails = [
+		user_id,
+		first_name,
+		last_name,
+		phone_number,
+		street_address,
+		unit,
+		city,
+		state,
+		zip,
+		allergies,
+		accomodations,
+	];
+
+	const client = await pool.connect();
+
+	const createUserQuery = `
+  INSERT INTO "user" (username, password)
+  VALUES ($1, $2) RETURNING id;`;
+
+	const addDetailsQuery = `
+  INSERT INTO "guest_info" (user_id, first_name, last_name,	phone_number,	street_address, unit, city, state, zip, allergies, accomodations)
+  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
+  `;
+
+	// assignRelationshipQuery MIGHT NEED TO LIVE SOMEWHERE ELSE!!
+	// DOUBLE CHECK TO MAKE SURE THE DEFAULTS WERE CHANGED ON THE DB!!
+	// THIS IS GOING TO BE USED FOR INITAL ADDING PEOPLE TO THE GUEST LIST
+	const assignRelationshipQuery = `
+  UPDATE TABLE guest_list_junction SET relationship = $1 SET spouse_association = $2 SET can_plus_one = $3
+  WHERE wedding_id = $4 AND guest_id = $5
+  ;`;
+
+	try {
+		await client.query("BEGIN");
+		await client.query(createUserQuery, [authData]);
+		await client.query(addDetailsQuery, [userDetails]);
+		await client.query("COMMIT");
+		res.sendStatus(201);
+	} catch (error) {
+		await client.query("ROLLBACK");
+		console.log("ERROR WITH REGISTRATION", error);
+		res.sendStatus(500);
+	} finally {
+		await client.release();
+	}
 });
 
 // Handles login form authenticate/login POST

@@ -5,7 +5,7 @@ const {
 	rejectUnauthenticated,
 } = require("../modules/authentication-middleware");
 
-
+// Endpoint to query a guest list for a specific wedding by the wedding id
 router.get("/:wedding_id", rejectUnauthenticated, (req, res) => {
 	const queryText = `;`;
     const wedding_id = req.params.id
@@ -16,7 +16,7 @@ router.get("/:wedding_id", rejectUnauthenticated, (req, res) => {
 			res.sendStatus(500);
 		});
 });
-
+// Endpoint to create guest info to a wedding's guest list
 router.post("/", rejectUnauthenticated, (req, res) => {
 const queryText = `;`;
 const {} = req.body;
@@ -29,6 +29,7 @@ pool.query(queryText)
 
 });
 
+// Endpoint to change existing user's guest information (name, address, etc...)
 router.put("/", rejectUnauthenticated, (req, res) => {
     const queryText = `;`;
 	const {} = req.body;
