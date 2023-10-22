@@ -1,15 +1,20 @@
-import React from "react";
+import { React, useState } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import FormControl from "@mui/material/FormControl/FormControl";
 import { FormLabel } from "@mui/material";
 import TextField from "@mui/material/TextField";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { useSelector } from "react-redux";
+
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 function UserDashboard() {
   // this component doesn't do much to start, just renders some user reducer info to the DOM
   const user = useSelector((store) => store.user);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -18,6 +23,19 @@ function UserDashboard() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const now = new Date();
+
+  const limitPast = () => {
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const year = now.getFullYear();
+
+    return `${year}-${month}-${day}`;
+  };
+
+  const today = limitPast();
+  const [value, setValue] = useState(today);
 
   return (
     <>
@@ -33,7 +51,13 @@ function UserDashboard() {
             <TextField></TextField>
 
             <FormLabel>Date</FormLabel>
-            <TextField></TextField>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateCalendar
+                defaultValue={dayjs(today)}
+                views={["year", "month", "day"]}
+                disablePast
+              ></DateCalendar>
+            </LocalizationProvider>
 
             <FormLabel>Description</FormLabel>
             <TextField></TextField>
