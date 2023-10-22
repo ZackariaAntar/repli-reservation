@@ -1,10 +1,95 @@
+-- Create a database called repli_reservation and run the following commands to create tables
 
--- USER is a reserved keyword with Postgres
--- You must use double quotes in every query that user is in:
--- ex. SELECT * FROM "user";
--- Otherwise you will have errors!
+-- TODO: Create universal mock data as INSERT INTO statements
+
 CREATE TABLE "user" (
     "id" SERIAL PRIMARY KEY,
-    "username" VARCHAR (80) UNIQUE NOT NULL,
-    "password" VARCHAR (1000) NOT NULL
+    "username" VARCHAR UNIQUE NOT NULL,
+    "password" VARCHAR
+);
+
+CREATE TABLE "guest_info" (
+    "id" SERIAL PRIMARY KEY,
+    "user_id" INT REFERENCES 'user'(id),
+    "first_name" VARCHAR(100) NOT NULL,
+    "last_name" VARCHAR(100) NOT NULL,
+    "phone_number" VARCHAR(16) DEFAULT NULL,
+    "street_address" VARCHAR(200),
+    "unit" VARCHAR(10),
+    "city" VARCHAR(100),
+    "state" VARCHAR(100),
+    "zip" INT,
+    "allergies" VARCHAR(500),
+    "accomodations" VARCHAR(1000)
+);
+
+CREATE TABLE "plus_one" (
+    "id" SERIAL PRIMARY KEY,
+    "first_name" VARCHAR(100),
+    "last_name" VARCHAR(100),
+    "meal_id" INT REFERENCES "meal_options"(id),
+    "notes" VARCHAR(1000)
+);
+
+CREATE TABLE "event_attendees_junction" (
+    "id" SERIAL PRIMARY KEY,
+    "guest_id" INT REFERENCES "guest_info"(id),
+    "wedding_id" INT REFERENCES "wedding"(id),
+    "event_id" INT REFERENCES "events"(id),
+    "is_attending" BOOLEAN DEFAULT NULL
+);
+
+CREATE TABLE "events" (
+    "id" SERIAL PRIMARY KEY,
+    "wedding_id" INT REFERENCES "wedding"(id),
+    "event_broadcast" BOOLEAN,
+    "event_name" VARCHAR(200),
+    "event_street_address" VARCHAR(200),
+    "event_city" VARCHAR(100),
+    "event_state" VARCHAR(100),
+    "event_zip" INT,
+    "event_maps_url" VARCHAR(2500),
+    "event_start_time" TIME,
+    "event_end_time" TIME
+);
+
+CREATE TABLE "meal_options" (
+    "id" SERIAL PRIMARY KEY,
+    "wedding_id" INT REFERENCES "wedding"(id),
+    "meal_name" VARCHAR(200),
+    "meal_description" VARCHAR(1000)
+);
+
+CREATE TABLE "wedding" (
+    "id" SERIAL PRIMARY KEY,
+    "wedding_photo" VARCHAR(2500),
+    "wedding_blurb" VARCHAR(5000),
+    "wedding_title" VARCHAR(200),
+    "wedding_date" DATE,
+    "wedding_creator" INT REFERENCES "user"(id)
+);
+
+CREATE TABLE "guest_list_junction" (
+    "id" SERIAL PRIMARY KEY,
+    "wedding_id" INT REFERENCES "wedding"(id),
+    "guest_id" INT REFERENCES "guest_info"(id),
+    "can_plus_one" BOOLEAN,
+    "plus_one_id" INT REFERENCES "plus_one"(id),
+    "meal_id" INT REFERENCES "meal_options"(id)
+);
+
+CREATE TABLE "wedding_seating_chart" (
+    "id" SERIAL PRIMARY KEY,
+    "wedding_id" INT REFERENCES "wedding"(id),
+    "guest_id" INT REFERENCES "guest_info"(id),
+    "table_number" INT,
+    "seat_assignment" INT
+);
+
+CREATE TABLE "wedding_announcements" (
+    "id" SERIAL PRIMARY KEY,
+    "creator_id" INT REFERENCES "wedding"(wedding_creator),
+    "wedding_id" INT REFERENCES "wedding"(id),
+    "event_id" INT REFERENCES "events"(id),
+    "announcement" VARCHAR(5000)
 );
