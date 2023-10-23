@@ -24,7 +24,7 @@ CREATE TABLE "guest_info" (
 CREATE TABLE "wedding" (
     "id" SERIAL PRIMARY KEY,
     "wedding_photo" VARCHAR(2500),
-    "wedding_blurb" VARCHAR(5000),
+    "wedding_blurb" VARCHAR(5001),
     "wedding_title" VARCHAR(200),
     "wedding_date" DATE,
     "wedding_creator" INT REFERENCES "user"(id)
@@ -82,7 +82,7 @@ CREATE TABLE "wedding_announcements" (
     "creator_id" INT REFERENCES "user"(id),
     "wedding_id" INT REFERENCES "wedding"(id),
     "event_id" INT REFERENCES "events"(id),
-    "announcement" VARCHAR(5000)
+    "announcement" VARCHAR(5001)
 );
 
 -- KEEPING THIS HERE AS A REFERENCE FOR IF/WHEN WE INCORPORATE IT TO THE PROJECT

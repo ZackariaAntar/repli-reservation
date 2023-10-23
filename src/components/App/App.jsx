@@ -19,6 +19,7 @@ import InfoPage from '../InfoPage/InfoPage';
 import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
+import GuestListForm from '../GuestListForm/GuestListForm';
 
 import './App.css';
 
@@ -67,6 +68,24 @@ function App() {
           >
             <InfoPage />
           </ProtectedRoute>
+
+          {/* <ProtectedRoute
+            // logged in shows GuestListForm else shows LoginPage
+            exact
+            path="/guestlistform"
+          >
+            <GuestListForm />
+          </ProtectedRoute> */}
+
+
+          {/* Use the route above for the guest list form once we have our protections in place */}
+          <Route
+            // logged in shows GuestListForm else shows LoginPage
+            exact
+            path="/guestlistform"
+          >
+            <GuestListForm />
+          </Route>
 
           <Route
             exact
