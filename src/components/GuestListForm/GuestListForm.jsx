@@ -17,6 +17,7 @@ function GuestListForm() {
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [zip, setZip] = useState('');
+    const [relationship, setRelationship] = useState('');
     const history = useHistory();
     const dispatch = useDispatch();
     
@@ -30,7 +31,8 @@ function GuestListForm() {
                 <input 
                     value={first} 
                     id="first" 
-                    placeholder="First Name" 
+                    placeholder="First Name *" 
+                    required
                 />
                 
                 <br />
@@ -38,7 +40,8 @@ function GuestListForm() {
                 <input 
                     value={last} 
                     id="last" 
-                    placeholder="Last Name" 
+                    placeholder="Last Name *" 
+                    required
                 />
 
                 <br />
@@ -47,7 +50,8 @@ function GuestListForm() {
                 <input 
                     value={email} 
                     id="email" 
-                    placeholder="E-mail" 
+                    placeholder="E-mail *" 
+                    required
                 />
 
                 <br />
@@ -151,7 +155,25 @@ function GuestListForm() {
                 <br />
                 
                 <h3>Other Information</h3>
+
                 
+
+                <select 
+                    value={relationship}
+                    id="relationship"
+                >
+                    <option value="" disable selected hidden>Relationship to the couple...</option>
+                    <option value="Spouse 1 family">(spouse 1) Family</option>
+                    <option value="Spouse 1 friend">(spouse 1) Friend</option>
+                    <option value="Spouse 1 fam friend">(spouse 1) Family Friend</option>
+                    <option value="Spouse 1 wedding party">(spouse 1) Wedding Party</option>
+                    <option value="Spouse 2 family">(spouse 2) Family</option>
+                    <option value="Spouse 2 friend">(spouse 2) Friend</option>
+                    <option value="Spouse 2 fam friend">(spouse 2) Family Friend</option>
+                    <option value="Spouse 2 wedding party">(spouse 2) Wedding Party</option>
+                </select>
+                
+                <br />
 
                 <button>Save and Add Another</button>
                 <button>Save and View Guest List</button>
