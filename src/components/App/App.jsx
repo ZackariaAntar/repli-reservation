@@ -21,14 +21,9 @@ import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 import GuestListForm from '../GuestListForm/GuestListForm';
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
-
-
-import AboutPage from "../AboutPage/AboutPage";
 import UserDashboard from "../UserDashboard/UserDashboard";
-import InfoPage from "../InfoPage/InfoPage";
-import LandingPage from "../LandingPage/LandingPage";
-import LoginPage from "../LoginPage/LoginPage";
-import RegisterPage from "../RegisterPage/RegisterPage";
+
+
 
 import "./App.css";
 
