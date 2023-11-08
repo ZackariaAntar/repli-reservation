@@ -74,7 +74,7 @@ Before pushing to Heroku, run `npm run build` in terminal. This will create a bu
 
 - Start postgres if not running already by using `brew services start postgresql`
 - Run `npm start`
-- Navigate to `localhost:5000`
+- Navigate to `localhost:5001`
 
 ## Lay of the Land
 
