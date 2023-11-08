@@ -43,10 +43,14 @@ passport.use(
       .then((result) => {
         const user = result && result.rows && result.rows[0];
         if (user && encryptLib.comparePassword(password, user.password)) {
-          // All good! Passwords match!
-          // done takes an error (null in this case) and a user
-          done(null, user);
-        } else {
+			// All good! Passwords match!
+			// done takes an error (null in this case) and a user
+			user.isTemp = user.isTemp || false;
+			// ^^^ ADDED LOGIC FOR HANDLING TEMPORARY PASSWORD ^^^
+			// LOGIC IS USED ON user.router post('/login') to prompt a redirect to client side view at path 'login/change-password' (login/taco) if true.
+			// Pretty sure it needs to be a client side route and NOT an api endpoint like user.router post('/change-password').
+			done(null, user);
+		} else {
           // Not good! Username and password do not match.
           // done takes an error (null in this case) and a user (also null in this case)
           // this will result in the server returning a 401 status code
