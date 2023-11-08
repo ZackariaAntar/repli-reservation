@@ -18,6 +18,7 @@ router.get('/', rejectUnauthenticated, (req, res) => {
 // Handles POST request with new user data
 // async post to guest_info table after user create profile for themselves
 router.post('/register', async (req, res, next) => {
+	console.log('req.body',req.body);
 	const {
 		first_name,
 		last_name,
@@ -30,43 +31,43 @@ router.post('/register', async (req, res, next) => {
 		allergies,
 		accomodations,
 	} = req.body;
-	// user_id might only need to be req.user
-	const user_id = req.user;
 
 	const username = req.body.username;
 	const password = encryptLib.encryptPassword(req.body.password);
 
-	const authData = [username, password];
-
-	const userDetails = [
-		user_id,
-		first_name,
-		last_name,
-		phone_number,
-		street_address,
-		unit,
-		city,
-		state,
-		zip,
-		allergies,
-		accomodations,
-	];
-
 	const client = await pool.connect();
 
+	const authData = [username, password];
 	const createUserQuery = `
   INSERT INTO "user" (username, password)
   VALUES ($1, $2) RETURNING id;`;
 
 	const addDetailsQuery = `
-  INSERT INTO "guest_info" (user_id, first_name, last_name,	phone_number,	street_address, unit, city, state, zip, allergies, accomodations)
+  INSERT INTO "guest_info" (user_id, first_name, last_name,	phone_number, street_address, unit, city, state, zip, allergies, accomodations)
   VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
   `;
 
 	try {
 		await client.query("BEGIN");
-		await client.query(createUserQuery, authData);
+
+		const get_user_id = await client.query(createUserQuery, authData);
+		const user_id = await get_user_id.rows[0].id; //RETURNING id didn't work in the query so had to improvise
+
+		const userDetails = [
+			user_id,
+			first_name,
+			last_name,
+			phone_number,
+			street_address,
+			unit,
+			city,
+			state,
+			zip,
+			allergies,
+			accomodations,
+		];
 		await client.query(addDetailsQuery, userDetails);
+
 		await client.query("COMMIT");
 		res.sendStatus(201);
 	} catch (error) {
@@ -118,12 +119,33 @@ router.post('/register_invited_guest', async (req, res, next)=>{
 	try {
 		await client.query("BEGIN");
 
-		const user_id = await client.query(createUserQuery, authData);
+		const get_user_id = await client.query(createUserQuery, authData);
+		const user_id = await get_user_id.rows[0].id; //RETURNING id didn't work in the query so had to improvise
 
-		const userDetails = [ user_id, first_name, last_name, phone_number, street_address, unit, city, state, zip, allergies, accomodations];
-		const guest_id = await client.query(addDetailsQuery, userDetails);
+		const userDetails = [
+			user_id,
+			first_name,
+			last_name,
+			phone_number,
+			street_address,
+			unit,
+			city,
+			state,
+			zip,
+			allergies,
+			accomodations,
+		];
 
-		const relationshipDetails = [wedding_id, guest_id, relationship, spouse_association, can_plus_one];
+		const get_guest_id = await client.query(addDetailsQuery, userDetails);
+		const guest_id = await get_guest_id.rows[0].id; //RETURNING id didn't work in the query so had to improvise
+
+		const relationshipDetails = [
+			wedding_id,
+			guest_id,
+			relationship,
+			spouse_association,
+			can_plus_one,
+		];
 		await client.query(assignRelationshipQuery, relationshipDetails);
 
 		await client.query("COMMIT");
