@@ -9,7 +9,10 @@ function AboutPage() {
   return (
     <div className="container">
       <div>
-        <p>This about page is for anyone to read!</p>
+        <p>The existing wedding industry has no shortage of RSVP solutions, 
+          however most wedding websites focus on the whole wedding experience.
+          While this works for a lot of couples, there are some who just want 
+          management when it comes to just one experience. </p>
       </div>
     </div>
   );
