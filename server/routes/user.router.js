@@ -31,7 +31,7 @@ router.post('/register', async (req, res, next) => {
 		accomodations,
 	} = req.body;
 	// user_id might only need to be req.user
-	const user_id = req.user.id;
+	const user_id = req.user;
 
 	const username = req.body.username;
 	const password = encryptLib.encryptPassword(req.body.password);

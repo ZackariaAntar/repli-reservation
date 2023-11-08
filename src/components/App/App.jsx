@@ -14,7 +14,7 @@ import Footer from "../Footer/Footer";
 
 
 import AboutPage from '../AboutPage/AboutPage';
-import UserPage from '../UserPage/UserPage';
+// import UserPage from '../UserPage/UserPage';
 import InfoPage from '../InfoPage/InfoPage';
 import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
@@ -37,7 +37,7 @@ function App() {
   }, [dispatch]);
 
   return (
-   
+
     <Router>
       <div>
         <Nav />
@@ -93,7 +93,7 @@ function App() {
             <GuestListForm />
           </Route>
 
-       
+
 
           <Route exact path="/login">
             {user.id ? (
