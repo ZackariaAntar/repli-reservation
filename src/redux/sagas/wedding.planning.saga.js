@@ -15,7 +15,7 @@ function* getActiveWeddingDetails(action) {
 			type: "SET_ACTIVE_WEDDING_DETAILS",
 			payload: activeWedding.data,
 		});
-		// Scaffolding the ACTIVE WEDDING waterfall.
+		// Scaffolding the ACTIVE WEDDING data waterfall.
 		// yield put({type:'GET_ACTIVE_WEDDING_EVENTS', payload: activeWedding.data}) // payload should be ACTIVE WEDDING wedding_id
 		yield put({
 			type: "GET_ACTIVE_WEDDING_GUESTS",
