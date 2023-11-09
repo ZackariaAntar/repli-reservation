@@ -28,7 +28,7 @@ function* getAllMyWeddingDetails(action) {
 		`------ in getAllMyWeddingDetails() on dashboardDataSaga\naction.payload is user.id: ${action.payload}`
 	);
 	try {
-		const allWeddings = yield axios.get(`/api/wedding/${action.payload}`);
+		const allWeddings = yield axios.get(`/api/wedding/all_weddings`);
 		console.log(
 			"result.rows returned from getAllMyWeddingDetails()",
 			allWeddings.data
@@ -49,7 +49,7 @@ function* getAllMyRSVPs(action) {
 		`------ in getAllMyRSVPs() on dashboardDataSaga\naction.payload is user.id: ${action.payload}`
 	);
 	try {
-		const allRSVPs = yield axios.get(`/api/wedding/${action.payload}`); //TODO FIX API ENDPOINT!
+		const allRSVPs = yield axios.get(`/api/wedding/all_RSVPs`);
 		console.log("result.rows returned from getAllMyRSVPs()", allRSVPs.data);
 		yield put({
 			type: "SET_ALL_MY_RSVPS",
