@@ -32,7 +32,7 @@ function GuestListForm() {
     const addToList = (e) => {
         e.preventDefault();
         dispatch({
-            type:'',
+            type:'ADD_GUEST_TO_LIST',
             payload: guestInfo
         })
         setGuestInfo(guestData)
