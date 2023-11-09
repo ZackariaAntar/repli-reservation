@@ -5,6 +5,11 @@ import allMyWeddings from './all.weddings.reducer';
 import allMyRSVPs from './all.rsvps.reducer';
 import activeWeddingDetails from './active.wedding.details.reducer';
 import activeWeddingEvents from './active.wedding.events.reducer';
+import activeWeddingGuests from './active.wedding.guests.reducer';
+import activeWeddingMeals from './active.wedding.meals.reducer';
+import activeWeddingPosts from './active.wedding.posts.reducer';
+import activeWeddingReplis from './active.wedding.replis.reducer';
+
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
 // This is imported in index.js as rootSaga
@@ -19,6 +24,10 @@ const rootReducer = combineReducers({
 	allMyRSVPs, // TODO: UPDATE COMMENT WITH CONTENTS
 	activeWeddingDetails, // TODO: UPDATE COMMENT WITH CONTENTS
 	activeWeddingEvents, // TODO: UPDATE COMMENT WITH CONTENTS
+	activeWeddingGuests, // TODO: UPDATE COMMENT WITH CONTENTS
+	activeWeddingMeals, // TODO: UPDATE COMMENT WITH CONTENTS
+	activeWeddingPosts, // TODO: UPDATE COMMENT WITH CONTENTS
+	activeWeddingReplis, // TODO: UPDATE COMMENT WITH CONTENTS
 });
 
 export default rootReducer;
