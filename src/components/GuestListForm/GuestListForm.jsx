@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 //////////////////Guest List Form Component/////////////////////
@@ -8,87 +8,103 @@ function GuestListForm() {
 
     // hooks for form inputs and dispatch and history for navigation and dispatch to redux store
     // may need to update the naming convention for the hooks depending on how we want to handle the data
-    const [first, setFirst] = useState('');
-    const [last, setLast] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [street, setStreet] = useState('');
-    const [unit, setUnit] = useState('');
-    const [city, setCity] = useState('');
-    const [state, setState] = useState('');
-    const [zip, setZip] = useState('');
-    const [relationship, setRelationship] = useState('');
+    const guestData = {
+        first_name:'',
+        last_name:'',
+        username:'',
+        password:'',
+        phone_number:'',
+        street_address:'',
+        unit:'',
+        city:'',
+        state:'',
+        zip:'',
+        relationship:'',
+        wedding_id: '',
+        spouse_association:'',
+        can_plus_one: null
+    };
+    const [guestInfo, setGuestInfo] = useState(guestData);
     const history = useHistory();
     const dispatch = useDispatch();
-    
+
+    const addToList = (e) => {
+        e.preventDefault();
+        dispatch({
+            type:'',
+            payload: guestInfo
+        })
+        setGuestInfo(guestData)
+    };
+
 
     return (
         <>
             <h2>Guest List Form</h2>
             {/* The h2 above can be deleted once we have a page header established */}
-            <form>
+            <form onSubmit={addToList}>
                 <h3>Personal Information</h3>
-                <input 
-                    value={first} 
-                    id="first" 
-                    placeholder="First Name *" 
+                <input
+                    value={first}
+                    id="first"
+                    placeholder="First Name *"
                     required
                 />
-                
+
                 <br />
 
-                <input 
-                    value={last} 
-                    id="last" 
-                    placeholder="Last Name *" 
+                <input
+                    value={last}
+                    id="last"
+                    placeholder="Last Name *"
                     required
                 />
 
                 <br />
 
                 <h3>Contact Information</h3>
-                <input 
-                    value={email} 
-                    id="email" 
-                    placeholder="E-mail *" 
+                <input
+                    value={email}
+                    id="email"
+                    placeholder="E-mail *"
                     required
                 />
 
                 <br />
 
-                <input 
+                <input
                     value={phone}
                     id="phone"
-                    placeholder="Phone Number" 
+                    placeholder="Phone Number"
                 />
 
                 <br />
 
-                <input 
+                <input
                     value={street}
                     id="street"
-                    placeholder="Street Address" 
+                    placeholder="Street Address"
                 />
 
                 <br />
 
-                <input 
+                <input
                     value={unit}
                     id="unit"
-                    placeholder="Unit/Apt #" 
+                    placeholder="Unit/Apt #"
                 />
 
                 <br />
 
-                <input 
+                <input
                     value={city}
                     id="city"
-                    placeholder="City" 
+                    placeholder="City"
                 />
 
                 <br />
 
-                <select 
+                <select
                     value={state}
                     id="state"
                 >
@@ -146,19 +162,19 @@ function GuestListForm() {
                     <option value="WY">Wyoming</option>
                 </select>
 
-                <input 
+                <input
                     value={zip}
                     id="zip"
-                    placeholder="Zip" 
+                    placeholder="Zip"
                 />
 
                 <br />
-                
+
                 <h3>Other Information</h3>
 
-                
 
-                <select 
+
+                <select
                     value={relationship}
                     id="relationship"
                 >
@@ -172,7 +188,7 @@ function GuestListForm() {
                     <option value="Spouse 2 fam friend">(spouse 2) Family Friend</option>
                     <option value="Spouse 2 wedding party">(spouse 2) Wedding Party</option>
                 </select>
-                
+
                 <br />
 
                 <button>Save and Add Another</button>
