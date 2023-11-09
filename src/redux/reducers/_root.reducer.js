@@ -4,7 +4,7 @@ import user from './user.reducer';
 import allMyWeddings from './all.weddings.reducer';
 import allMyRSVPs from './all.rsvps.reducer';
 import activeWeddingDetails from './active.wedding.details.reducer';
-
+import activeWeddingEvents from './active.wedding.events.reducer';
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
 // This is imported in index.js as rootSaga
@@ -18,7 +18,7 @@ const rootReducer = combineReducers({
 	allMyWeddings, // TODO: UPDATE COMMENT WITH CONTENTS
 	allMyRSVPs, // TODO: UPDATE COMMENT WITH CONTENTS
 	activeWeddingDetails, // TODO: UPDATE COMMENT WITH CONTENTS
-  
+	activeWeddingEvents, // TODO: UPDATE COMMENT WITH CONTENTS
 });
 
 export default rootReducer;
