@@ -1,6 +1,27 @@
 import axios from "axios";
 import { put, takeLatest } from "redux-saga/effects";
 
+// worker Saga: will be fired on "GET_ALL_MY_DETAILS" actions
+function* getAllMyDetails(action){
+    console.log(
+		`------ in getAllMyDetails() on dashboardDataSaga\naction.payload is user.id: ${action.payload}`
+	);
+	try {
+		yield put({
+			type: "GET_ALL_MY_WEDDINGS_DETAILS",
+			payload: action.payload,
+		});
+		yield put({
+			type: "GET_ALL_MY_RSVPS",
+			payload: action.payload,
+		});
+
+	} catch (error) {
+		console.log("getAllMyDetails() FAILED", error);
+	}
+
+}
+
 // worker Saga: will be fired on "GET_ALL_MY_WEDDINGS_DETAILS" actions
 function* getAllMyWeddingDetails(action) {
 	console.log(
@@ -43,6 +64,7 @@ function* getAllMyRSVPs(action) {
 
 function* dashboardDataSaga() {
 	// GETS
+	yield takeLatest("GET_ALL_MY_DETAILS", getAllMyDetails);
 	yield takeLatest("GET_ALL_MY_WEDDINGS_DETAILS", getAllMyWeddingDetails);
 	yield takeLatest("GET_ALL_MY_RSVPS", getAllMyRSVPs);
 	// POSTS
