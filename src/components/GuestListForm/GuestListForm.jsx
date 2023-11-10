@@ -54,7 +54,7 @@ function GuestListForm() {
     const addToList = (e) => {
         e.preventDefault();
         dispatch({
-			type: "ADD_GUEST_TO_LIST",
+			type: "VALIDATE_GUEST_INVITATION",
 			payload: guestInfo,
 		});
         setGuestInfo(guestData)

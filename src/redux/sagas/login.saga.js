@@ -37,6 +37,7 @@ function* loginUser(action) {
   }
 }
 function* changePassword(action) {
+  console.log('ARRIVED ON CHANGE PASSWORD:', action.payload);
   const {username, oldPassword, newPassword} = action.payload
   const login = { username: username, password: newPassword };
 

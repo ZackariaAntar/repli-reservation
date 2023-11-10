@@ -6,7 +6,9 @@ function* getActiveWeddingDetails(action) {
 		`------ in getActiveWeddingDetails() on weddingPlanningSaga\naction.payload is wedding_id for the clicked on: ${action.payload}`
 	);
 	try {
-		const activeWedding = yield axios.get(`/api/wedding/active_details/${action.payload}`);
+		const activeWedding = yield axios.get(
+			`/api/wedding/active_details/${action.payload}`
+		);
 		console.log(
 			"result.rows returned from getActiveWeddingDetails()",
 			activeWedding.data
@@ -35,7 +37,9 @@ function* getActiveEvents(action) {
 		`------ in getActiveEvents() on weddingPlanningSaga\naction.payload is the specified wedding_id: ${action.payload}`
 	);
 	try {
-		const activeEvents = yield axios.get(`/api/wedding/active_events/${action.payload}`);
+		const activeEvents = yield axios.get(
+			`/api/wedding/active_events/${action.payload}`
+		);
 		console.log(
 			"result.rows returned from getActiveEvents()",
 			activeEvents.data
@@ -55,7 +59,9 @@ function* getActiveGuestList(action) {
 		`------ in getActiveGuestList() on weddingPlanningSaga\naction.payload is the specified wedding_id: ${action.payload}`
 	);
 	try {
-		const activeGuests = yield axios.get(`/api/wedding/active_guests/${action.payload}`);
+		const activeGuests = yield axios.get(
+			`/api/wedding/active_guests/${action.payload}`
+		);
 		console.log(
 			"result.rows returned from getActiveGuestList()",
 			activeGuests.data
@@ -75,7 +81,9 @@ function* getActiveMeals(action) {
 		`------ in getActiveMeals() on weddingPlanningSaga\naction.payload is the specified wedding_id: ${action.payload}`
 	);
 	try {
-		const activeMeals = yield axios.get(`/api/wedding/active_meals/${action.payload}`);
+		const activeMeals = yield axios.get(
+			`/api/wedding/active_meals/${action.payload}`
+		);
 		console.log(
 			"result.rows returned from getActiveMeals()",
 			activeMeals.data
@@ -95,7 +103,9 @@ function* getActivePosts(action) {
 		`------ in getActivePosts() on weddingPlanningSaga\naction.payload is the specified wedding_id: ${action.payload}`
 	);
 	try {
-		const activePosts = yield axios.get(`/api/wedding/active_posts/${action.payload}`);
+		const activePosts = yield axios.get(
+			`/api/wedding/active_posts/${action.payload}`
+		);
 		console.log(
 			"result.rows returned from getActivePosts()",
 			activePosts.data
@@ -115,7 +125,9 @@ function* getActiveReplis(action) {
 		`------ in getActiveReplis() on weddingPlanningSaga\naction.payload is the specified wedding_id: ${action.payload}`
 	);
 	try {
-		const activeReplis = yield axios.get(`/api/wedding/active_replis/${action.payload}`);
+		const activeReplis = yield axios.get(
+			`/api/wedding/active_replis/${action.payload}`
+		);
 		console.log(
 			"result.rows returned from getActiveReplis()",
 			activeReplis.data
@@ -129,7 +141,7 @@ function* getActiveReplis(action) {
 	}
 }
 
-function* createNewWedding(action){
+function* createNewWedding(action) {
 	console.log(
 		`------ in createNewWedding() on weddingPlanningSaga\naction.payload is: ${action.payload}, wedding_creator_id is user.id`
 	);
@@ -143,19 +155,101 @@ function* createNewWedding(action){
 			type: "GET_ALL_MY_DETAILS",
 			payload: action.payload.wedding_creator_id,
 		});
-
 	} catch (error) {
 		console.log("createNewWedding() FAILED", error);
+	}
+}
+// TODO: SET UP CONFIRMATION AND ERROR MESSAGING FOR VALIDATION
+function* validateGuestInvitation(action) {
+	console.log(
+		"Arrived at validateGuestInvitation on weddingPlanningSaga\naction.payload is:",
+		action.payload
+	);
+	const {
+		wedding_title,
+		first_name,
+		last_name,
+		username,
+		password,
+		phone_number,
+		street_address,
+		unit,
+		city,
+		state,
+		zip,
+		relationship,
+		wedding_id,
+		spouse_association,
+		can_plus_one,
+	} = action.payload;
 
+	try {
+		const validation = yield axios.get(
+			`/api/user/check_existing_users/${wedding_id}/${username}`
+		);
+
+		console.log(
+			"RESULT.ROWS.DATA RETURNED TO VALIDATE AGAINST: ",
+			validation.data
+		);
+		if (validation.data.length < 1) {
+			console.log("CREATING NEW ACCOUNT FOR INVITED GUEST");
+			yield put({
+				type: "ADD_GUEST_TO_LIST",
+				payload: action.payload,
+			});
+		} else {
+			let userExists = {};
+			// check for existing users before creating accounts and branch the endpoints from there.
+			for (let user of validation.data) {
+				if (
+					username === user.username &&
+					wedding_id !== user.check_wed_id
+				) {
+					userExists.wedding_id = wedding_id;
+					userExists.guest_id = user.guest_id;
+					userExists.relationship = relationship;
+					userExists.spouse_association = spouse_association;
+					userExists.can_plus_one = can_plus_one;
+					yield put({
+						type: "ADD_EXSITING_USER_TO_GUEST_LIST",
+						payload: userExists,
+					});
+					console.log("INVITING A GUEST THAT ALREADY HAS AN ACCOUNT");
+				} else {
+					throw new Error(
+						"The person you tried to add is already on your list, please add someone new :D"
+					);
+				}
+			}
+		}
+	} catch (error) {
+		console.log("validateGuestInvitation() FAILED", error);
 	}
 }
 
+function* addExistingUserToActiveGuestList(action) {
+	console.log(
+		"Arrived at addExistingUserToActiveGuestList on weddingPlanningSaga\naction.payload is:",
+		action.payload
+	);
+	try {
+		yield axios.post("/api/user/existing_guest", action.payload);
+		yield put({
+			type: "GET_ACTIVE_WEDDING_GUESTS",
+			payload: action.payload.wedding_id,
+		});
+	} catch (error) {
+		console.log("addExistingUserToActiveGuestList() FAILED", error);
+	}
+}
 
 function* addToActiveGuestList(action) {
 	console.log(
-		`------ in addToActiveGuestList() on weddingPlanningSaga\naction.payload is:`, action.payload
+		`------ in addToActiveGuestList() on weddingPlanningSaga\naction.payload is:`,
+		action.payload
 	);
-	const weddingTitle = action.payload.wedding_title.replace(/ /g, '')
+	const weddingTitle = action.payload.wedding_title.replace(/ /g, "");
 
 	function makeid(title, length) {
 		let result = title;
@@ -169,12 +263,11 @@ function* addToActiveGuestList(action) {
 			);
 			counter += 1;
 		}
-		return result
+		return result;
 	}
-	action.payload.password = makeid(weddingTitle, 5)
+	action.payload.password = makeid(weddingTitle, 5);
 
 	try {
-		//Just scaffolding for now, not sure how this is all coming together yet :D
 		yield axios.post("/api/user/invited_guest", action.payload);
 		console.log(
 			"wedding_id used in getActiveGuestList",
@@ -190,21 +283,26 @@ function* addToActiveGuestList(action) {
 }
 
 function* weddingPlanningSaga() {
-    // GETS
+	// GETS
 	yield takeLatest("GET_ACTIVE_WEDDING_DETAILS", getActiveWeddingDetails);
-	yield takeLatest("GET_ACTIVE_WEDDING_EVENTS", getActiveEvents );
+	yield takeLatest("GET_ACTIVE_WEDDING_EVENTS", getActiveEvents);
 	yield takeLatest("GET_ACTIVE_WEDDING_GUESTS", getActiveGuestList);
-	yield takeLatest("GET_ACTIVE_WEDDING_MEALS", getActiveMeals );
-	yield takeLatest("GET_ACTIVE_WEDDING_POSTS", getActivePosts );
-	yield takeLatest("GET_ACTIVE_WEDDING_REPLIS", getActiveReplis );
+	yield takeLatest("GET_ACTIVE_WEDDING_MEALS", getActiveMeals);
+	yield takeLatest("GET_ACTIVE_WEDDING_POSTS", getActivePosts);
+	yield takeLatest("GET_ACTIVE_WEDDING_REPLIS", getActiveReplis);
 
-    // POSTS
+	// POSTS
 	yield takeLatest("CREATE_NEW_WEDDING", createNewWedding);
+	yield takeLatest("VALIDATE_GUEST_INVITATION", validateGuestInvitation);
 	yield takeLatest("ADD_GUEST_TO_LIST", addToActiveGuestList);
+	yield takeLatest(
+		"ADD_EXSITING_USER_TO_GUEST_LIST",
+		addExistingUserToActiveGuestList
+	);
 
-    // UPDATES
+	// UPDATES
 
-    // DELETES
+	// DELETES
 }
 
 export default weddingPlanningSaga;

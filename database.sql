@@ -41,7 +41,7 @@ CREATE TABLE "relationship" (
 );
 CREATE TABLE "guest_info" (
     "id" SERIAL PRIMARY KEY,
-    "user_id" INT REFERENCES "user"(id),
+    "user_id" INT UNIQUE REFERENCES "user"(id),
     "first_name" VARCHAR(100) NOT NULL,
     "last_name" VARCHAR(100) NOT NULL,
     "phone_number" VARCHAR(16) DEFAULT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE "plus_one" (
 CREATE TABLE "guest_list_junction" (
     "id" SERIAL PRIMARY KEY,
     "wedding_id" INT REFERENCES "wedding"(id),
-    "guest_id" INT REFERENCES "guest_info"(id),
+    "guest_id" INT REFERENCES "guest_info"(user_id),
     "relationship" INT REFERENCES "relationship"(id),
     "spouse_association" VARCHAR,
     "can_plus_one" BOOLEAN,
