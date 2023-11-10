@@ -22,8 +22,8 @@ import RegisterPage from '../RegisterPage/RegisterPage';
 import GuestListForm from '../GuestListForm/GuestListForm';
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import UserDashboard from "../UserDashboard/UserDashboard";
-
-
+import ActiveWedding from "../ActiveWedding/ActiveWedding";
+import ActiveRSVP from "../ActiveRSVP/ActiveRSVP";
 
 import "./App.css";
 
@@ -72,6 +72,20 @@ function App() {
             path="/info"
           >
             <InfoPage />
+          </ProtectedRoute>
+
+          <ProtectedRoute
+            exact
+            path={`/wedding-details/:id`}
+          >
+            <ActiveWedding />
+          </ProtectedRoute>
+
+          <ProtectedRoute
+            exact
+            path={`/invitation-details/:id`}
+          >
+            <ActiveRSVP />
           </ProtectedRoute>
 
 

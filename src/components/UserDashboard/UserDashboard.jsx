@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import Container from '@mui/material/Container'
 import { useDispatch, useSelector } from "react-redux";
-
+import {Link} from 'react-router-dom'
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -65,30 +65,29 @@ function UserDashboard() {
     handleClose();
   };
 
-  const seeActiveWedding = (id) =>{
-	dispatch({ type: "GET_ACTIVE_WEDDING_DETAILS", payload: id });
-
-
-  };
-
   return (
 		<Container xs>
 			<div className="container">
 				<h2>Welcome, {user.first_name}!</h2>
 			</div>
-			<div style={{border:'1px solid red'}}>
-
-			{myWeddings.length > 0 && <h4>My weddings</h4>}
-			{myWeddings &&
-				myWeddings.map((wedding) => (
-					<div key={wedding.id}>
-						<p>{wedding.wedding_title}</p>
-						<p>{wedding.wedding_date}</p>
-						<p>{wedding.wedding_blurb}</p>
-						<button onClick={()=> seeActiveWedding(wedding.id)}>See details</button>
-					</div>
-				))}
+			<div style={{ border: "1px solid red" }}>
+				{myWeddings.length > 0 && <h4>My weddings</h4>}
+				{myWeddings &&
+					myWeddings.map((wedding) => (
+						<div key={wedding.id}>
+							<p>{wedding.wedding_title}</p>
+							<p>{wedding.wedding_date}</p>
+							<p>{wedding.wedding_blurb}</p>
+							<Button
+								component={Link}
+								to={`/wedding-details/${wedding.id}`}
+							>
+								See details
+							</Button>
+						</div>
+					))}
 			</div>
+			<div>
 			{myRSVPs.length > 0 && <h4>My Invitations</h4>}
 			{myRSVPs &&
 				myRSVPs.map((invite) => (
@@ -98,9 +97,12 @@ function UserDashboard() {
 						<p>{invite.wedding_blurb}</p>
 						<p>Allowed plus one: {invite.can_plus_one}</p>
 						{/* more to come */}
+						<Button component={Link} to={`/invitation-details/${invite.id}`}>
+							See details
+						</Button>
 					</div>
 				))}
-
+			</div>
 			<div>
 				<Button onClick={handleClickOpen}>Add Wedding</Button>
 				<Dialog open={open} onClose={handleClose}>
