@@ -69,6 +69,15 @@ function UserDashboard() {
 			<div className="container">
 				<h2>Welcome, {user.first_name}!</h2>
 			</div>
+			{myWeddings.length>0&& <h4>My weddings</h4>}
+			{myWeddings &&
+				myWeddings.map((wedding) => (
+					<div key={wedding.id}>
+						<p>{wedding.wedding_title}</p>
+						<p>{wedding.wedding_date}</p>
+						<p>{wedding.wedding_blurb}</p>
+					</div>
+				))}
 
 			<div>
 				<Button onClick={handleClickOpen}>Add Wedding</Button>

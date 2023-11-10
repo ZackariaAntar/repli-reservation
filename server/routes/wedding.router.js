@@ -7,7 +7,7 @@ const {
 
 // Endpoint for getAllMyWeddingsDetails
 router.get("/all_weddings", rejectUnauthenticated, (req, res) => {
-	const queryText = `SELECT * FROM wedding WHERE wedding.wedding_creator_id = $1;`;
+	const queryText = `SELECT wedding.*, to_char(wedding.wedding_date, 'Month DD, YYYY') AS wedding_date FROM wedding WHERE wedding.wedding_creator_id = $1;`;
 	const user_id = req.user.id;
 	pool.query(queryText, [user_id])
 		.then((result) => res.send(result.rows))
@@ -30,7 +30,7 @@ router.get("/all_RSVPs", rejectUnauthenticated, (req, res) => {
 	plus_one.id AS po_id,
 	wedding.id AS wedding_id,
 	wedding.wedding_title,
-	wedding.wedding_date,
+	to_char(wedding.wedding_date, 'Month DD, YYYY') AS wedding_date,
 	wedding.wedding_photo,
 	wedding.wedding_blurb FROM guest_list_junction
 	JOIN plus_one ON plus_one_id = guest_list_junction.plus_one_id
@@ -51,7 +51,7 @@ router.get("/all_RSVPs", rejectUnauthenticated, (req, res) => {
 });
 
 router.get("/active_details/:id", rejectUnauthenticated, (req, res) => {
-	const queryText = `SELECT * FROM wedding WHERE wedding.id = $1;`;
+	const queryText = `SELECT wedding.*, to_char(wedding.wedding_date, 'Month DD, YYYY') AS wedding_date FROM wedding WHERE wedding.id = $1;`;
 	const wedding_id = req.params.id;
 	pool.query(queryText, [wedding_id])
 		.then((result) => res.send(result.rows))
