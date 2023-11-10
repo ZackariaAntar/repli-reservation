@@ -4,7 +4,7 @@ CREATE TABLE "user" (
     "id" SERIAL PRIMARY KEY,
     "username" VARCHAR UNIQUE NOT NULL,
     "password" VARCHAR,
-    "isTemp" BOOLEAN DEFAULT FALSE
+    "is_temp" BOOLEAN DEFAULT FALSE
 );
 CREATE TABLE "wedding" (
     "id" SERIAL PRIMARY KEY,
