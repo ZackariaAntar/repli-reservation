@@ -63,13 +63,21 @@ function UserDashboard() {
     dispatch({ type: "CREATE_NEW_WEDDING", payload: newWedding });
     setNewWedding(weddingData);
     handleClose();
-  }
+  };
+
+  const seeActiveWedding = (id) =>{
+	dispatch({ type: "GET_ACTIVE_WEDDING_DETAILS", payload: id });
+
+
+  };
 
   return (
 		<Container xs>
 			<div className="container">
 				<h2>Welcome, {user.first_name}!</h2>
 			</div>
+			<div style={{border:'1px solid red'}}>
+
 			{myWeddings.length > 0 && <h4>My weddings</h4>}
 			{myWeddings &&
 				myWeddings.map((wedding) => (
@@ -77,8 +85,10 @@ function UserDashboard() {
 						<p>{wedding.wedding_title}</p>
 						<p>{wedding.wedding_date}</p>
 						<p>{wedding.wedding_blurb}</p>
+						<button onClick={()=> seeActiveWedding(wedding.id)}>See details</button>
 					</div>
 				))}
+			</div>
 			{myRSVPs.length > 0 && <h4>My Invitations</h4>}
 			{myRSVPs &&
 				myRSVPs.map((invite) => (

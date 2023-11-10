@@ -26,6 +26,7 @@ CREATE TABLE "events" (
     "event_state" VARCHAR(100),
     "event_zip" INT,
     "event_maps_url" VARCHAR(2500),
+    "event_date" DATE,
     "event_start_time" TIME,
     "event_end_time" TIME
 );
@@ -84,6 +85,11 @@ CREATE TABLE "wedding_announcements" (
     "event_id" INT REFERENCES "events"(id),
     "announcement" VARCHAR(5000)
 );
+
+INSERT INTO relationship(category)
+VALUES ('Family'), ('Friend'), ('Family Friend'), ('Wedding Party');
+
+
 -- KEEPING THIS HERE AS A REFERENCE FOR IF/WHEN WE INCORPORATE IT TO THE PROJECT
 -- CREATE TABLE "wedding_seating_chart" (
 --     "id" SERIAL PRIMARY KEY,

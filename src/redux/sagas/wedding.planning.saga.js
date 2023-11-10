@@ -18,14 +18,14 @@ function* getActiveWeddingDetails(action) {
 			payload: activeWedding.data,
 		});
 		// Scaffolding the ACTIVE WEDDING data waterfall.
-		// yield put({type:'GET_ACTIVE_WEDDING_EVENTS', payload: action.payload}) // payload should be ACTIVE WEDDING wedding_id
-		// yield put({
-		// 	type: "GET_ACTIVE_WEDDING_GUESTS",
-		// 	payload: action.payload,
-		// }); // payload should be ACTIVE WEDDING wedding_id
-		// yield put({type:'GET_ACTIVE_WEDDING_MEALS', payload: action.payload}) // payload should be ACTIVE WEDDING wedding_id
-		// yield put({type:'GET_ACTIVE_WEDDING_POSTS', payload: action.payload}) // payload should be ACTIVE WEDDING wedding_id
-		// yield put({type:'GET_ACTIVE_WEDDING_REPLIS', payload: action.payload}) // payload should be ACTIVE WEDDING wedding_id
+		yield put({type:'GET_ACTIVE_WEDDING_EVENTS', payload: action.payload}) // payload should be ACTIVE WEDDING wedding_id
+		yield put({
+			type: "GET_ACTIVE_WEDDING_GUESTS",
+			payload: action.payload,
+		}); // payload should be ACTIVE WEDDING wedding_id
+		yield put({type:'GET_ACTIVE_WEDDING_MEALS', payload: action.payload}) // payload should be ACTIVE WEDDING wedding_id
+		yield put({type:'GET_ACTIVE_WEDDING_POSTS', payload: action.payload}) // payload should be ACTIVE WEDDING wedding_id
+		yield put({type:'GET_ACTIVE_WEDDING_REPLIS', payload: action.payload}) // payload should be ACTIVE WEDDING wedding_id
 	} catch (error) {
 		console.log("getActiveWeddingDetails() FAILED", error);
 	}

@@ -19,7 +19,8 @@ function ActiveWedding() {
 	// - Add/edit meals form
 	// - Add/edit announcement form
 	// - Visualize RSVP data.
-	return (
+	
+    return (
 		<>
 			<p>
 				<span>{user.id}</span>
