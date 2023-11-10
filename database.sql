@@ -4,15 +4,17 @@ CREATE TABLE "user" (
     "id" SERIAL PRIMARY KEY,
     "username" VARCHAR UNIQUE NOT NULL,
     "password" VARCHAR,
-    "isTemp" BOOLEAN DEFAULT FALSE
+    "is_temp" BOOLEAN DEFAULT FALSE
 );
 CREATE TABLE "wedding" (
     "id" SERIAL PRIMARY KEY,
     "wedding_photo" VARCHAR(2500),
-    "wedding_blurb" VARCHAR(5001),
+    "wedding_blurb" VARCHAR(5000),
     "wedding_title" VARCHAR(200),
     "wedding_date" DATE,
-    "wedding_creator" INT REFERENCES "user"(id)
+    "wedding_creator_id" INT REFERENCES "user"(id),
+    "spouse_1" VARCHAR(100),
+    "spouse_2" VARCHAR(100)
 );
 CREATE TABLE "events" (
     "id" SERIAL PRIMARY KEY,
@@ -49,7 +51,7 @@ CREATE TABLE "guest_info" (
     "state" VARCHAR(100),
     "zip" INT,
     "allergies" VARCHAR(500),
-    "accomodations" VARCHAR(1000)
+    "accommodations" VARCHAR(1000)
 );
 CREATE TABLE "plus_one" (
     "id" SERIAL PRIMARY KEY,
@@ -80,7 +82,7 @@ CREATE TABLE "wedding_announcements" (
     "creator_id" INT REFERENCES "user"(id),
     "wedding_id" INT REFERENCES "wedding"(id),
     "event_id" INT REFERENCES "events"(id),
-    "announcement" VARCHAR(5001)
+    "announcement" VARCHAR(5000)
 );
 -- KEEPING THIS HERE AS A REFERENCE FOR IF/WHEN WE INCORPORATE IT TO THE PROJECT
 -- CREATE TABLE "wedding_seating_chart" (

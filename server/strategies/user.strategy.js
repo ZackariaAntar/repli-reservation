@@ -8,30 +8,46 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  pool
-    .query('SELECT * FROM "user" WHERE id = $1', [id])
-    .then((result) => {
-      // Handle Errors
-      const user = result && result.rows && result.rows[0];
+  pool.query(
+		`
+    SELECT "user".*,
+    guest_info.first_name,
+    guest_info.last_name,
+    guest_info.phone_number,
+    guest_info.street_address,
+    guest_info.unit,
+    guest_info.city,
+    guest_info.state,
+    guest_info.zip,
+    guest_info.allergies,
+    guest_info.accommodations
+    FROM "user"
+    JOIN guest_info ON guest_info.user_id = "user".id
+    WHERE "user".id = $1`,
+		[id]
+  )
+		.then((result) => {
+			// Handle Errors
+			const user = result && result.rows && result.rows[0];
 
-      if (user) {
-        // user found
-        delete user.password; // remove password so it doesn't get sent
-        // done takes an error (null in this case) and a user
-        done(null, user);
-      } else {
-        // user not found
-        // done takes an error (null in this case) and a user (also null in this case)
-        // this will result in the server returning a 401 status code
-        done(null, null);
-      }
-    })
-    .catch((error) => {
-      console.log('Error with query during deserializing user ', error);
-      // done takes an error (we have one) and a user (null in this case)
-      // this will result in the server returning a 500 status code
-      done(error, null);
-    });
+			if (user) {
+				// user found
+				delete user.password; // remove password so it doesn't get sent
+				// done takes an error (null in this case) and a user
+				done(null, user);
+			} else {
+				// user not found
+				// done takes an error (null in this case) and a user (also null in this case)
+				// this will result in the server returning a 401 status code
+				done(null, null);
+			}
+		})
+		.catch((error) => {
+			console.log("Error with query during deserializing user ", error);
+			// done takes an error (we have one) and a user (null in this case)
+			// this will result in the server returning a 500 status code
+			done(error, null);
+		});
 });
 
 // Does actual work of logging in
@@ -45,10 +61,8 @@ passport.use(
         if (user && encryptLib.comparePassword(password, user.password)) {
 			// All good! Passwords match!
 			// done takes an error (null in this case) and a user
-			user.isTemp = user.isTemp || false;
+			user.is_temp = user.is_temp || false;
 			// ^^^ ADDED LOGIC FOR HANDLING TEMPORARY PASSWORD ^^^
-			// LOGIC IS USED ON user.router post('/login') to prompt a redirect to client side view at path 'login/change-password' (login/taco) if true.
-			// Pretty sure it needs to be a client side route and NOT an api endpoint like user.router post('/change-password').
 			done(null, user);
 		} else {
           // Not good! Username and password do not match.
