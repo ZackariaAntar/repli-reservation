@@ -10,6 +10,7 @@ import activeWeddingMeals from './active.wedding.meals.reducer';
 import activeWeddingPosts from './active.wedding.posts.reducer';
 import activeWeddingReplis from './active.wedding.replis.reducer';
 import relationships from './relationship.reducer';
+import changePassword from './change.password.reducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
 	activeWeddingPosts, // TODO: UPDATE COMMENT WITH CONTENTS
 	activeWeddingReplis, // TODO: UPDATE COMMENT WITH CONTENTS
 	relationships,
+	changePassword
 });
 
 export default rootReducer;

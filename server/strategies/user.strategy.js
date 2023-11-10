@@ -63,8 +63,6 @@ passport.use(
 			// done takes an error (null in this case) and a user
 			user.is_temp = user.is_temp || false;
 			// ^^^ ADDED LOGIC FOR HANDLING TEMPORARY PASSWORD ^^^
-			// LOGIC IS USED ON user.router post('/login') to prompt a redirect to client side view at path 'login/change-password' (login/taco) if true.
-			// Pretty sure it needs to be a client side route and NOT an api endpoint like user.router post('/change-password').
 			done(null, user);
 		} else {
           // Not good! Username and password do not match.

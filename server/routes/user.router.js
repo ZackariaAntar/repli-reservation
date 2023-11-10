@@ -1,24 +1,24 @@
-const express = require('express');
+const express = require("express");
 const {
-  rejectUnauthenticated,
-} = require('../modules/authentication-middleware');
-const encryptLib = require('../modules/encryption');
-const pool = require('../modules/pool');
-const userStrategy = require('../strategies/user.strategy');
+	rejectUnauthenticated,
+} = require("../modules/authentication-middleware");
+const encryptLib = require("../modules/encryption");
+const pool = require("../modules/pool");
+const userStrategy = require("../strategies/user.strategy");
 
 const router = express.Router();
 
 // Handles Ajax request for user information if user is authenticated
-router.get('/', rejectUnauthenticated, (req, res) => {
-  // Send back user object from the session (previously queried from the database)
-  // TODO: MIGHT NEED TO CHANGE THE QUERY FOR USER TO BE MORE DATA RICH IN ORDER TO BETTER SERVE CLIENT SIDE REQUESTS/AUTHORIZATIONS
-  res.send(req.user);
+router.get("/", rejectUnauthenticated, (req, res) => {
+	// Send back user object from the session (previously queried from the database)
+	// TODO: MIGHT NEED TO CHANGE THE QUERY FOR USER TO BE MORE DATA RICH IN ORDER TO BETTER SERVE CLIENT SIDE REQUESTS/AUTHORIZATIONS
+	res.send(req.user);
 });
 
 // Handles POST request with new user data
 // async post to guest_info table after user create profile for themselves
-router.post('/register', async (req, res, next) => {
-	console.log('req.body',req.body);
+router.post("/register", async (req, res, next) => {
+	console.log("req.body", req.body);
 	const {
 		first_name,
 		last_name,
@@ -33,7 +33,7 @@ router.post('/register', async (req, res, next) => {
 	} = req.body;
 
 	const username = req.body.username;
-	const password = encryptLib.encryptPassword(req.body.password);
+	const password = req.body.password;
 
 	const client = await pool.connect();
 
@@ -79,11 +79,9 @@ router.post('/register', async (req, res, next) => {
 	}
 });
 
-router.post('/invited_guest', async (req, res, next)=>{
+router.post("/invited_guest", async (req, res, next) => {
 	const client = await pool.connect();
 	const {
-		username,
-		password,
 		first_name,
 		last_name,
 		phone_number,
@@ -98,7 +96,10 @@ router.post('/invited_guest', async (req, res, next)=>{
 		can_plus_one,
 	} = req.body;
 
-	console.log(req.body);
+	const username = req.body.username;
+	const password = encryptLib.encryptPassword(req.body.password);
+
+	console.log("new guest:", req.body);
 
 	const authData = [username, password, true];
 
@@ -157,26 +158,25 @@ router.post('/invited_guest', async (req, res, next)=>{
 	} finally {
 		await client.release();
 	}
-
 });
 
-router.post("/change-password", async (req, res, next) => {
-	const { oldPassword, newPassword } = req.body;
-
-	// Verify the old password
-	pool.query('SELECT * FROM "user" WHERE id = $1', [req.user.id])
+router.post("/change_password", (req, res) => {
+	const { username, oldPassword, newPassword } = req.body;
+	pool.query('SELECT * FROM "user" WHERE username = $1', [username])
 		.then((result) => {
 			const user = result && result.rows && result.rows[0];
 			if (
-				user &&
-				encryptLib.comparePassword(oldPassword, user.password)
+				(user &&
+					encryptLib.comparePassword(oldPassword, user.password)) ||
+				(user && oldPassword === user.password)
 			) {
+				console.log("--------------------user && passwords match");
 				// The old password is correct, so update the password
 				const encryptedNewPassword =
 					encryptLib.encryptPassword(newPassword);
 				pool.query(
-					'UPDATE "user" SET password = $1, isTemp = false WHERE id = $2',
-					[encryptedNewPassword, req.user.id]
+					'UPDATE "user" SET password = $1, is_temp = false WHERE id = $2',
+					[encryptedNewPassword, user.id]
 				)
 					.then(() => {
 						res.sendStatus(200);
@@ -196,25 +196,24 @@ router.post("/change-password", async (req, res, next) => {
 		});
 });
 
-
 // Handles login form authenticate/login POST
 // userStrategy.authenticate('local') is middleware that we run on this route
 // this middleware will run our POST if successful
 // this middleware will send a 404 if not successful
-router.post('/login', userStrategy.authenticate('local'), (req, res) => {
-  if (req.user.is_temp) {
-		res.redirect("/login/change-password");
-  } else {
+router.post("/login", userStrategy.authenticate("local"), (req, res) => {
+	if (req.user.is_temp) {
+		console.log("user IS temp");
+		res.sendStatus(401);
+	} else {
 		res.sendStatus(200);
-  }
+	}
 });
 
 // clear all server session information about this user
-router.post('/logout', (req, res) => {
-  // Use passport's built-in method to log out the user
-  req.logout();
-  res.sendStatus(200);
+router.post("/logout", (req, res) => {
+	// Use passport's built-in method to log out the user
+	req.logout();
+	res.sendStatus(200);
 });
 
 module.exports = router;
-
