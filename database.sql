@@ -51,7 +51,7 @@ CREATE TABLE "guest_info" (
     "state" VARCHAR(100),
     "zip" INT,
     "allergies" VARCHAR(500),
-    "accomodations" VARCHAR(1000)
+    "accommodations" VARCHAR(1000)
 );
 CREATE TABLE "plus_one" (
     "id" SERIAL PRIMARY KEY,

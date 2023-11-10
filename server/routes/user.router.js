@@ -29,7 +29,7 @@ router.post('/register', async (req, res, next) => {
 		state,
 		zip,
 		allergies,
-		accomodations,
+		accommodations,
 	} = req.body;
 
 	const username = req.body.username;
@@ -43,7 +43,7 @@ router.post('/register', async (req, res, next) => {
   VALUES ($1, $2) RETURNING id;`;
 
 	const addDetailsQuery = `
-  INSERT INTO "guest_info" (user_id, first_name, last_name,	phone_number, street_address, unit, city, state, zip, allergies, accomodations)
+  INSERT INTO "guest_info" (user_id, first_name, last_name,	phone_number, street_address, unit, city, state, zip, allergies, accommodations)
   VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);
   `;
 
@@ -64,7 +64,7 @@ router.post('/register', async (req, res, next) => {
 			state,
 			zip,
 			allergies,
-			accomodations,
+			accommodations,
 		];
 		await client.query(addDetailsQuery, userDetails);
 
@@ -106,7 +106,7 @@ router.post('/register_invited_guest', async (req, res, next)=>{
   `;
 
 	const addDetailsQuery = `
-  INSERT INTO "guest_info" (user_id, first_name, last_name,	phone_number, street_address, unit, city, state, zip, allergies, accomodations)
+  INSERT INTO "guest_info" (user_id, first_name, last_name,	phone_number, street_address, unit, city, state, zip, allergies, accommodations)
   VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id;
   `;
 
@@ -133,7 +133,7 @@ router.post('/register_invited_guest', async (req, res, next)=>{
 			state,
 			zip,
 			allergies,
-			accomodations,
+			accommodations,
 		];
 
 		const get_guest_id = await client.query(addDetailsQuery, userDetails);

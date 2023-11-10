@@ -3,18 +3,18 @@ import { useDispatch, useSelector } from 'react-redux';
 
 function RegisterForm() {
   const userInfo = {
-    username:'',
-    password:'',
-		first_name:'',
-		last_name:'',
-		phone_number:'',
-		street_address:'',
-		unit:'',
-		city:'',
-		state:'',
-		zip:'',
-		allergies:'',
-		accomodations:'',
+		username: "",
+		password: "",
+		first_name: "",
+		last_name: "",
+		phone_number: "",
+		street_address: "",
+		unit: "",
+		city: "",
+		state: "",
+		zip: "",
+		allergies: "",
+		accommodations: "",
   };
   const [regPayload, setRegPayload] = useState(userInfo);
   const errors = useSelector((store) => store.errors);
@@ -32,9 +32,9 @@ function RegisterForm() {
 
   const secretDiv = () =>{
     const testingLogin = {
-    username:'ChangeMe@example.com',
-    password: '123',
-		first_name: 'Basic',
+		username: "ChangeMe@example.com",
+		password: "123",
+		first_name: "Basic",
 		last_name: "User",
 		phone_number: "(555) 123-4567",
 		street_address: "123 boo st",
@@ -43,7 +43,7 @@ function RegisterForm() {
 		state: "Bliss",
 		zip: "55407",
 		allergies: "None",
-		accomodations: "Paint me like one of your french girls.",
+		accommodations: "Paint me like one of your french girls.",
 	};
     setRegPayload(testingLogin)
 
@@ -52,10 +52,7 @@ function RegisterForm() {
 
   return (
 		<form className="formPanel" onSubmit={registerUser}>
-			<h2
-      onClick={secretDiv}
-
-      >Register User</h2>
+			<h2 onClick={secretDiv}>Register User</h2>
 			{errors.registrationMessage && (
 				<h3 className="alert" role="alert">
 					{errors.registrationMessage}
@@ -269,12 +266,12 @@ function RegisterForm() {
 						cols="45"
 						wrap="hard"
 						name="accommodations"
-						value={regPayload.accomodations}
+						value={regPayload.accommodations}
 						required
 						onChange={(event) =>
 							setRegPayload({
 								...regPayload,
-								accomodations: event.target.value,
+								accommodations: event.target.value,
 							})
 						}
 					/>
