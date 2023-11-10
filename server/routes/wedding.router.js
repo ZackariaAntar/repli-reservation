@@ -7,7 +7,7 @@ const {
 
 // Endpoint for getAllMyWeddingsDetails
 router.get("/all_weddings", rejectUnauthenticated, (req, res) => {
-	const queryText = `SELECT * FROM wedding WHERE wedding.wedding_creator = $1;`;
+	const queryText = `SELECT * FROM wedding WHERE wedding.wedding_creator_id = $1;`;
 	const user_id = req.user.id;
 	pool.query(queryText, [user_id])
 		.then((result) => res.send(result.rows))
@@ -50,13 +50,50 @@ router.get("/all_RSVPs", rejectUnauthenticated, (req, res) => {
 		});
 });
 
-router.post("/", rejectUnauthenticated, (req, res) => {
-	const queryText = `;`;
-	const {} = req.body;
-	pool.query(queryText)
+router.get("/active_details/:id", rejectUnauthenticated, (req, res) => {
+	const queryText = `SELECT * FROM wedding WHERE wedding.id = $1;`;
+	const wedding_id = req.params.id;
+	pool.query(queryText, [wedding_id])
+		.then((result) => res.send(result.rows))
+		.catch((err) => {
+			console.log(
+				`Failed to ${queryText}, $1 used in query is: ${wedding_id}`,
+				err
+			);
+			res.sendStatus(500);
+		});
+});
+
+
+router.post("/new_wedding", rejectUnauthenticated, (req, res) => {
+	const queryText = `
+	INSERT INTO wedding(wedding_photo, wedding_blurb, wedding_title, wedding_date, wedding_creator_id, spouse_1, spouse_2)
+	VALUES($1, $2, $3, $4, $5, $6, $7)
+	;`;
+
+	const {
+		wedding_photo,
+		wedding_blurb,
+		wedding_title,
+		wedding_date,
+		wedding_creator_id,
+		spouse_1,
+		spouse_2
+	} = req.body;
+
+	const weddingDetails = [
+		wedding_photo,
+		wedding_blurb,
+		wedding_title,
+		wedding_date,
+		wedding_creator_id,
+		spouse_1,
+		spouse_2,
+	];
+	pool.query(queryText, weddingDetails)
 		.then((result) => res.sendStatus(201))
 		.catch((err) => {
-			console.log(": ", err);
+			console.log(`Problem with ${queryText}, Data used in post: ${req.body}`, err);
 			res.sendStatus(500);
 		});
 });

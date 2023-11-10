@@ -6,7 +6,7 @@ function* getActiveWeddingDetails(action) {
 		`------ in getActiveWeddingDetails() on weddingPlanningSaga\naction.payload is wedding_id for the clicked on: ${action.payload}`
 	);
 	try {
-		const activeWedding = yield axios.get(`/api/wedding/${action.payload}`);
+		const activeWedding = yield axios.get(`/api/wedding/active_details/${action.payload}`);
 		console.log(
 			"result.rows returned from getActiveWeddingDetails()",
 			activeWedding.data
@@ -16,14 +16,14 @@ function* getActiveWeddingDetails(action) {
 			payload: activeWedding.data,
 		});
 		// Scaffolding the ACTIVE WEDDING data waterfall.
-		// yield put({type:'GET_ACTIVE_WEDDING_EVENTS', payload: activeWedding.data}) // payload should be ACTIVE WEDDING wedding_id
-		yield put({
-			type: "GET_ACTIVE_WEDDING_GUESTS",
-			payload: activeWedding.data,
-		}); // payload should be ACTIVE WEDDING wedding_id
-		// yield put({type:'GET_ACTIVE_WEDDING_MEALS', payload: activeWedding.data}) // payload should be ACTIVE WEDDING wedding_id
-		// yield put({type:'GET_ACTIVE_WEDDING_POSTS', payload: activeWedding.data}) // payload should be ACTIVE WEDDING wedding_id
-		// yield put({type:'GET_ACTIVE_WEDDING_REPLIS', payload: activeWedding.data}) // payload should be ACTIVE WEDDING wedding_id
+		// yield put({type:'GET_ACTIVE_WEDDING_EVENTS', payload: action.payload}) // payload should be ACTIVE WEDDING wedding_id
+		// yield put({
+		// 	type: "GET_ACTIVE_WEDDING_GUESTS",
+		// 	payload: action.payload,
+		// }); // payload should be ACTIVE WEDDING wedding_id
+		// yield put({type:'GET_ACTIVE_WEDDING_MEALS', payload: action.payload}) // payload should be ACTIVE WEDDING wedding_id
+		// yield put({type:'GET_ACTIVE_WEDDING_POSTS', payload: action.payload}) // payload should be ACTIVE WEDDING wedding_id
+		// yield put({type:'GET_ACTIVE_WEDDING_REPLIS', payload: action.payload}) // payload should be ACTIVE WEDDING wedding_id
 	} catch (error) {
 		console.log("getActiveWeddingDetails() FAILED", error);
 	}
@@ -35,7 +35,7 @@ function* getActiveEvents(action) {
 		`------ in getActiveEvents() on weddingPlanningSaga\naction.payload is the specified wedding_id: ${action.payload}`
 	);
 	try {
-		const activeEvents = yield axios.get(`/api/wedding/${action.payload}`);//TODO FIX API ENDPOINT!
+		const activeEvents = yield axios.get(`/api/wedding/active_events/${action.payload}`);
 		console.log(
 			"result.rows returned from getActiveEvents()",
 			activeEvents.data
@@ -55,7 +55,7 @@ function* getActiveGuestList(action) {
 		`------ in getActiveGuestList() on weddingPlanningSaga\naction.payload is the specified wedding_id: ${action.payload}`
 	);
 	try {
-		const activeGuests = yield axios.get(`/api/wedding/${action.payload}`);//TODO FIX API ENDPOINT!
+		const activeGuests = yield axios.get(`/api/wedding/active_guests/${action.payload}`);
 		console.log(
 			"result.rows returned from getActiveGuestList()",
 			activeGuests.data
@@ -75,7 +75,7 @@ function* getActiveMeals(action) {
 		`------ in getActiveMeals() on weddingPlanningSaga\naction.payload is the specified wedding_id: ${action.payload}`
 	);
 	try {
-		const activeMeals = yield axios.get(`/api/wedding/${action.payload}`);//TODO FIX API ENDPOINT!
+		const activeMeals = yield axios.get(`/api/wedding/active_meals/${action.payload}`);
 		console.log(
 			"result.rows returned from getActiveMeals()",
 			activeMeals.data
@@ -95,7 +95,7 @@ function* getActivePosts(action) {
 		`------ in getActivePosts() on weddingPlanningSaga\naction.payload is the specified wedding_id: ${action.payload}`
 	);
 	try {
-		const activePosts = yield axios.get(`/api/wedding/${action.payload}`);//TODO FIX API ENDPOINT!
+		const activePosts = yield axios.get(`/api/wedding/active_posts/${action.payload}`);
 		console.log(
 			"result.rows returned from getActivePosts()",
 			activePosts.data
@@ -115,7 +115,7 @@ function* getActiveReplis(action) {
 		`------ in getActiveReplis() on weddingPlanningSaga\naction.payload is the specified wedding_id: ${action.payload}`
 	);
 	try {
-		const activeReplis = yield axios.get(`/api/wedding/${action.payload}`);//TODO FIX API ENDPOINT!
+		const activeReplis = yield axios.get(`/api/wedding/active_replis/${action.payload}`);
 		console.log(
 			"result.rows returned from getActiveReplis()",
 			activeReplis.data
@@ -126,6 +126,27 @@ function* getActiveReplis(action) {
 		});
 	} catch (error) {
 		console.log("getActiveReplis() FAILED", error);
+	}
+}
+
+function* createNewWedding(action){
+	console.log(
+		`------ in createNewWedding() on weddingPlanningSaga\naction.payload is: ${action.payload}, wedding_creator_id is user.id`
+	);
+	try {
+		yield axios.post("/api/wedding/new_wedding", action.payload);
+		console.log(
+			"wedding_creator_id used in GET_ALL_MY_DETAILS",
+			action.payload.wedding_creator_id
+		);
+		yield put({
+			type: "GET_ALL_MY_DETAILS",
+			payload: action.payload.wedding_creator_id,
+		});
+
+	} catch (error) {
+		console.log("createNewWedding() FAILED", error);
+
 	}
 }
 
@@ -160,6 +181,7 @@ function* weddingPlanningSaga() {
 	yield takeLatest("GET_ACTIVE_WEDDING_REPLIS", getActiveReplis );
 
     // POSTS
+	yield takeLatest("CREATE_NEW_WEDDING", createNewWedding);
 	yield takeLatest("ADD_GUEST_TO_LIST", addToActiveGuestList);
 
     // UPDATES

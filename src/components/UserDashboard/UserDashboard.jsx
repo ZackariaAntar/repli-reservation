@@ -22,8 +22,6 @@ function UserDashboard() {
     dispatch({type:'GET_ALL_MY_DETAILS', payload: user.id})
   },[]);
 
-
-
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -45,44 +43,130 @@ function UserDashboard() {
   };
 
   const today = limitPast();
-  const [value, setValue] = useState(today);
+
+  const [value, setValue] = useState(dayjs(today));
+
+
+  const weddingData = {
+		wedding_photo:'',
+		wedding_blurb:'',
+		wedding_title:'',
+		wedding_date:`${today}`,
+		wedding_creator_id:user.id,
+    spouse_1:'',
+    spouse_2:''
+  };
+  const [newWedding, setNewWedding] = useState(weddingData);
+
+  const createNewWedding = () =>{
+    dispatch({ type: "CREATE_NEW_WEDDING", payload: newWedding });
+    setNewWedding(weddingData);
+    handleClose();
+  }
 
   return (
-    <>
-      <div className="container">
-        <h2>Welcome, {user.username}!</h2>
-      </div>
+		<>
+			<div className="container">
+				<h2>Welcome, {user.username}!</h2>
+			</div>
 
-      <div>
-        <Button onClick={handleClickOpen}>Add Wedding</Button>
-        <Dialog open={open} onClose={handleClose}>
-          <FormControl>
-            <FormLabel>Wedding Title</FormLabel>
-            <TextField></TextField>
+			<div>
+				<Button onClick={handleClickOpen}>Add Wedding</Button>
+				<Dialog open={open} onClose={handleClose}>
+					<FormControl
+						sx={{
+							width: "auto",
+							mx: 3.5,
+							my: 3.5,
+						}}
+					>
+						{/* <FormLabel>Wedding Title</FormLabel> */}
+						<TextField
+							label="Wedding Title"
+							sx={{ mb: 2 }}
+							value={newWedding.wedding_title}
+							onChange={(e) =>
+								setNewWedding({
+									...newWedding,
+									wedding_title: e.target.value,
+								})
+							}
+							InputLabelProps={{ shrink: true, fontSize: "2rem" }}
+						></TextField>
 
-            <FormLabel>Date</FormLabel>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateCalendar
-                defaultValue={dayjs(today)}
-                views={["year", "month", "day"]}
-                disablePast
-              ></DateCalendar>
-            </LocalizationProvider>
+						<FormLabel>Wedding Date</FormLabel>
+						<LocalizationProvider dateAdapter={AdapterDayjs}>
+							<DateCalendar
+								sx={{
+									border: "1px solid lightgrey",
+									borderRadius: 1.25,
+									mb: 1.75,
+									height: "295px",
+								}}
+								defaultValue={dayjs(today)}
+								views={["year", "month", "day"]}
+								disablePast
+								onChange={(newValue) =>
+									setNewWedding({
+										...newWedding,
+										wedding_date: `${newValue.$y}-${
+											newValue.$M + 1
+										}-${newValue.$D}`,
+									})
+								}
+							></DateCalendar>
+						</LocalizationProvider>
 
-            <FormLabel>Description</FormLabel>
-            <TextField></TextField>
+						{/* <FormLabel>Description</FormLabel> */}
+						<TextField
+							label="Description"
+							multiline
+							rows={4}
+							maxRows={5}
+							sx={{ mb: 2 }}
+							value={newWedding.wedding_blurb}
+							onChange={(e) =>
+								setNewWedding({
+									...newWedding,
+									wedding_blurb: e.target.value,
+								})
+							}
+							InputLabelProps={{ shrink: true }}
+						></TextField>
 
-            <FormLabel>Spouse Name</FormLabel>
-            <TextField></TextField>
+						{/* <FormLabel>Spouse Name</FormLabel> */}
+						<TextField
+							label="Spouse Name"
+							sx={{ mb: 2 }}
+							value={newWedding.spouse_1}
+							onChange={(e) =>
+								setNewWedding({
+									...newWedding,
+									spouse_1: e.target.value,
+								})
+							}
+							InputLabelProps={{ shrink: true }}
+						></TextField>
 
-            <FormLabel>Spouse Name</FormLabel>
-            <TextField></TextField>
+						{/* <FormLabel>Spouse Name</FormLabel> */}
+						<TextField
+							label="Spouse Name"
+							sx={{ mb: 2 }}
+							value={newWedding.spouse_2}
+							onChange={(e) =>
+								setNewWedding({
+									...newWedding,
+									spouse_2: e.target.value,
+								})
+							}
+							InputLabelProps={{ shrink: true }}
+						></TextField>
 
-            <Button>Submit</Button>
-          </FormControl>
-        </Dialog>
-      </div>
-    </>
+						<Button onClick={createNewWedding}>Submit</Button>
+					</FormControl>
+				</Dialog>
+			</div>
+		</>
   );
 }
 

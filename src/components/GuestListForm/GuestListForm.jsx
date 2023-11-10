@@ -5,25 +5,26 @@ import { useHistory } from "react-router-dom";
 //////////////////Guest List Form Component/////////////////////
 
 function GuestListForm() {
+    const activeWedding = useSelector((store) => store.activeWeddingDetails);
 
     // hooks for form inputs and dispatch and history for navigation and dispatch to redux store
     // may need to update the naming convention for the hooks depending on how we want to handle the data
     const guestData = {
-        first_name:'',
-        last_name:'',
-        username:'',
-        password:'',
-        phone_number:'',
-        street_address:'',
-        unit:'',
-        city:'',
-        state:'',
-        zip:'',
-        relationship:'',
-        wedding_id: 'This needs to be pulled in dynamically',
-        spouse_association:'',
-        can_plus_one: null
-    };
+		first_name: "",
+		last_name: "",
+		username: "",
+		password: "",
+		phone_number: "",
+		street_address: "",
+		unit: "",
+		city: "",
+		state: "",
+		zip: "",
+		relationship: "",
+		wedding_id: activeWedding.id,
+		spouse_association: "",
+		can_plus_one: null,
+	};
     const [guestInfo, setGuestInfo] = useState(guestData);
     const [switchName, setSwitchName] = useState('')
     const history = useHistory();
@@ -32,9 +33,9 @@ function GuestListForm() {
     const addToList = (e) => {
         e.preventDefault();
         dispatch({
-            type:'ADD_GUEST_TO_LIST',
-            payload: guestInfo
-        })
+			type: "ADD_GUEST_TO_LIST",
+			payload: guestInfo,
+		});
         setGuestInfo(guestData)
     };
 
