@@ -5,6 +5,7 @@ import FormControl from "@mui/material/FormControl/FormControl";
 import { FormLabel } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import Container from '@mui/material/Container'
 import { useDispatch, useSelector } from "react-redux";
 
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -65,17 +66,28 @@ function UserDashboard() {
   }
 
   return (
-		<>
+		<Container xs>
 			<div className="container">
 				<h2>Welcome, {user.first_name}!</h2>
 			</div>
-			{myWeddings.length>0&& <h4>My weddings</h4>}
+			{myWeddings.length > 0 && <h4>My weddings</h4>}
 			{myWeddings &&
 				myWeddings.map((wedding) => (
 					<div key={wedding.id}>
 						<p>{wedding.wedding_title}</p>
 						<p>{wedding.wedding_date}</p>
 						<p>{wedding.wedding_blurb}</p>
+					</div>
+				))}
+			{myRSVPs.length > 0 && <h4>My Invitations</h4>}
+			{myRSVPs &&
+				myRSVPs.map((invite) => (
+					<div key={invite.id}>
+						<p>{invite.wedding_title}</p>
+						<p>{invite.wedding_date}</p>
+						<p>{invite.wedding_blurb}</p>
+						<p>Allowed plus one: {invite.can_plus_one}</p>
+						{/* more to come */}
 					</div>
 				))}
 
@@ -175,7 +187,7 @@ function UserDashboard() {
 					</FormControl>
 				</Dialog>
 			</div>
-		</>
+		</Container>
   );
 }
 
