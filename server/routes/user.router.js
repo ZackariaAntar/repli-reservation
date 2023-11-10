@@ -79,7 +79,7 @@ router.post('/register', async (req, res, next) => {
 	}
 });
 
-router.post('/register_invited_guest', async (req, res, next)=>{
+router.post('/invited_guest', async (req, res, next)=>{
 	const client = await pool.connect();
 	const {
 		username,
@@ -98,16 +98,18 @@ router.post('/register_invited_guest', async (req, res, next)=>{
 		can_plus_one,
 	} = req.body;
 
+	console.log(req.body);
+
 	const authData = [username, password, true];
 
 	const createUserQuery = `
-  INSERT INTO "user" (username, password, isTemp)
+  INSERT INTO "user" (username, password, is_temp)
   VALUES ($1, $2, $3) RETURNING id;
   `;
 
 	const addDetailsQuery = `
-  INSERT INTO "guest_info" (user_id, first_name, last_name,	phone_number, street_address, unit, city, state, zip, allergies, accommodations)
-  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id;
+  INSERT INTO "guest_info" (user_id, first_name, last_name,	phone_number, street_address, unit, city, state, zip)
+  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id;
   `;
 
 	// MAKE SURE TO GIVE GUESTS THE OPTION TO UPDATE JUNCTION
@@ -132,8 +134,6 @@ router.post('/register_invited_guest', async (req, res, next)=>{
 			city,
 			state,
 			zip,
-			allergies,
-			accommodations,
 		];
 
 		const get_guest_id = await client.query(addDetailsQuery, userDetails);
@@ -202,8 +202,8 @@ router.post("/change-password", async (req, res, next) => {
 // this middleware will run our POST if successful
 // this middleware will send a 404 if not successful
 router.post('/login', userStrategy.authenticate('local'), (req, res) => {
-  if (req.user.isTemp) {
-		res.redirect("login/change-password");
+  if (req.user.is_temp) {
+		res.redirect("/login/change-password");
   } else {
 		res.sendStatus(200);
   }

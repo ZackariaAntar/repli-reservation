@@ -153,11 +153,29 @@ function* createNewWedding(action){
 
 function* addToActiveGuestList(action) {
 	console.log(
-		`------ in addToActiveGuestList() on weddingPlanningSaga\naction.payload is: ${action.payload}`
+		`------ in addToActiveGuestList() on weddingPlanningSaga\naction.payload is:`, action.payload
 	);
+	const weddingTitle = action.payload.wedding_title.replace(/ /g, '')
+
+	function makeid(title, length) {
+		let result = title;
+		const characters =
+			"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		const charactersLength = characters.length;
+		let counter = 0;
+		while (counter < length) {
+			result += characters.charAt(
+				Math.floor(Math.random() * charactersLength)
+			);
+			counter += 1;
+		}
+		return result
+	}
+	action.payload.password = makeid(weddingTitle, 5)
+
 	try {
 		//Just scaffolding for now, not sure how this is all coming together yet :D
-		yield axios.post("/api/user/register_invited_guest");
+		yield axios.post("/api/user/invited_guest", action.payload);
 		console.log(
 			"wedding_id used in getActiveGuestList",
 			action.payload.wedding_id

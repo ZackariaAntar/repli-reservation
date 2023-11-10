@@ -1,15 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 //////////////////Guest List Form Component/////////////////////
 
 function GuestListForm() {
-    const activeWedding = useSelector((store) => store.activeWeddingDetails);
+
+    // const activeWedding = useSelector((store) => store.activeWeddingDetails);
+    const activeWedding = useSelector((store) => store.allMyWeddings[0]); // only using for testing
+    const relationships = useSelector((store)=>store.relationships)
 
     // hooks for form inputs and dispatch and history for navigation and dispatch to redux store
     // may need to update the naming convention for the hooks depending on how we want to handle the data
     const guestData = {
+        wedding_title: activeWedding.wedding_title,
 		first_name: "",
 		last_name: "",
 		username: "",
@@ -23,7 +27,24 @@ function GuestListForm() {
 		relationship: "",
 		wedding_id: activeWedding.id,
 		spouse_association: "",
-		can_plus_one: null,
+		can_plus_one: '',
+	};
+    const dummy = {
+		wedding_title: activeWedding.wedding_title,
+		first_name: "Pooh",
+		last_name: "Bear",
+		username: "pooh@bear.com",
+		password: "",
+		phone_number: "12345678",
+		street_address: "123 Memory Lane",
+		unit: "",
+		city: "MPLS",
+		state: "MN",
+		zip: "55407",
+		relationship: 1,
+		wedding_id: activeWedding.id,
+		spouse_association: activeWedding.spouse_1,
+		can_plus_one: true,
 	};
     const [guestInfo, setGuestInfo] = useState(guestData);
     const [switchName, setSwitchName] = useState('')
@@ -42,7 +63,13 @@ function GuestListForm() {
 
     return (
 		<>
-			<h2>Guest List Form</h2>
+			<h2
+				onClick={() => {
+					setGuestInfo(dummy);
+				}}
+			>
+				Guest List Form
+			</h2>
 			{/* The h2 above can be deleted once we have a page header established */}
 			<form onSubmit={addToList}>
 				<h3>Personal Information</h3>
@@ -147,7 +174,12 @@ function GuestListForm() {
 						setGuestInfo({ ...guestInfo, state: e.target.value })
 					}
 				>
-					<option value="" disable selected hidden>
+					<option
+						value="Select a State"
+						disable="true"
+						selected
+						hidden
+					>
 						Select a State
 					</option>
 					<option value="AL">Alabama</option>
@@ -216,7 +248,7 @@ function GuestListForm() {
 				<div>
 					<p>Does this guest get a plus one?</p>
 
-					<label for="can_plus_one">
+					<label htmlFor="can_plus_one">
 						Yes
 						<input
 							type="radio"
@@ -233,7 +265,7 @@ function GuestListForm() {
 						/>
 					</label>
 
-					<label for="cannot_plus_one">
+					<label htmlFor="cannot_plus_one">
 						{" "}
 						No{" "}
 						<input
@@ -265,19 +297,19 @@ function GuestListForm() {
 					}
 				>
 					{switchName ? (
-						<option value="" disable selected hidden>
+						<option value="" disable="true" selected hidden>
 							Who is {switchName} is associated with...
 						</option>
 					) : (
-						<option value="" disable selected hidden>
+						<option value="" disable="true" selected hidden>
 							Who is this guest is associated with...
 						</option>
 					)}
-					<option value={"Replace with redux state for spouse 1"}>
-						Guest of (spouse 1)
+					<option value={activeWedding.spouse_1}>
+						Guest of {activeWedding.spouse_1}
 					</option>
-					<option value={"Replace with redux state for spouse 2"}>
-						Guest of (spouse 2)
+					<option value={activeWedding.spouse_2}>
+						Guest of {activeWedding.spouse_2}
 					</option>
 				</select>
 
@@ -291,10 +323,15 @@ function GuestListForm() {
 						})
 					}
 				>
-					<option value="" disable selected hidden>
+					<option value="" disable="true" selected hidden>
 						Relationship to {guestInfo.spouse_association}...
 					</option>
-					<option value={"family"}>
+					{relationships.map((relation) => (
+						<option key={relation.id} value={relation.id}>
+							{guestInfo.spouse_association}'s {relation.category}
+						</option>
+					))}
+					{/* <option value={"family"}>
 						{guestInfo.spouse_association}'s Family
 					</option>
 					<option value="friend">
@@ -305,12 +342,12 @@ function GuestListForm() {
 					</option>
 					<option value="wedding party">
 						{guestInfo.spouse_association}'s Wedding Party
-					</option>
+					</option> */}
 				</select>
 
 				<br />
 
-				<button>Save and Add Another</button>
+				<button type="submit">Save and Add Another</button>
 				<button>Save and View Guest List</button>
 				<button>Save and Exit</button>
 			</form>
