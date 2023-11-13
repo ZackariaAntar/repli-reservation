@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
+
+import EditWeddingDetailsForm from "../EditWeddingDetailsForm/EditWeddingDetailsForm";
 
 function ActiveWedding() {
 	const dispatch = useDispatch();
@@ -17,6 +19,8 @@ function ActiveWedding() {
 	const meals = useSelector((store) => store.activeWeddingMeals);
 	const posts = useSelector((store) => store.activeWeddingPosts);
 	const RSVPs = useSelector((store) => store.activeWeddingReplis);
+
+	const [editWedding, setEditWedding] = useState(false);
 
 	useEffect(() => {
 		dispatch({ type: "GET_ACTIVE_WEDDING_DETAILS", payload: wedding_id });
@@ -46,13 +50,26 @@ function ActiveWedding() {
 							<p>{info.wedding_date}</p>
 							<p>{info.spouse_1}</p>
 							<p>{info.spouse_2}</p>
-							<Button>edit details</Button>
+							<Button
+								onClick={() => setEditWedding(!editWedding)}
+							>
+								edit wedding details
+							</Button>
 						</div>
 					))}
 				</Grid>
 				<Grid item xs={12} sm={12} md={12}>
 					<h2>Wedding Events</h2>
 					<Button>Add an event</Button>
+
+					{details[0] && (
+						<EditWeddingDetailsForm
+							editWedding={editWedding}
+							setEditWedding={setEditWedding}
+							details={details}
+						/>
+					)}
+
 					<Grid container spacing={1}>
 						{events.map((event) => (
 							<Grid item xs={12} sm={6} md={3}>
