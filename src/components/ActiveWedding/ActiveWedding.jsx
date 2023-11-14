@@ -1,4 +1,4 @@
-import {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import EditWeddingDetailsForm from "../EditWeddingDetailsForm/EditWeddingDetailsForm";
+import AddEventForm from "../AddEventForm/AddEventForm";
 
 function ActiveWedding() {
 	const dispatch = useDispatch();
@@ -21,13 +22,14 @@ function ActiveWedding() {
 	const RSVPs = useSelector((store) => store.activeWeddingReplis);
 
 	const [editWedding, setEditWedding] = useState(false);
+	const [addEvent, setAddEvent] = useState(false);
 
 	useEffect(() => {
 		dispatch({ type: "GET_ACTIVE_WEDDING_DETAILS", payload: wedding_id });
 	}, []);
 
 	// TODO: Create and source in components for:
-	// - Edit wedding details form
+	// - Connect edit wedding form to saga and server
 	// - Add/edit event form
 	// - Assign guests to events
 	// - Send RSVPs via email(single vs batch?): how do we cache temp passwords/can encriptLib decrypt on server before sending?
@@ -55,20 +57,26 @@ function ActiveWedding() {
 							>
 								edit wedding details
 							</Button>
+							{details[0] && (
+								<EditWeddingDetailsForm
+									editWedding={editWedding}
+									setEditWedding={setEditWedding}
+									details={details}
+								/>
+							)}
 						</div>
 					))}
 				</Grid>
 				<Grid item xs={12} sm={12} md={12}>
 					<h2>Wedding Events</h2>
-					<Button>Add an event</Button>
-
-					{details[0] && (
-						<EditWeddingDetailsForm
-							editWedding={editWedding}
-							setEditWedding={setEditWedding}
-							details={details}
-						/>
-					)}
+					<Button
+                    onClick={()=> setAddEvent(!addEvent)}
+                    >Add an event</Button>
+					<AddEventForm
+						addEvent={addEvent}
+						setAddEvent={setAddEvent}
+                        wedding_id={wedding_id}
+					/>
 
 					<Grid container spacing={1}>
 						{events.map((event) => (
