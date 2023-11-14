@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import EditWeddingDetailsForm from "../EditWeddingDetailsForm/EditWeddingDetailsForm";
 import AddEventForm from "../AddEventForm/AddEventForm";
 import EditEventForm from "../EditEventForm/EditEventForm";
+import AddGuestToEventForm from "../AddGuestToEventForm/AddGuestToEventForm";
 
 function ActiveWedding() {
 	const dispatch = useDispatch();
@@ -25,6 +26,7 @@ function ActiveWedding() {
 	const [editWedding, setEditWedding] = useState(false);
 	const [addEvent, setAddEvent] = useState(false);
 	const [editEvent, setEditEvent] = useState(false);
+    const [addGuests, setAddGuests] = useState(false);
 
 	useEffect(() => {
 		dispatch({ type: "GET_ACTIVE_WEDDING_DETAILS", payload: wedding_id });
@@ -32,12 +34,11 @@ function ActiveWedding() {
 
 	// TODO: Create and source in components for:
 	// - Connect edit wedding form to saga and server
-	// - Add/edit event form
+	// - Connect add/edit event forms to saga and server
 	// - Assign guests to events
 	// - Send RSVPs via email(single vs batch?): how do we cache temp passwords/can encriptLib decrypt on server before sending?
 	// - Add/edit meals form
 	// - Add/edit announcement form
-	// - Visualize RSVP data and Fix query?
 
 	return (
 		<Container maxWidth="lg">
@@ -71,37 +72,47 @@ function ActiveWedding() {
 				</Grid>
 				<Grid item xs={12} sm={12} md={12}>
 					<h2>Wedding Events</h2>
-					<Button
-                    onClick={()=> setAddEvent(!addEvent)}
-                    >Add an event</Button>
+					<Button onClick={() => setAddEvent(!addEvent)}>
+						Add an event
+					</Button>
 					<AddEventForm
 						addEvent={addEvent}
 						setAddEvent={setAddEvent}
-                        wedding_id={wedding_id}
+						wedding_id={wedding_id}
 					/>
 
 					<Grid container spacing={1}>
-						{events.map((event) => (
-							<Grid item xs={12} sm={6} md={3}>
-								<div key={event.id}>
-									{/* <p>{event.wedding_id}</p> */}
-									<p>{event.event_broadcast}</p>
-									<h4>{event.event_name}</h4>
-									<p>{event.event_street_address}</p>
-									<p>{event.event_city}</p>
-									<p>{event.event_state}</p>
-									<p>{event.event_zip}</p>
-									<p>{event.event_maps_url}</p>
-									<p>{event.event_date}</p>
-									<p>{event.event_start_time}</p>
-									<p>{event.event_end_time}</p>
-									<Button
-                                    onClick={()=>setEditEvent(!editEvent)}
-                                    >Edit event</Button>
-								</div>
-                                <EditEventForm editEvent={editEvent} setEditEvent={setEditEvent} event={event} />
-							</Grid>
-						))}
+						{events.map(
+							(event) =>
+								event.event_broadcast && (
+									<Grid item xs={12} sm={6} md={3}>
+										<div key={event.id}>
+											{/* <p>{event.wedding_id}</p> */}
+											<h4>{event.event_name}</h4>
+											<p>{event.event_street_address}</p>
+											<p>{event.event_city}</p>
+											<p>{event.event_state}</p>
+											<p>{event.event_zip}</p>
+											<p>{event.event_maps_url}</p>
+											<p>{event.event_date}</p>
+											<p>{event.event_start_time}</p>
+											<p>{event.event_end_time}</p>
+											<Button
+												onClick={() =>
+													setEditEvent(!editEvent)
+												}
+											>
+												Edit event
+											</Button>
+										</div>
+										<EditEventForm
+											editEvent={editEvent}
+											setEditEvent={setEditEvent}
+											event={event}
+										/>
+									</Grid>
+								)
+						)}
 					</Grid>
 				</Grid>
 
@@ -129,7 +140,18 @@ function ActiveWedding() {
 
 				<Grid item xs={12} sm={12} md={12}>
 					<h2>Guest List</h2>
-					<Button>Manage guest list</Button>
+					<Button onClick={() => setAddGuests(!addGuests)}>
+						Manage guest list
+					</Button>
+					{guests && (
+						<AddGuestToEventForm
+							addGuests={addGuests}
+							setAddGuests={setAddGuests}
+							wedding_id={wedding_id}
+                            events={events}
+                            guests={guests}
+						/>
+					)}
 					<Grid container spacing={1}>
 						{guests.map((guest) => (
 							<Grid item xs={12} sm={6} md={3}>
@@ -254,8 +276,8 @@ function ActiveWedding() {
 						{meals.map((meal) => (
 							<Grid item xs={12} sm={6} md={3}>
 								<div key={meal.id}>
-									<p> {meal.id} </p>
-									<p>{meal.meal_name}</p>
+									{/* <p> {meal.id} </p> */}
+									<h3>{meal.meal_name}</h3>
 									<p>{meal.meal_description}</p>
 								</div>
 							</Grid>
