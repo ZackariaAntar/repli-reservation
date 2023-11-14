@@ -12,34 +12,19 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 
-function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
+function EditEventForm({ editEvent, setEditEvent, event }) {
 
+	const [changeEvent, setChangeEvent] = useState(event);
 
-	const eventDetails = {
-		wedding_id: wedding_id,
-		event_broadcast: true,
-		event_name: "",
-		event_street_address: "",
-		event_city: "",
-		event_state: "",
-		event_zip: "",
-		event_maps_url: "",
-		event_date: "",
-		event_start_time: "",
-		event_end_time: "",
-	};
-
-	const [event, setEvent] = useState(eventDetails);
-	console.log(event.event_broadcast);
-	const postEvent = (e) => {
+	const updateEvent = (e) => {
 		e.preventDefault();
-		alert("CONNECT AddEventForm TO SAGA AND SERVER");
+		alert("CONNECT EditEventForm TO SAGA AND SERVER");
 	};
 	return (
-		<Dialog open={addEvent} onClose={() => setAddEvent(!addEvent)}>
+		<Dialog open={editEvent} onClose={() => setEditEvent(!editEvent)}>
 			<form
-				method="POST"
-				onSubmit={postEvent}
+				method="PUT"
+				onSubmit={updateEvent}
 				style={{
 					display: "flex",
 					flexDirection: "column",
@@ -62,21 +47,25 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 					<Grid item xs={12} sm={6} md={8}>
 						<FormControl>
 							<FormLabel id="radio-buttons-group-label">
-								Share with guests right away?
+								Share with guests?
 							</FormLabel>
 							<RadioGroup
 								aria-labelledby="radio-buttons-group-label"
 								defaultValue={true}
 								name="radio-buttons-group"
-                                sx={{display:'flex', flexDirection:'row', mb:1.25}}
+								sx={{
+									display: "flex",
+									flexDirection: "row",
+									mb: 1.25,
+								}}
 							>
 								<FormControlLabel
 									value={true}
 									control={
 										<Radio
 											onChange={(e) =>
-												setEvent({
-													...event,
+												setChangeEvent({
+													...changeEvent,
 													event_broadcast:
 														e.target.value,
 												})
@@ -90,8 +79,8 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 									control={
 										<Radio
 											onChange={(e) =>
-												setEvent({
-													...event,
+												setChangeEvent({
+													...changeEvent,
 													event_broadcast:
 														e.target.value,
 												})
@@ -110,8 +99,8 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 							sx={{ mb: 2 }}
 							value={event.event_name}
 							onChange={(e) =>
-								setEvent({
-									...event,
+								setChangeEvent({
+									...changeEvent,
 									event_name: e.target.value,
 								})
 							}
@@ -121,14 +110,15 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 							}}
 						/>
 					</Grid>
-					<Grid item xs={12} sm={6} md={3}>
+					<Grid item xs={12} sm={6} md={5}>
 						<TextField
 							label="Date"
+                            fullWidth
 							sx={{ mb: 2 }}
 							value={event.event_date}
 							onChange={(e) =>
-								setEvent({
-									...event,
+								setChangeEvent({
+									...changeEvent,
 									event_date: e.target.value,
 								})
 							}
@@ -142,12 +132,12 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 						<TextField
 							label="Start Time"
 							type="time"
-                            step="15"
+							step="15"
 							sx={{ mb: 2 }}
 							value={event.event_start_time}
 							onChange={(e) =>
-								setEvent({
-									...event,
+								setChangeEvent({
+									...changeEvent,
 									event_start_time: e.target.value,
 								})
 							}
@@ -164,8 +154,8 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 							sx={{ mb: 2 }}
 							value={event.event_end_time}
 							onChange={(e) =>
-								setEvent({
-									...event,
+								setChangeEvent({
+									...changeEvent,
 									event_end_time: e.target.value,
 								})
 							}
@@ -182,8 +172,8 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 							sx={{ mb: 2 }}
 							value={event.event_street_address}
 							onChange={(e) =>
-								setEvent({
-									...event,
+								setChangeEvent({
+									...changeEvent,
 									event_street_address: e.target.value,
 								})
 							}
@@ -199,8 +189,8 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 							sx={{ mb: 2 }}
 							value={event.event_city}
 							onChange={(e) =>
-								setEvent({
-									...event,
+								setChangeEvent({
+									...evchangeEventent,
 									event_city: e.target.value,
 								})
 							}
@@ -216,8 +206,8 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 							sx={{ mb: 2 }}
 							value={event.event_state}
 							onChange={(e) =>
-								setEvent({
-									...event,
+								setChangeEvent({
+									...changeEvent,
 									event_state: e.target.value,
 								})
 							}
@@ -233,8 +223,8 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 							sx={{ mb: 2 }}
 							value={event.event_zip}
 							onChange={(e) =>
-								setEvent({
-									...event,
+								setChangeEvent({
+									...changeEvent,
 									event_zip: e.target.value,
 								})
 							}
@@ -250,8 +240,8 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 							sx={{ mb: 2 }}
 							value={event.event_maps_url}
 							onChange={(e) =>
-								setEvent({
-									...event,
+								setChangeEvent({
+									...changeEvent,
 									event_maps_url: e.target.value,
 								})
 							}
@@ -268,7 +258,7 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 							fullWidth
 							sx={{ mt: 1, height: "50px" }}
 						>
-							Add event
+							Save changes
 						</Button>
 					</Grid>
 				</Grid>
@@ -277,4 +267,4 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 	);
 }
 
-export default AddEventForm;
+export default EditEventForm;

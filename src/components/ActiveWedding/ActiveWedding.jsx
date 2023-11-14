@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 
 import EditWeddingDetailsForm from "../EditWeddingDetailsForm/EditWeddingDetailsForm";
 import AddEventForm from "../AddEventForm/AddEventForm";
+import EditEventForm from "../EditEventForm/EditEventForm";
 
 function ActiveWedding() {
 	const dispatch = useDispatch();
@@ -23,6 +24,7 @@ function ActiveWedding() {
 
 	const [editWedding, setEditWedding] = useState(false);
 	const [addEvent, setAddEvent] = useState(false);
+	const [editEvent, setEditEvent] = useState(false);
 
 	useEffect(() => {
 		dispatch({ type: "GET_ACTIVE_WEDDING_DETAILS", payload: wedding_id });
@@ -93,8 +95,11 @@ function ActiveWedding() {
 									<p>{event.event_date}</p>
 									<p>{event.event_start_time}</p>
 									<p>{event.event_end_time}</p>
-									<Button>Edit event</Button>
+									<Button
+                                    onClick={()=>setEditEvent(!editEvent)}
+                                    >Edit event</Button>
 								</div>
+                                <EditEventForm editEvent={editEvent} setEditEvent={setEditEvent} event={event} />
 							</Grid>
 						))}
 					</Grid>
