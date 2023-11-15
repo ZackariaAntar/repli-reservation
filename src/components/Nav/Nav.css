@@ -12,7 +12,9 @@
 .nav a {
   text-decoration: none;
 }
-
+.nav img{
+  margin-left: 20px;
+}
 .nav-title {
   font-size: 24px;
   font-weight: 700;
