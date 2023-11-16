@@ -37,7 +37,7 @@ function ActiveWedding() {
 				return to dashboard
 			</Button>
 			<Grid container spacing={2}>
-				<Grid item xs={12} sm={6} md={4}>
+				<Grid item xs={12} sm={12} md={12}>
 					<h5>WEDDING DETAILS</h5>
 					{details.map((info) => (
 						<div key={info.id}>
@@ -50,103 +50,187 @@ function ActiveWedding() {
 						</div>
 					))}
 				</Grid>
-				<Grid item xs={12} sm={6} md={4}>
-					<h5>Wedding Events</h5>
+				<Grid item xs={12} sm={12} md={12}>
+					<h2>Wedding Events</h2>
 					<Button>Add an event</Button>
-					{events.map((event) => (
-						<div key={event.id}>
-							<p>{event.wedding_id}</p>
-							<p>{event.event_broadcast}</p>
-							<p>{event.event_name}</p>
-							<p>{event.event_street_address}</p>
-							<p>{event.event_city}</p>
-							<p>{event.event_state}</p>
-							<p>{event.event_zip}</p>
-							<p>{event.event_maps_url}</p>
-							<p>{event.event_date}</p>
-							<p>{event.event_start_time}</p>
-							<p>{event.event_end_time}</p>
-							<Button>Edit event</Button>
-						</div>
-					))}
+					<Grid container spacing={1}>
+						{events.map((event) => (
+							<Grid item xs={12} sm={6} md={3}>
+								<div key={event.id}>
+									{/* <p>{event.wedding_id}</p> */}
+									<p>{event.event_broadcast}</p>
+									<h4>{event.event_name}</h4>
+									<p>{event.event_street_address}</p>
+									<p>{event.event_city}</p>
+									<p>{event.event_state}</p>
+									<p>{event.event_zip}</p>
+									<p>{event.event_maps_url}</p>
+									<p>{event.event_date}</p>
+									<p>{event.event_start_time}</p>
+									<p>{event.event_end_time}</p>
+									<Button>Edit event</Button>
+								</div>
+							</Grid>
+						))}
+					</Grid>
 				</Grid>
-				<Grid item xs={12} sm={6} md={4}>
-					<h5>Announcements</h5>
+
+				<Grid item xs={12} sm={12} md={12}>
+					<h2>Announcements</h2>
 					<Button>Add an announcement</Button>
-					{posts.map((post) => (
-						<div key={post.id}>
-							<p> {post.id} </p>
-							<p>{post.announcement}</p>
-							<p>{post.creator_first_name}</p>
-							<p>{post.creator_last_name}</p>
-							<p>{post.event_id}</p>
-							<p>{post.event_name}</p>
-							<p>{post.event_date}</p>
-						</div>
-					))}
+					<Grid container spacing={1}>
+						{posts.map((post) => (
+							<Grid item xs={12} sm={6} md={3}>
+								<div key={post.id}>
+									{/* <p> {post.id} </p> */}
+									<h4>
+										{post.event_name} <br />{" "}
+										{post.event_date}
+									</h4>
+									<p>{post.announcement}</p>
+									<p>{post.creator_first_name}</p>
+									<p>{post.creator_last_name}</p>
+									{/* <p>{post.event_id}</p> */}
+								</div>
+							</Grid>
+						))}
+					</Grid>
 				</Grid>
-				<Grid item xs={12} sm={6} md={4}>
-					<h5>Guest List</h5>
+
+				<Grid item xs={12} sm={12} md={12}>
+					<h2>Guest List</h2>
 					<Button>Manage guest list</Button>
-					{guests.map((guest) => (
-						<div key={guest.id}>
-							<p> {guest.id} </p>
-							<p>{guest.user_id}</p>
-							<p>{guest.first_name}</p>
-							<p>{guest.last_name}</p>
-							<p>{guest.phone_number}</p>
-							<p>{guest.street_address}</p>
-							<p>{guest.unit}</p>
-							<p>{guest.city}</p>
-							<p>{guest.state}</p>
-							<p>{guest.zip}</p>
-							<p>{guest.allergies}</p>
-							<p>{guest.accommodations}</p>
-							<p>{guest.contact_email}</p>
-							<p>{guest.spouse_party}</p>
-							<p>{guest.relationship_to_spouse}</p>
-							<p>{guest.can_plus_one}</p>
-							<p>{guest.plus_one_id}</p>
-							<p>{guest.meal_id}</p>
-							<p>{guest.plus_one_id}</p>
-							<p>{guest.plus_one_first_name}</p>
-							<p>{guest.plus_one_last_name}</p>
-							<p>{guest.plus_one_meal_id}</p>
-							<p>{guest.plus_one_notes}</p>
-							<p>{guest.meal_name}</p>
-							<Button>edit guest</Button>
-						</div>
-					))}
+					<Grid container spacing={1}>
+						{guests.map((guest) => (
+							<Grid item xs={12} sm={6} md={3}>
+								<div key={guest.id}>
+									<p> {guest.id} </p>
+									<p> user_id: {guest.user_id}</p>
+									<p> first_name: {guest.first_name}</p>
+									<p> last_name: {guest.last_name}</p>
+									<p> phone_number: {guest.phone_number}</p>
+									<p>
+										{" "}
+										street_address: {guest.street_address}
+									</p>
+									<p> unit: {guest.unit}</p>
+									<p> city: {guest.city}</p>
+									<p> state: {guest.state}</p>
+									<p> zip: {guest.zip}</p>
+									<p> allergies: {guest.allergies}</p>
+									<p>
+										{" "}
+										accommodations: {guest.accommodations}
+									</p>
+									<p> contact_email: {guest.contact_email}</p>
+									<p> spouse_party: {guest.spouse_party}</p>
+									<p>
+										relationship_to_spouse:
+										{guest.relationship_to_spouse}
+									</p>
+									<p>
+										{" "}
+										guest_meal_choice:{" "}
+										{guest.guest_meal_choice}
+									</p>
+									<p>
+										can_plus_one:{" "}
+										{guest.can_plus_one ? `Yes` : `No`}
+									</p>
+									<p> plus_one_id: {guest.plus_one_id}</p>
+									<p>
+										{" "}
+										plus_one_first_name:{" "}
+										{guest.plus_one_first_name}
+									</p>
+									<p>
+										{" "}
+										plus_one_last_name:{" "}
+										{guest.plus_one_last_name}
+									</p>
+									<p>
+										{" "}
+										plus_one_meal_choice:{" "}
+										{guest.plus_one_meal_choice}
+									</p>
+									<p>
+										{" "}
+										plus_one_notes: {guest.plus_one_notes}
+									</p>
+									<Button>edit guest</Button>
+								</div>
+							</Grid>
+						))}
+					</Grid>
 				</Grid>
-				<Grid item xs={12} sm={6} md={4}>
-					<h5>RSVPs</h5>
+
+				<Grid item xs={12} sm={12} md={12}>
+					<h2>RSVPs</h2>
 					<Button>Manage rsvps</Button>
-					{RSVPs.map((repli) => (
-						<div key={repli.id}>
-							<p> {repli.id} </p>
-							<p>{repli.event_id}</p>
-							<p>{repli.event_name}</p>
-							<p>{repli.event_date}</p>
-							<p>{repli.guest_id}</p>
-							<p>{repli.first_name}</p>
-							<p>{repli.last_name}</p>
-							<p>{repli.is_attending}</p>
-							<p>{repli.plus_one_id}</p>
-							<p>{repli.plus_one_first}</p>
-							<p>{repli.plus_one_last}</p>
-						</div>
-					))}
+					<Grid container spacing={1}>
+						{RSVPs.map((repli) => (
+							<Grid item xs={12} sm={6} md={3}>
+								<div key={repli.event_id}>
+									<h5>
+										{repli.event_name} - {repli.event_date}
+									</h5>
+									<p>
+										<span>
+											Attending: {repli.num_attending}
+										</span>{" "}
+										<span>
+											Pending: {repli.num_pending}
+										</span>{" "}
+										<span>
+											Declined: {repli.num_declined}
+										</span>
+									</p>
+									<p></p>
+									{repli.guests.map((guest) => (
+										<p key={guest.guest_id}>
+											{guest.plus_one_first_name ? (
+												<span>
+													Guest:{" "}
+													{guest.guest_first_name}{" "}
+													{guest.guest_last_name}
+													<br />
+													Plus one:{" "}
+													{
+														guest.plus_one_first_name
+													}{" "}
+													{guest.plus_one_last_name}{" "}
+												</span>
+											) : (
+												<span>
+													Guest:{" "}
+													{guest.guest_first_name}{" "}
+													{guest.guest_last_name}
+												</span>
+											)}
+											{"  "} Status: {"  "}
+											{guest.status}
+										</p>
+									))}
+								</div>
+							</Grid>
+						))}
+					</Grid>
 				</Grid>
-				<Grid item xs={12} sm={6} md={4}>
-					<h5>Meals</h5>
+
+				<Grid item xs={12} sm={12} md={12}>
+					<h2>Meals</h2>
 					<Button>Manage meals</Button>
-					{meals.map((meal) => (
-						<div key={meal.id}>
-							<p> {meal.id} </p>
-							<p>{meal.meal_name}</p>
-							<p>{meal.meal_description}</p>
-						</div>
-					))}
+					<Grid container spacing={1}>
+						{meals.map((meal) => (
+							<Grid item xs={12} sm={6} md={3}>
+								<div key={meal.id}>
+									<p> {meal.id} </p>
+									<p>{meal.meal_name}</p>
+									<p>{meal.meal_description}</p>
+								</div>
+							</Grid>
+						))}
+					</Grid>
 				</Grid>
 			</Grid>
 		</Container>
