@@ -10,6 +10,7 @@ import EditWeddingDetailsForm from "../EditWeddingDetailsForm/EditWeddingDetails
 import AddEventForm from "../AddEventForm/AddEventForm";
 import EditEventForm from "../EditEventForm/EditEventForm";
 import AddGuestToEventForm from "../AddGuestToEventForm/AddGuestToEventForm";
+import AddAnnouncementForm from "../AddAnnouncementForm/AddAnnouncementForm";
 
 function ActiveWedding() {
 	const dispatch = useDispatch();
@@ -27,6 +28,8 @@ function ActiveWedding() {
 	const [addEvent, setAddEvent] = useState(false);
 	const [editEvent, setEditEvent] = useState(false);
     const [addGuests, setAddGuests] = useState(false);
+	const [addAnnouncement, setAddAnnouncement] = useState(false);
+
 
 	useEffect(() => {
 		dispatch({ type: "GET_ACTIVE_WEDDING_DETAILS", payload: wedding_id });
@@ -116,14 +119,23 @@ function ActiveWedding() {
 											event={event}
 										/>
 									</Grid>
-								
+
 						)}
 					</Grid>
 				</Grid>
 
 				<Grid item xs={12} sm={12} md={12}>
 					<h2>Announcements</h2>
-					<Button>Add an announcement</Button>
+					<Button
+					onClick={()=> setAddAnnouncement(!addAnnouncement)}
+					>Add an announcement</Button>
+					{posts &&(
+					<AddAnnouncementForm
+					addAnnouncement={addAnnouncement}
+					setAddAnnouncement={setAddAnnouncement}
+					events={events}
+					wedding_id={wedding_id}
+					/>)}
 					<Grid container spacing={1}>
 						{posts.map((post) => (
 							<Grid item xs={12} sm={6} md={3}>
