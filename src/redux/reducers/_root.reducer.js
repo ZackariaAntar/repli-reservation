@@ -9,6 +9,7 @@ import activeWeddingGuests from './active.wedding.guests.reducer';
 import activeWeddingMeals from './active.wedding.meals.reducer';
 import activeWeddingPosts from './active.wedding.posts.reducer';
 import activeWeddingReplis from './active.wedding.replis.reducer';
+import activeRsvpDetails from './active.rsvp.details.reducer';
 import relationships from './relationship.reducer';
 import changePassword from './change.password.reducer';
 
@@ -30,6 +31,7 @@ const rootReducer = combineReducers({
 	activeWeddingMeals, // TODO: UPDATE COMMENT WITH CONTENTS
 	activeWeddingPosts, // TODO: UPDATE COMMENT WITH CONTENTS
 	activeWeddingReplis, // TODO: UPDATE COMMENT WITH CONTENTS
+	activeRsvpDetails,
 	relationships,
 	changePassword
 });

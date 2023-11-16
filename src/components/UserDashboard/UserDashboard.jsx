@@ -97,7 +97,7 @@ function UserDashboard() {
 						<p>{invite.wedding_blurb}</p>
 						<p>Allowed plus one: {invite.can_plus_one}</p>
 						{/* more to come */}
-						<Button component={Link} to={`/invitation-details/${invite.id}`}>
+						<Button component={Link} to={`/invitation-details/${invite.wedding_id}`}>
 							See details
 						</Button>
 					</div>
