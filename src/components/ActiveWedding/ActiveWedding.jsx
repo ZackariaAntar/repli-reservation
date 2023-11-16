@@ -84,11 +84,16 @@ function ActiveWedding() {
 					<Grid container spacing={1}>
 						{events.map(
 							(event) =>
-								event.event_broadcast && (
+
 									<Grid item xs={12} sm={6} md={3}>
 										<div key={event.id}>
 											{/* <p>{event.wedding_id}</p> */}
 											<h4>{event.event_name}</h4>
+											<p>
+												{event.event_broadcast
+													? "Guests can see"
+													: "Guests can't see"}
+											</p>
 											<p>{event.event_street_address}</p>
 											<p>{event.event_city}</p>
 											<p>{event.event_state}</p>
@@ -111,7 +116,7 @@ function ActiveWedding() {
 											event={event}
 										/>
 									</Grid>
-								)
+								
 						)}
 					</Grid>
 				</Grid>
@@ -148,8 +153,8 @@ function ActiveWedding() {
 							addGuests={addGuests}
 							setAddGuests={setAddGuests}
 							wedding_id={wedding_id}
-                            events={events}
-                            guests={guests}
+							events={events}
+							guests={guests}
 						/>
 					)}
 					<Grid container spacing={1}>

@@ -27,10 +27,12 @@ function* loginUser(action) {
       // if user isn't in the database or
       // if the username and password don't match in the database
       yield put({ type: 'LOGIN_FAILED' });
-      yield put({type:'SET_CHANGE_PASSWORD', payload:{change:true}})
-       yield put({ type: 'CLEAR_LOGIN_ERROR' });
-    } else {
-      // Got an error that wasn't a 401
+      yield put({ type: 'CLEAR_LOGIN_ERROR' });
+    } else if(error.response.status === 449){
+       yield put({type:'SET_CHANGE_PASSWORD', payload:{change:true}})
+    }
+    else {
+      // Got an error that wasn't a 401 or 402
       // Could be anything, but most common cause is the server is not started
       yield put({ type: 'LOGIN_FAILED_NO_CODE' });
     }
