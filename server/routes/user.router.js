@@ -15,6 +15,32 @@ router.get("/", rejectUnauthenticated, (req, res) => {
 	res.send(req.user);
 });
 
+router.get("/check_existing_users/:wedding_id/:username", (req, res)=>{
+const { wedding_id, username } = req.params;
+
+	console.log('req.params', req.params);
+	console.log(typeof wedding_id);
+	console.log(typeof username);
+
+	queryText = `
+	SELECT "user".id AS guest_id, "user".username, guest_list_junction.wedding_id AS check_wed_id FROM "user"
+	JOIN guest_list_junction ON guest_list_junction.guest_id = "user".id
+	WHERE "user".username = $1;
+	`;
+	pool.query(queryText, [username])
+	.then((result)=>{
+		console.log('result.rows', result.rows);
+		res.send(result.rows)
+
+	}).catch((err)=>{
+		res.sendStatus(500);
+		console.log("error on /check_for_duplicates", err);
+
+	})
+});
+
+
+
 // Handles POST request with new user data
 // async post to guest_info table after user create profile for themselves
 router.post("/register", async (req, res, next) => {
@@ -33,7 +59,7 @@ router.post("/register", async (req, res, next) => {
 	} = req.body;
 
 	const username = req.body.username;
-	const password = req.body.password;
+	const password = encryptLib.encryptPassword(req.body.password);
 
 	const client = await pool.connect();
 
@@ -97,7 +123,7 @@ router.post("/invited_guest", async (req, res, next) => {
 	} = req.body;
 
 	const username = req.body.username;
-	const password = encryptLib.encryptPassword(req.body.password);
+	const password = encryptLib.encryptPassword(req.body.password); // TODO: figure out if we need to leave this unencrypted for emailing purposes.
 
 	console.log("new guest:", req.body);
 
@@ -153,14 +179,42 @@ router.post("/invited_guest", async (req, res, next) => {
 		res.sendStatus(201);
 	} catch (error) {
 		await client.query("ROLLBACK");
-		console.log("ERROR WITH REGISTRATION", error);
+		console.log("ERROR WITH /invited_guest", error);
 		res.sendStatus(500);
 	} finally {
 		await client.release();
 	}
 });
 
+router.post('/existing_guest', (req,res)=>{
+	const {wedding_id, guest_id, relationship, spouse_association, can_plus_one} = req.body
+
+	const assignRelationshipQuery = `
+	INSERT INTO guest_list_junction(wedding_id, guest_id, relationship, spouse_association, can_plus_one)
+	VALUES($1, $2, $3, $4, $5)
+	;`;
+
+	const guestInfo = [
+		wedding_id,
+		guest_id,
+		relationship,
+		spouse_association,
+		can_plus_one,
+	];
+
+
+	pool.query(assignRelationshipQuery, guestInfo )
+	.then((result)=>{
+		res.sendStatus(201)
+	}).catch((err)=>{
+		console.log('ERROR WITH POST ON /existing_guest', err);
+		res.sendStatus(500)
+	})
+});
+
+
 router.post("/change_password", (req, res) => {
+	console.log('ARRIVED ON /CHANGE_PASSWORD');
 	const { username, oldPassword, newPassword } = req.body;
 	pool.query('SELECT * FROM "user" WHERE username = $1', [username])
 		.then((result) => {
@@ -202,7 +256,7 @@ router.post("/change_password", (req, res) => {
 // this middleware will send a 404 if not successful
 router.post("/login", userStrategy.authenticate("local"), (req, res) => {
 	if (req.user.is_temp) {
-		console.log("user IS temp");
+		console.log("USER LOGIN ATTEMPTED WITH TEMPORARY PASSWORD, REDIRECTING THEM TO CHANGE THEIR PASSWORD");
 		res.sendStatus(401);
 	} else {
 		res.sendStatus(200);

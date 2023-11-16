@@ -26,6 +26,7 @@ CREATE TABLE "events" (
     "event_state" VARCHAR(100),
     "event_zip" INT,
     "event_maps_url" VARCHAR(2500),
+    "event_date" DATE,
     "event_start_time" TIME,
     "event_end_time" TIME
 );
@@ -41,7 +42,7 @@ CREATE TABLE "relationship" (
 );
 CREATE TABLE "guest_info" (
     "id" SERIAL PRIMARY KEY,
-    "user_id" INT REFERENCES "user"(id),
+    "user_id" INT UNIQUE REFERENCES "user"(id),
     "first_name" VARCHAR(100) NOT NULL,
     "last_name" VARCHAR(100) NOT NULL,
     "phone_number" VARCHAR(16) DEFAULT NULL,
@@ -63,7 +64,7 @@ CREATE TABLE "plus_one" (
 CREATE TABLE "guest_list_junction" (
     "id" SERIAL PRIMARY KEY,
     "wedding_id" INT REFERENCES "wedding"(id),
-    "guest_id" INT REFERENCES "guest_info"(id),
+    "guest_id" INT REFERENCES "guest_info"(user_id),
     "relationship" INT REFERENCES "relationship"(id),
     "spouse_association" VARCHAR,
     "can_plus_one" BOOLEAN,
@@ -84,6 +85,11 @@ CREATE TABLE "wedding_announcements" (
     "event_id" INT REFERENCES "events"(id),
     "announcement" VARCHAR(5000)
 );
+
+INSERT INTO relationship(category)
+VALUES ('Family'), ('Friend'), ('Family Friend'), ('Wedding Party');
+
+
 -- KEEPING THIS HERE AS A REFERENCE FOR IF/WHEN WE INCORPORATE IT TO THE PROJECT
 -- CREATE TABLE "wedding_seating_chart" (
 --     "id" SERIAL PRIMARY KEY,

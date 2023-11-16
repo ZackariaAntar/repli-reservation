@@ -63,6 +63,126 @@ router.get("/active_details/:id", rejectUnauthenticated, (req, res) => {
 			res.sendStatus(500);
 		});
 });
+router.get("/active_events/:id", rejectUnauthenticated, (req, res) => {
+	const queryText = `SELECT events.*, to_char(events.event_date, 'Month DD, YYYY') AS event_date FROM events WHERE events.wedding_id = $1;`;
+	const wedding_id = req.params.id;
+	pool.query(queryText, [wedding_id])
+		.then((result) => res.send(result.rows))
+		.catch((err) => {
+			console.log(
+				`Failed to ${queryText}, $1 used in query is: ${wedding_id}`,
+				err
+			);
+			res.sendStatus(500);
+		});
+});
+router.get("/active_guests/:id", rejectUnauthenticated, (req, res) => {
+	const queryText = `
+	SELECT
+	guest_info.*,
+	"user".username AS contact_email,
+	guest_list_junction.spouse_association AS spouse_party,
+	relationship.category AS relationship_to_spouse,
+	guest_list_junction.can_plus_one,
+	guest_list_junction.plus_one_id,
+	guest_list_junction.meal_id,
+	plus_one.id AS plus_one_id,
+	plus_one.first_name AS plus_one_first_name,
+	plus_one.last_name AS plus_one_last_name,
+	plus_one.meal_id AS plus_one_meal_id,
+	plus_one.notes AS plus_one_notes,
+	meal_options.meal_name
+	FROM guest_info
+	JOIN "user" ON "user".id = guest_info.user_id
+	JOIN guest_list_junction ON guest_list_junction.guest_id = guest_info.user_id
+	JOIN plus_one ON plus_one.id = guest_list_junction.plus_one_id
+	JOIN relationship ON relationship.id = guest_list_junction.relationship
+	JOIN meal_options ON meal_options.id = guest_list_junction.meal_id
+	WHERE guest_list_junction.wedding_id = $1;
+	;`;
+	const wedding_id = req.params.id;
+	pool.query(queryText, [wedding_id])
+		.then((result) => res.send(result.rows))
+		.catch((err) => {
+			console.log(
+				`Failed to ${queryText}, $1 used in query is: ${wedding_id}`,
+				err
+			);
+			res.sendStatus(500);
+		});
+});
+
+router.get("/active_meals/:id", rejectUnauthenticated, (req, res) => {
+	const queryText = `SELECT meal_options.id, meal_options.meal_name, meal_options.meal_description FROM meal_options WHERE meal_options.wedding_id = $1;`;
+	const wedding_id = req.params.id;
+	pool.query(queryText, [wedding_id])
+		.then((result) => res.send(result.rows))
+		.catch((err) => {
+			console.log(
+				`Failed to ${queryText}, $1 used in query is: ${wedding_id}`,
+				err
+			);
+			res.sendStatus(500);
+		});
+});
+
+router.get("/active_posts/:id", rejectUnauthenticated, (req, res) => {
+	const queryText = `
+	SELECT
+	wedding_announcements.id,
+	wedding_announcements.announcement,
+	guest_info.first_name AS creator_first_name,
+	guest_info.last_name AS creator_last_name,
+	events.id AS event_id,
+	events.event_name,
+	to_char(events.event_date, 'Month DD, YYYY') AS event_date
+	FROM wedding_announcements
+	JOIN guest_info ON guest_info.user_id = wedding_announcements.creator_id
+	JOIN events ON events.id = wedding_announcements.event_id
+	WHERE wedding_announcements.wedding_id = $1;
+`;
+	const wedding_id = req.params.id;
+	pool.query(queryText, [wedding_id])
+		.then((result) => res.send(result.rows))
+		.catch((err) => {
+			console.log(
+				`Failed to ${queryText}, $1 used in query is: ${wedding_id}`,
+				err
+			);
+			res.sendStatus(500);
+		});
+});
+
+router.get("/active_replis/:id", rejectUnauthenticated, (req, res) => {
+	const queryText = `
+	SELECT
+	events.id AS event_id,
+	events.event_name,
+	events.event_date,
+	guest_info.user_id AS guest_id,
+	guest_info.first_name,
+	guest_info.last_name,
+	event_attendees_junction.is_attending,
+	plus_one.id AS plus_one_id,
+	plus_one.first_name AS plus_one_first,
+	plus_one.last_name AS plus_one_last
+	FROM event_attendees_junction
+	JOIN events ON events.id = event_attendees_junction.event_id
+	JOIN guest_info ON guest_info.id = event_attendees_junction.guest_id
+	JOIN guest_list_junction ON guest_list_junction.wedding_id = event_attendees_junction.wedding_id
+	JOIN plus_one ON plus_one.id = guest_list_junction.plus_one_id
+	WHERE event_attendees_junction.wedding_id = $1;`;
+	const wedding_id = req.params.id;
+	pool.query(queryText, [wedding_id])
+		.then((result) => res.send(result.rows))
+		.catch((err) => {
+			console.log(
+				`Failed to ${queryText}, $1 used in query is: ${wedding_id}`,
+				err
+			);
+			res.sendStatus(500);
+		});
+});
 
 
 router.post("/new_wedding", rejectUnauthenticated, (req, res) => {
