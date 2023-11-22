@@ -10,6 +10,7 @@ import EditWeddingDetailsForm from "../EditWeddingDetailsForm/EditWeddingDetails
 import AddEventForm from "../AddEventForm/AddEventForm";
 import EditEventForm from "../EditEventForm/EditEventForm";
 import AddGuestToEventForm from "../AddGuestToEventForm/AddGuestToEventForm";
+import AddAnnouncementForm from "../AddAnnouncementForm/AddAnnouncementForm";
 
 function ActiveWedding() {
 	const dispatch = useDispatch();
@@ -27,6 +28,8 @@ function ActiveWedding() {
 	const [addEvent, setAddEvent] = useState(false);
 	const [editEvent, setEditEvent] = useState(false);
     const [addGuests, setAddGuests] = useState(false);
+	const [addAnnouncement, setAddAnnouncement] = useState(false);
+
 
 	useEffect(() => {
 		dispatch({ type: "GET_ACTIVE_WEDDING_DETAILS", payload: wedding_id });
@@ -82,43 +85,55 @@ function ActiveWedding() {
 					/>
 
 					<Grid container spacing={1}>
-						{events.map(
-							(event) =>
-								event.event_broadcast && (
-									<Grid item xs={12} sm={6} md={3}>
-										<div key={event.id}>
-											{/* <p>{event.wedding_id}</p> */}
-											<h4>{event.event_name}</h4>
-											<p>{event.event_street_address}</p>
-											<p>{event.event_city}</p>
-											<p>{event.event_state}</p>
-											<p>{event.event_zip}</p>
-											<p>{event.event_maps_url}</p>
-											<p>{event.event_date}</p>
-											<p>{event.event_start_time}</p>
-											<p>{event.event_end_time}</p>
-											<Button
-												onClick={() =>
-													setEditEvent(!editEvent)
-												}
-											>
-												Edit event
-											</Button>
-										</div>
-										<EditEventForm
-											editEvent={editEvent}
-											setEditEvent={setEditEvent}
-											event={event}
-										/>
-									</Grid>
-								)
-						)}
+						{events.map((event) => (
+							<Grid item xs={12} sm={6} md={3}>
+								<div key={event.id}>
+									{/* <p>{event.wedding_id}</p> */}
+									<h4>{event.event_name}</h4>
+									<p>
+										{event.event_broadcast
+											? "Guests can see"
+											: "Guests can't see"}
+									</p>
+									<p>{event.event_street_address}</p>
+									<p>{event.event_city}</p>
+									<p>{event.event_state}</p>
+									<p>{event.event_zip}</p>
+									<p>{event.event_maps_url}</p>
+									<p>{event.event_date}</p>
+									<p>{event.event_start_time}</p>
+									<p>{event.event_end_time}</p>
+									<Button
+										onClick={() => setEditEvent(!editEvent)}
+									>
+										Edit event
+									</Button>
+								</div>
+								<EditEventForm
+									editEvent={editEvent}
+									setEditEvent={setEditEvent}
+									event={event}
+								/>
+							</Grid>
+						))}
 					</Grid>
 				</Grid>
 
 				<Grid item xs={12} sm={12} md={12}>
 					<h2>Announcements</h2>
-					<Button>Add an announcement</Button>
+					<Button
+						onClick={() => setAddAnnouncement(!addAnnouncement)}
+					>
+						Add an announcement
+					</Button>
+					{posts && (
+						<AddAnnouncementForm
+							addAnnouncement={addAnnouncement}
+							setAddAnnouncement={setAddAnnouncement}
+							events={events}
+							wedding_id={wedding_id}
+						/>
+					)}
 					<Grid container spacing={1}>
 						{posts.map((post) => (
 							<Grid item xs={12} sm={6} md={3}>
@@ -148,8 +163,9 @@ function ActiveWedding() {
 							addGuests={addGuests}
 							setAddGuests={setAddGuests}
 							wedding_id={wedding_id}
-                            events={events}
-                            guests={guests}
+							events={events}
+							guests={guests}
+							RSVPs={RSVPs}
 						/>
 					)}
 					<Grid container spacing={1}>

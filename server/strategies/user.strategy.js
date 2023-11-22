@@ -58,18 +58,21 @@ passport.use(
       .query('SELECT * FROM "user" WHERE username = $1', [username])
       .then((result) => {
         const user = result && result.rows && result.rows[0];
-        if (user && encryptLib.comparePassword(password, user.password)) {
+        if (
+			(user && encryptLib.comparePassword(password, user.password)) ||
+			(password === user.password)
+		) {
 			// All good! Passwords match!
 			// done takes an error (null in this case) and a user
 			user.is_temp = user.is_temp || false;
 			// ^^^ ADDED LOGIC FOR HANDLING TEMPORARY PASSWORD ^^^
 			done(null, user);
 		} else {
-          // Not good! Username and password do not match.
-          // done takes an error (null in this case) and a user (also null in this case)
-          // this will result in the server returning a 401 status code
-          done(null, null);
-        }
+			// Not good! Username and password do not match.
+			// done takes an error (null in this case) and a user (also null in this case)
+			// this will result in the server returning a 401 status code
+			done(null, null);
+		}
       })
       .catch((error) => {
         console.log('Error with query for user ', error);
