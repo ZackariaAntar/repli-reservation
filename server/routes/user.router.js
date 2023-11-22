@@ -257,7 +257,7 @@ router.post("/change_password", (req, res) => {
 router.post("/login", userStrategy.authenticate("local"), (req, res) => {
 	if (req.user.is_temp) {
 		console.log("USER LOGIN ATTEMPTED WITH TEMPORARY PASSWORD, REDIRECTING THEM TO CHANGE THEIR PASSWORD");
-		res.sendStatus(401);
+		res.sendStatus(449);
 	} else {
 		res.sendStatus(200);
 	}

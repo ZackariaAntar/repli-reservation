@@ -88,20 +88,23 @@ function UserDashboard() {
 					))}
 			</div>
 			<div>
-			{myRSVPs.length > 0 && <h4>My Invitations</h4>}
-			{myRSVPs &&
-				myRSVPs.map((invite) => (
-					<div key={invite.id}>
-						<p>{invite.wedding_title}</p>
-						<p>{invite.wedding_date}</p>
-						<p>{invite.wedding_blurb}</p>
-						<p>Allowed plus one: {invite.can_plus_one}</p>
-						{/* more to come */}
-						<Button component={Link} to={`/invitation-details/${invite.wedding_id}`}>
-							See details
-						</Button>
-					</div>
-				))}
+				{myRSVPs.length > 0 && <h4>My Invitations</h4>}
+				{myRSVPs &&
+					myRSVPs.map((invite, i) => (
+						<div key={i}>
+							<p>{invite.wedding_title}</p>
+							<p>{invite.wedding_date}</p>
+							<p>{invite.wedding_blurb}</p>
+							<p>Allowed plus one: {invite.can_plus_one ? "yes":"no"}</p>
+							{/* more to come */}
+							<Button
+								component={Link}
+								to={`/invitation-details/${invite.wedding_id}`}
+							>
+								See details
+							</Button>
+						</div>
+					))}
 			</div>
 			<div>
 				<Button onClick={handleClickOpen}>Add Wedding</Button>
