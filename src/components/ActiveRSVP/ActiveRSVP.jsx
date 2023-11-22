@@ -10,6 +10,9 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { TextField } from "@mui/material";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
 
 function ActiveRSVP() {
   const dispatch = useDispatch();
@@ -18,20 +21,26 @@ function ActiveRSVP() {
   const meals = useSelector((store) => store.activeWeddingMeals);
   const params = useParams();
   const wedding_id = params.id;
+  const dispatchObject = {
+    event_id: "",
+    po_first_name: "",
+    po_last_name: "",
+    po_meal_id: "",
+    po_notes: "",
+    guest_meal_id: "",
+    is_attending: true,
+  };
 
-  const [value, setValue] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [mealChoice, setMealChoice] = useState("");
-  const [notes, setNotes] = useState("");
+  const [fullForm, setFullForm] = useState(dispatchObject);
 
   useEffect(() => {
     dispatch({ type: "GET_ACTIVE_RSVP", payload: wedding_id });
+    dispatch({ type: "GET_ACTIVE_WEDDING_DETAILS", payload: wedding_id });
   }, []);
 
-  const handleChange = (e) => {
-    console.log("in handleChange");
-    setValue(e.target.value);
+  const handleSubmit = (e) => {
+    console.log("in handlesubmit");
+    dispatch({ type: "", payload: fullForm });
   };
 
   return (
@@ -58,7 +67,7 @@ function ActiveRSVP() {
               </p>
               <p>{details.event_maps_url}</p>
               <Grid item xs={12} sm={12} md={12}>
-                <FormControl>
+                <form onSubmit={handleSubmit}>
                   <FormLabel id="row-radio-buttons-group-label">
                     Can you make this event?
                   </FormLabel>
@@ -66,37 +75,89 @@ function ActiveRSVP() {
                     row
                     aria-labelledby="row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
-                    value={value}
-                    onChange={handleChange}
+                    defaultValue="false"
                   >
                     <FormControlLabel
-                      value="yes"
-                      control={<Radio />}
+                      value={true}
+                      control={<Radio 
+                        onChange={(e) => {
+                          setFullForm({
+                            ...fullForm,
+                            is_attending: e.target.value,
+                          })}} />}
                       label="Yes"
                     />
                     <FormControlLabel
-                      value="no"
-                      control={<Radio />}
+                      value={false}
+                      control={<Radio 
+                        onChange={(e) => {
+                          setFullForm({
+                            ...fullForm,
+                            is_attending: e.target.value,
+                          })}} />}
                       label="No"
                     />
                   </RadioGroup>
+                  Plus One Info
                   {details.can_plus_one && (
-                    <FormLabel id="plus-one">
-                      <TextField label="First Name" value={firstName} />
-                      <TextField label="Last Name" value={lastName}/>
+                    <FormLabel id="plus-one" label="Plus One Info">
                       <TextField 
-                      select 
-                      label="Plus one meal">
+                      label="First Name" 
+                      value={fullForm.po_first_name} 
+                        onChange={(e) => {
+                          setFullForm({
+                            ...fullForm,
+                            po_first_name: e.target.value,
+                          })}} />
+                      <TextField 
+                      label="Last Name" 
+                      value={fullForm.po_last_name} 
+                      onChange={(e) => {
+                        setFullForm({
+                          ...fullForm,
+                          po_last_name: e.target.value,
+                        })}} />
+                      <Select 
+                      label="Plus One Meal"
+                      onChange={(e) => {
+                        setFullForm({
+                          ...fullForm,
+                          po_meal_id: e.target.value,
+                        })}} >
                         {meals.map((option) => (
-                         <MenuItem key={option.id} value={mealChoice}> 
-                         {option.meal_name}
-                         </MenuItem>
+                          <MenuItem 
+                          key={option.id} 
+                          value={fullForm.po_meal_id} 
+                      >
+                            {option.meal_name}
+                          </MenuItem>
                         ))}
-                    </TextField>
-                      <TextField placeholder="hey" />
+                      </Select>
+                      <TextField 
+                      placeholder="Notes" 
+                      value={fullForm.notes}
+                      onChange={(e) => {
+                        setFullForm({
+                          ...fullForm,
+                          notes: e.target.value,
+                        })}}  />
                     </FormLabel>
                   )}
-                </FormControl>
+                  <FormLabel>
+                    <Select notched={true} value={fullForm.guest_meal_id} label="Meal">
+                      <InputLabel> Choose your meal</InputLabel>
+                      {meals.map((option) => (
+                        <MenuItem key={option.id} value={fullForm.guest_meal_id}>
+                          {option.meal_name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormLabel>
+                  <Button variant="outlined" type="submit">
+                    {" "}
+                    Save{" "}
+                  </Button>
+                </form>
               </Grid>
             </div>
           ))}

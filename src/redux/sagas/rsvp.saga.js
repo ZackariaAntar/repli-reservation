@@ -14,6 +14,14 @@ function* getActiveRsvpDetails(action) {
     }
 }
 
+function* addRsvpDetails(action) {
+    try {
+    yield axios.post(`/api/wedding/`)
+    } catch (error) {
+        
+    }
+}
+
 function* rsvpSaga() {
     yield takeLatest('GET_ACTIVE_RSVP', getActiveRsvpDetails);
   }
