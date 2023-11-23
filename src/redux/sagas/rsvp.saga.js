@@ -16,14 +16,20 @@ function* getActiveRsvpDetails(action) {
 
 function* addRsvpDetails(action) {
     try {
-    yield axios.post(`/api/wedding/`)
+    yield axios.post(`/api/rsvp/guest_confirm_meal_and_plus_one`)
+    yield put ({
+        type: "GET_ACTIVE_RSVP",
+        payload: action.payload.wedding_id
+    })
     } catch (error) {
+        console.log("Error posting RSVP details", error)
         
     }
 }
 
 function* rsvpSaga() {
     yield takeLatest('GET_ACTIVE_RSVP', getActiveRsvpDetails);
+    yield takeLatest('ADD_RSVP_DETAILS', addRsvpDetails);
   }
   
   export default rsvpSaga;
