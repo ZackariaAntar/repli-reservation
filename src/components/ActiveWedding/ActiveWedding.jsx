@@ -2,6 +2,14 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActionArea from "@mui/material/CardActionArea";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
+import IconButton from "@mui/material/IconButton";
+import Collapse from "@mui/material/Collapse";
+import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -11,6 +19,7 @@ import AddEventForm from "../AddEventForm/AddEventForm";
 import EditEventForm from "../EditEventForm/EditEventForm";
 import AddGuestToEventForm from "../AddGuestToEventForm/AddGuestToEventForm";
 import AddAnnouncementForm from "../AddAnnouncementForm/AddAnnouncementForm";
+import ActiveWeddingEventCard from "../ActiveWeddingEventCard/ActiveWeddingEventCard"
 
 function ActiveWedding() {
 	const dispatch = useDispatch();
@@ -24,12 +33,14 @@ function ActiveWedding() {
 	const posts = useSelector((store) => store.activeWeddingPosts);
 	const RSVPs = useSelector((store) => store.activeWeddingReplis);
 
+
+
 	const [editWedding, setEditWedding] = useState(false);
 	const [addEvent, setAddEvent] = useState(false);
 	const [editEvent, setEditEvent] = useState(false);
-    const [addGuests, setAddGuests] = useState(false);
+	const [addGuests, setAddGuests] = useState(false);
 	const [addAnnouncement, setAddAnnouncement] = useState(false);
-
+	const [expanded, setExpanded] = useState(false);
 
 	useEffect(() => {
 		dispatch({ type: "GET_ACTIVE_WEDDING_DETAILS", payload: wedding_id });
@@ -86,7 +97,7 @@ function ActiveWedding() {
 
 					<Grid container spacing={1}>
 						{events.map((event) => (
-							<Grid item xs={12} sm={6} md={3}>
+							<Grid item key={event.id} xs={12} sm={6} md={3}>
 								<div key={event.id}>
 									{/* <p>{event.wedding_id}</p> */}
 									<h4>{event.event_name}</h4>
@@ -136,8 +147,8 @@ function ActiveWedding() {
 					)}
 					<Grid container spacing={1}>
 						{posts.map((post) => (
-							<Grid item xs={12} sm={6} md={3}>
-								<div key={post.id}>
+							<Grid item key={post.id} xs={12} sm={6} md={3}>
+								<div>
 									{/* <p> {post.id} </p> */}
 									<h4>
 										{post.event_name} <br />{" "}
@@ -155,25 +166,14 @@ function ActiveWedding() {
 
 				<Grid item xs={12} sm={12} md={12}>
 					<h2>Guest List</h2>
-					<Button onClick={() => setAddGuests(!addGuests)}>
-						Manage guest list
-					</Button>
-					{guests && (
-						<AddGuestToEventForm
-							addGuests={addGuests}
-							setAddGuests={setAddGuests}
-							wedding_id={wedding_id}
-							events={events}
-							guests={guests}
-							RSVPs={RSVPs}
-						/>
-					)}
+					<Button>Manage guest list</Button>
+
 					<Grid container spacing={1}>
 						{guests.map((guest) => (
-							<Grid item xs={12} sm={6} md={3}>
-								<div key={guest.id}>
-									<p> {guest.id} </p>
-									<p> user_id: {guest.user_id}</p>
+							<Grid item key={guest.id} xs={12} sm={6} md={3}>
+								<div>
+									{/* <p> {guest.id} </p> */}
+									{/* <p> user_id: {guest.user_id}</p> */}
 									<p> first_name: {guest.first_name}</p>
 									<p> last_name: {guest.last_name}</p>
 									<p> phone_number: {guest.phone_number}</p>
@@ -234,52 +234,31 @@ function ActiveWedding() {
 
 				<Grid item xs={12} sm={12} md={12}>
 					<h2>RSVPs</h2>
-					<Button>Manage rsvps</Button>
+					<Button onClick={() => setAddGuests(!addGuests)}>
+						Manage rsvps
+					</Button>
+					{guests && (
+						<AddGuestToEventForm
+							addGuests={addGuests}
+							setAddGuests={setAddGuests}
+							wedding_id={wedding_id}
+							events={events}
+							guests={guests}
+							RSVPs={RSVPs}
+						/>
+					)}
 					<Grid container spacing={1}>
 						{RSVPs.map((repli) => (
-							<Grid item xs={12} sm={6} md={3}>
-								<div key={repli.event_id}>
-									<h5>
-										{repli.event_name} - {repli.event_date}
-									</h5>
-									<p>
-										<span>
-											Attending: {repli.num_attending}
-										</span>{" "}
-										<span>
-											Pending: {repli.num_pending}
-										</span>{" "}
-										<span>
-											Declined: {repli.num_declined}
-										</span>
-									</p>
-									<p></p>
-									{repli.guests.map((guest) => (
-										<p key={guest.guest_id}>
-											{guest.plus_one_first_name ? (
-												<span>
-													Guest:{" "}
-													{guest.guest_first_name}{" "}
-													{guest.guest_last_name}
-													<br />
-													Plus one:{" "}
-													{
-														guest.plus_one_first_name
-													}{" "}
-													{guest.plus_one_last_name}{" "}
-												</span>
-											) : (
-												<span>
-													Guest:{" "}
-													{guest.guest_first_name}{" "}
-													{guest.guest_last_name}
-												</span>
-											)}
-											{"  "} Status: {"  "}
-											{guest.status}
-										</p>
-									))}
-								</div>
+							<Grid
+								item
+								key={repli.event_id}
+								xs={12}
+								sm={6}
+								md={6}
+							>
+
+								<ActiveWeddingEventCard repli={repli}/>
+
 							</Grid>
 						))}
 					</Grid>
@@ -290,8 +269,8 @@ function ActiveWedding() {
 					<Button>Manage meals</Button>
 					<Grid container spacing={1}>
 						{meals.map((meal) => (
-							<Grid item xs={12} sm={6} md={3}>
-								<div key={meal.id}>
+							<Grid item key={meal.id} xs={12} sm={6} md={3}>
+								<div>
 									{/* <p> {meal.id} </p> */}
 									<h3>{meal.meal_name}</h3>
 									<p>{meal.meal_description}</p>
@@ -306,3 +285,5 @@ function ActiveWedding() {
 }
 
 export default ActiveWedding;
+
+

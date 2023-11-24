@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Dialog from "@mui/material/Dialog";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardHeader from "@mui/material/CardHeader";
+
 
 function AddGuestToEventForm({
 	addGuests,
@@ -56,26 +61,52 @@ function AddGuestToEventForm({
 						}}
 					>
 						<button onClick={() => setHide(!hide)}>close</button>
-						<pre>{JSON.stringify(RSVPs, null, 2)}</pre>
-						{RSVPs.map((invite) => (
-							<>
-								<br />
-								{invite.event_name} <br />
-								{invite.event_date} <br />
-								{invite.guests.map((guest) => (
-									<div>
-										{guest.status}
-                                        <br />
-										<p>
-											{`${guest.guest_first_name} ${guest.guest_last_name}`}
-										</p>
-									</div>
-								))}
-								<br />
-								{JSON.stringify(invite, null, 2)}
-								<br />
-							</>
-						))}
+						<Grid
+							container
+							spacing={1}
+							// sx={{ border: "1px solid lime" }}
+						>
+							{RSVPs.map((invite) => (
+								<>
+									<Grid
+										item
+										md={12}
+										sx={{ border: "1px solid magenta" }}
+									>
+										<h2>{invite.event_name}</h2>
+										<p>{invite.event_date}</p>
+									</Grid>
+									<Grid item md={12}>
+										<Grid container spacing={1}>
+											<Grid item md={12}>
+												<h4>Invited Guests' Details</h4>
+											</Grid>
+
+											{invite.guests.map((guest) => (
+												<Grid item md={2}>
+													<Card>
+														<CardHeader
+															
+														>
+                                                            {`${guest.guest_first_name} ${guest.guest_last_name}`}
+                                                        </CardHeader>
+                                                        <CardContent>
+
+														{`Response Status: ${guest.status} `}
+                                                        </CardContent>
+													</Card>
+												</Grid>
+											))}
+										</Grid>
+									</Grid>
+
+									<br />
+									{/* {JSON.stringify(invite, null, 2)} */}
+									<br />
+								</>
+							))}
+						</Grid>
+						{/* <pre>{JSON.stringify(RSVPs, null, 2)}</pre> */}
 					</div>
 				) : (
 					<div
