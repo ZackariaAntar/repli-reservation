@@ -67,6 +67,7 @@ function AddAnnouncementForm({
 					</MenuItem>
 					{events.map((event) => (
 						<MenuItem
+						key={event.id}
 							date={event.event_date}
 							value={event.event_name}
 						>

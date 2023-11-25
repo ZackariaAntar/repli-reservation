@@ -10,10 +10,8 @@ import CardHeader from "@mui/material/CardHeader";
 function AddGuestToEventForm({
 	addGuests,
 	setAddGuests,
-	wedding_id,
-	events,
 	guests,
-	RSVPs,
+	repli,
 }) {
 	const dispatch = useDispatch();
 	const [hide, setHide] = useState(false);
@@ -30,6 +28,10 @@ function AddGuestToEventForm({
 	//     dispatch({ type: "GET_ACTIVE_WEDDING_GUESTS", payload: wedding_id });
 	//     dispatch({ type: "GET_ACTIVE_WEDDING_EVENTS", payload: wedding_id });
 	// },[])
+
+    const notInvited = guests.filter((guest)=>guest.id !== repli.guests.map((guest)=>(guest.guest_id)))
+
+
 
 	return (
 		<>
@@ -66,7 +68,7 @@ function AddGuestToEventForm({
 							spacing={1}
 							// sx={{ border: "1px solid lime" }}
 						>
-							{RSVPs.map((invite) => (
+							{repli.map((invite) => (
 								<>
 									<Grid
 										item
@@ -85,15 +87,12 @@ function AddGuestToEventForm({
 											{invite.guests.map((guest) => (
 												<Grid item md={2}>
 													<Card>
-														<CardHeader
-															
-														>
-                                                            {`${guest.guest_first_name} ${guest.guest_last_name}`}
-                                                        </CardHeader>
-                                                        <CardContent>
-
-														{`Response Status: ${guest.status} `}
-                                                        </CardContent>
+														<CardHeader>
+															{`${guest.guest_first_name} ${guest.guest_last_name}`}
+														</CardHeader>
+														<CardContent>
+															{`Response Status: ${guest.status} `}
+														</CardContent>
 													</Card>
 												</Grid>
 											))}
@@ -106,7 +105,7 @@ function AddGuestToEventForm({
 								</>
 							))}
 						</Grid>
-						{/* <pre>{JSON.stringify(RSVPs, null, 2)}</pre> */}
+						{/* <pre>{JSON.stringify(repli, null, 2)}</pre> */}
 					</div>
 				) : (
 					<div
@@ -121,43 +120,17 @@ function AddGuestToEventForm({
 							// border: "1px solid magenta",
 						}}
 					>
+						{notInvited.map((guest) => (
+							<>
+								<p>{`Guest List: ${guest.first_name} ${guest.last_name}`}</p>
+							</>
+						))}
+
 						<div>
 							<button onClick={() => setAddGuests(!addGuests)}>
 								Close
 							</button>
 						</div>
-						{events.map((event) => (
-							<div
-								style={{
-									width: "100%",
-									display: "flex",
-									flexDirection: "row",
-									justifyContent: "space-between",
-									alignItems: "flex-start",
-									// border: "1px solid lime",
-									marginTop: 10,
-									marginBottom: 10,
-								}}
-							>
-								<h4>{event.event_name}</h4>
-								<div
-									style={{
-										display: "flex",
-										flexDirection: "column",
-										justifyContent: "space-evenly",
-										alignItems: "center",
-										// border: "1px solid blue",
-										height: "10vh",
-									}}
-								>
-									<button onClick={() => setHide(!hide)}>
-										Add guests to this event
-									</button>
-
-									<button>Update guests for event</button>
-								</div>
-							</div>
-						))}
 					</div>
 				)}
 			</Dialog>

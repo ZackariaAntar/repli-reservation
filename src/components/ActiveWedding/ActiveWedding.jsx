@@ -2,14 +2,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardActionArea from "@mui/material/CardActionArea";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import IconButton from "@mui/material/IconButton";
-import Collapse from "@mui/material/Collapse";
-import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -38,9 +30,9 @@ function ActiveWedding() {
 	const [editWedding, setEditWedding] = useState(false);
 	const [addEvent, setAddEvent] = useState(false);
 	const [editEvent, setEditEvent] = useState(false);
-	const [addGuests, setAddGuests] = useState(false);
 	const [addAnnouncement, setAddAnnouncement] = useState(false);
-	const [expanded, setExpanded] = useState(false);
+
+
 
 	useEffect(() => {
 		dispatch({ type: "GET_ACTIVE_WEDDING_DETAILS", payload: wedding_id });
@@ -237,16 +229,6 @@ function ActiveWedding() {
 					<Button onClick={() => setAddGuests(!addGuests)}>
 						Manage rsvps
 					</Button>
-					{guests && (
-						<AddGuestToEventForm
-							addGuests={addGuests}
-							setAddGuests={setAddGuests}
-							wedding_id={wedding_id}
-							events={events}
-							guests={guests}
-							RSVPs={RSVPs}
-						/>
-					)}
 					<Grid container spacing={1}>
 						{RSVPs.map((repli) => (
 							<Grid
@@ -257,7 +239,7 @@ function ActiveWedding() {
 								md={6}
 							>
 
-								<ActiveWeddingEventCard repli={repli}/>
+								<ActiveWeddingEventCard repli={repli} guests={guests}/>
 
 							</Grid>
 						))}
