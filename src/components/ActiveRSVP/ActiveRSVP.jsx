@@ -13,6 +13,8 @@ import { TextField } from "@mui/material";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
+import Typography from "@mui/material/Typography";
+
 
 import EventDisplay from "../EventDisplay/EventDisplay";
 import RSVPDetails from "../RSVPDetails/RSVPDetails";
@@ -45,7 +47,15 @@ function ActiveRSVP() {
       {rsvpDetails[0] && (
         <RSVPDetails meals={meals} rsvpDetails={rsvpDetails[0]} />
       )}
-      {rsvpDetails[0] && <EventDisplay rsvpDetails={rsvpDetails} />}
+      {rsvpDetails[0] && 
+      <Typography variant="h6" sx={{ mt: 3 }}>
+        You are invited to the following events for{" "}
+        {rsvpDetails[0].wedding_title}!
+      </Typography>
+      }
+      {rsvpDetails.map((details) => (
+        <EventDisplay details={details} />
+))}
     </Container>
   );
 }

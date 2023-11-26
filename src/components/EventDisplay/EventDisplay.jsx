@@ -10,7 +10,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 
-function EventDisplay({ rsvpDetails }) {
+function EventDisplay({ details }) {
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
 
@@ -29,11 +29,7 @@ function EventDisplay({ rsvpDetails }) {
   };
   return (
     <>
-      <Typography variant="h6" sx={{ mt: 3 }}>
-        You are invited to the following events for{" "}
-        {rsvpDetails[0].wedding_title}!
-      </Typography>
-      {rsvpDetails.map((details) => (
+      
         <Card
           elevation={3}
           sx={{ width: "50%", p: 4, my: 2 }}
@@ -110,7 +106,6 @@ function EventDisplay({ rsvpDetails }) {
             </CardContent>
           </CardContent>
         </Card>
-      ))}
     </>
   );
 }

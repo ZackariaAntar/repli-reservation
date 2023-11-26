@@ -68,7 +68,8 @@ router.get("/active_RSVP_details/:id", rejectUnauthenticated, (req, res) => {
 	JOIN wedding ON wedding.id = guest_list_junction.wedding_id
 	JOIN meal_options ON meal_options.id = guest_list_junction.meal_id
 	JOIN events ON events.id = event_attendees_junction.event_id
-	WHERE guest_list_junction.wedding_id = $1 AND guest_list_junction.guest_id = $2;`
+	WHERE guest_list_junction.wedding_id = $1 AND guest_list_junction.guest_id = $2
+	ORDER BY events.id ASC;`
 	const wedding_id = req.params.id;
 	const user_id = req.user.id;
 	pool.query(queryText, [wedding_id, user_id])
