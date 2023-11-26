@@ -14,71 +14,74 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 
-function EventDisplay({rsvpDetails}) {
+function EventDisplay({ rsvpDetails }) {
   const dispatch = useDispatch();
-  const dispatchObject = {
-    event_id: "",
-    is_attending: true,
-  };
+  const user = useSelector((store) => store.user);
 
+  const dispatchObject = {
+      event_id: '',
+      is_attending: '',
+      guest_id: user.id,
+      wedding_id: ''
+    };
+    
+    const [isAttending, setIsAttending] = useState(dispatchObject);
+    
+    const handleSubmit = () => {
+        console.log({isAttending})
+        dispatch({ type: "ADD_IS_ATTENDING", payload: isAttending });
+    };
   return (
-      <>
-        <Button component={Link} to="/user"></Button>
-        <Grid item xs={12} sm={12} md={12}>
-          {rsvpDetails.map((details) => (
-            <div key={details.id}>
-              <h5>
-                You are invited to the following events for{" "}
-                {details.wedding_title}!
-              </h5>
-              <p>{details.event_name}</p>
-              <p>
-                {details.event_date} | {details.event_start_time} |{" "}
-                {details.event_end_time}
-              </p>
-              <p>{details.event_street_address}</p>
-              <p>
-                {details.event_city}, {details.event_state} {details.event_zip}
-              </p>
-              <p>{details.event_maps_url}</p>
-              <Grid item xs={12} sm={12} md={12}>
-                  <FormLabel id="row-radio-buttons-group-label">
-                    Can you make this event?
-                  </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="row-radio-buttons-group-label"
-                    name="row-radio-buttons-group"
-                    defaultValue="false"
-                  >
-                    <FormControlLabel
-                      value={true}
-                      control={
-                        <Radio
-                          onChange={(e) => {
-                            dispatch({ type: "ADD_RSVP_DETAILS", payload: {event_id: event.id, is_attending: e.target.value}});
-                          }}
-                        />
-                      }
-                      label="Yes"
-                    />
-                    <FormControlLabel
-                      value={false}
-                      control={
-                        <Radio
-                          onChange={(e) => {
-                            dispatch({ type: "ADD_RSVP_DETAILS", payload: {event_id: event.id, is_attending: e.target.value}});
-                          }}
-                        />
-                      }
-                      label="No"
-                    />
-                  </RadioGroup>
-              </Grid>
-            </div>
-          ))}
-        </Grid>
-        </>
+    <>
+      <Button component={Link} to="/user"></Button>
+      <Grid item xs={12} sm={12} md={12}>
+        {rsvpDetails.map((details) => (
+          <div key={details.id}>
+            <h5>
+              You are invited to the following events for{" "}
+              {details.wedding_title}!
+            </h5>
+            <p>{details.event_name}</p>
+            <p>
+              {details.event_date} | {details.event_start_time} |{" "}
+              {details.event_end_time}
+            </p>
+            <p>{details.event_street_address}</p>
+            <p>
+              {details.event_city}, {details.event_state} {details.event_zip}
+            </p>
+            <p>{details.event_maps_url}</p>
+            <Grid item xs={12} sm={12} md={12}>
+              <FormLabel id="row-radio-buttons-group-label">
+                Can you make this event?
+              </FormLabel>
+              <Select
+                sx={{ width: "25%" }}
+                value={isAttending.is_attending}
+                onChange={(e) => {
+                  setIsAttending({
+                    ...isAttending,
+                    event_id: details.event_id,
+                    is_attending: e.target.value,
+                    wedding_id: details.wedding_id
+                  });
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                  fontSize: "2rem",
+                }}
+              >
+                <MenuItem value={true}> Yes </MenuItem>
+                <MenuItem value={false}> No </MenuItem>
+              </Select>
+              <Button variant="outlined" type="submit" onClick={handleSubmit}>
+                Submit
+              </Button>
+            </Grid>
+          </div>
+        ))}
+      </Grid>
+    </>
   );
 }
 

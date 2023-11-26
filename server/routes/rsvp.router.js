@@ -6,6 +6,23 @@ const {
 } = require("../modules/authentication-middleware");
 
 //post the is_attending details here
+router.post("/attendance/is_attending", rejectUnauthenticated, async (req, res) => {
+    const queryText = `
+    UPDATE event_attendees_junction SET is_attending = $1 WHERE wedding_id = $2 AND guest_id = $3 AND event_id = $4;
+    `;
+
+    const {wedding_id, guest_id, is_attending, event_id} = req.body;
+    const isAttendingDetails = [is_attending, wedding_id, guest_id, event_id]
+
+    pool.query(queryText, isAttendingDetails)
+		.then((result) => res.sendStatus(201))
+		.catch((err) => {
+			console.log(`Problem with ${queryText}, Data used in post: ${req.body}`, err);
+			res.sendStatus(500);
+		});
+
+})
+// update is_attending where guest_id = $1 AND wedding_id = $2 AND event_id = $3
 
 //post guest and plus one meal info
 router.post("/guest_confirm_meal_and_plus_one", rejectUnauthenticated, async (req, res) => {

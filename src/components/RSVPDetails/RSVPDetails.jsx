@@ -16,6 +16,8 @@ import InputLabel from "@mui/material/InputLabel";
 
 function RSVPDetails({meals, rsvpDetails}) {
   const dispatch = useDispatch();
+
+  const user = useSelector((store) => store.user);
  
   const dispatchObject = {
     po_first_name: "",
@@ -23,19 +25,14 @@ function RSVPDetails({meals, rsvpDetails}) {
     po_meal_id: "",
     po_notes: "",
     guest_meal_id: "",
-    wedding_id: rsvpDetails.wedding_id
+    wedding_id: rsvpDetails.wedding_id,
+    guest_id: user.id
   };
 
   const [fullForm, setFullForm] = useState(dispatchObject);
 
-  const handleSubmit = (e) => {
-    // dispatch({ type: "ADD_RSVP_DETAILS", payload: fullForm });
-    console.log(fullForm);
-
-    console.log(
-        'in handleSubmit'
-    )
-  };
+  const handleSubmit = () => {
+    dispatch({ type: "ADD_RSVP_DETAILS", payload: fullForm });};
   return (
       <>
                   <form>

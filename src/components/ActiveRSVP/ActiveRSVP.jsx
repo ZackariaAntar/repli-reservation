@@ -24,30 +24,15 @@ function ActiveRSVP() {
   const meals = useSelector((store) => store.activeWeddingMeals);
   const params = useParams();
   const wedding_id = params.id;
-  const dispatchObject = {
-    event_id: "",
-    po_first_name: "",
-    po_last_name: "",
-    po_meal_id: "",
-    po_notes: "",
-    guest_meal_id: "",
-    is_attending: true,
-  };
 
-  const [fullForm, setFullForm] = useState(dispatchObject);
-
-  useEffect(() => {
+ useEffect(() => {
     dispatch({ type: "GET_ACTIVE_RSVP", payload: wedding_id });
     dispatch({ type: "GET_ACTIVE_WEDDING_DETAILS", payload: wedding_id });
   }, []);
 
-  console.log({ fullForm });
-
-
-
   return (
     <Container maxWidth="lg">
-      {rsvpDetails && <EventDisplay rsvpDetails={rsvpDetails} />}
+      {rsvpDetails && <EventDisplay rsvpDetails={rsvpDetails}  />}
       {rsvpDetails[0] && <RSVPDetails meals={meals} rsvpDetails={rsvpDetails[0]} />}
     </Container>
   );
