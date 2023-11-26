@@ -25,15 +25,27 @@ function ActiveRSVP() {
   const params = useParams();
   const wedding_id = params.id;
 
- useEffect(() => {
+  useEffect(() => {
     dispatch({ type: "GET_ACTIVE_RSVP", payload: wedding_id });
     dispatch({ type: "GET_ACTIVE_WEDDING_DETAILS", payload: wedding_id });
   }, []);
 
   return (
-    <Container maxWidth="lg">
-      {rsvpDetails && <EventDisplay rsvpDetails={rsvpDetails}  />}
-      {rsvpDetails[0] && <RSVPDetails meals={meals} rsvpDetails={rsvpDetails[0]} />}
+    <Container
+      maxWidth="lg"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <Button component={Link} to="/user">
+        Back
+      </Button>
+      {rsvpDetails[0] && (
+        <RSVPDetails meals={meals} rsvpDetails={rsvpDetails[0]} />
+      )}
+      {rsvpDetails[0] && <EventDisplay rsvpDetails={rsvpDetails} />}
     </Container>
   );
 }
