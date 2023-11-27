@@ -11,10 +11,12 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import Collapse from "@mui/material/Collapse"
+import Typography from "@mui/material/Typography";
 
-function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
-
-
+function AddEventForm({wedding_id }) {
+	const[expanded, setExpanded] = useState(false);
+	const btn = { p: 1.5, width: "51%", mb: 2 };
 	const eventDetails = {
 		wedding_id: wedding_id,
 		event_broadcast: true,
@@ -36,28 +38,42 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 		alert("CONNECT AddEventForm TO SAGA AND SERVER");
 	};
 	return (
-		<Dialog open={addEvent} onClose={() => setAddEvent(!addEvent)}>
 			<form
 				method="POST"
 				onSubmit={postEvent}
-				style={{
+				// style={{
+				// 	display: "flex",
+				// 	flexDirection: "column",
+				// 	justifyContent: "center",
+				// 	alignItems: "center",
+				// 	padding: 10,
+				// 	marginRight: 45,
+				// 	marginLeft: 25,
+				// 	marginBottom: 5,
+				// }}
+			>
+			<Button
+			variant="outlined"
+			sx={btn}
+			onClick={()=>setExpanded(!expanded)}
+			>
+				{expanded ? 'Close' : 'Add Event' }
+			</Button>
+			<Collapse
+				in={expanded}
+				timeout="auto"
+				unmountOnExit
+				sx={{
 					display: "flex",
 					flexDirection: "column",
 					justifyContent: "center",
 					alignItems: "center",
-					padding: 10,
-					marginRight: 45,
-					marginLeft: 25,
-					marginBottom: 5,
 				}}
 			>
+				<Typography variant="h6" > Event Details</Typography>
 				<Grid
 					container
 					spacing={1}
-					sx={{
-						mx: 1,
-						mt: 3,
-					}}
 				>
 					<Grid item xs={12} sm={6} md={8}>
 						<FormControl>
@@ -103,7 +119,7 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 							</RadioGroup>
 						</FormControl>
 					</Grid>
-					<Grid item xs={12} sm={12} md={12}>
+					<Grid item xs={12} sm={12} md={6}>
 						<TextField
 							fullWidth
 							label="Event Name"
@@ -115,15 +131,17 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 									event_name: e.target.value,
 								})
 							}
-							InputLabelProps={{
-								shrink: true,
-								fontSize: "2rem",
-							}}
+							// InputLabelProps={{
+							// 	shrink: true,
+							// 	fontSize: "2rem",
+							// }}
 						/>
 					</Grid>
-					<Grid item xs={12} sm={6} md={3}>
+					<Grid item xs={12} sm={6} md={6}>
 						<TextField
+						fullWidth
 							label="Date"
+							type="date"
 							sx={{ mb: 2 }}
 							value={event.event_date}
 							onChange={(e) =>
@@ -132,14 +150,15 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 									event_date: e.target.value,
 								})
 							}
-							InputLabelProps={{
-								shrink: true,
-								fontSize: "2rem",
-							}}
+								InputLabelProps={{
+									shrink: true,
+									fontSize: "2rem",
+								}}
 						/>
 					</Grid>
-					<Grid item xs={12} sm={6} md={3}>
+					<Grid item xs={12} sm={6} md={6}>
 						<TextField
+						fullWidth
 							label="Start Time"
 							type="time"
                             step="15"
@@ -157,8 +176,9 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 							}}
 						/>
 					</Grid>
-					<Grid item xs={12} sm={6} md={3}>
+					<Grid item xs={12} sm={6} md={6}>
 						<TextField
+						fullWidth
 							label="End Time"
 							type="time"
 							sx={{ mb: 2 }}
@@ -187,10 +207,6 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 									event_street_address: e.target.value,
 								})
 							}
-							InputLabelProps={{
-								shrink: true,
-								fontSize: "2rem",
-							}}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={6} md={4}>
@@ -204,10 +220,6 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 									event_city: e.target.value,
 								})
 							}
-							InputLabelProps={{
-								shrink: true,
-								fontSize: "2rem",
-							}}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={6} md={4}>
@@ -221,10 +233,6 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 									event_state: e.target.value,
 								})
 							}
-							InputLabelProps={{
-								shrink: true,
-								fontSize: "2rem",
-							}}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={6} md={4}>
@@ -238,13 +246,9 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 									event_zip: e.target.value,
 								})
 							}
-							InputLabelProps={{
-								shrink: true,
-								fontSize: "2rem",
-							}}
 						/>
 					</Grid>
-					<Grid item xs={12} sm={6} md={6}>
+					{/* <Grid item xs={12} sm={6} md={6}>
 						<TextField
 							label="Map"
 							sx={{ mb: 2 }}
@@ -260,7 +264,7 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 								fontSize: "2rem",
 							}}
 						/>
-					</Grid>
+					</Grid> */}
 					<Grid item xs={12} sm={6} md={6}>
 						<Button
 							type="submit"
@@ -272,8 +276,10 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 						</Button>
 					</Grid>
 				</Grid>
+
+
+			</Collapse>
 			</form>
-		</Dialog>
 	);
 }
 

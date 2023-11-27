@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
@@ -15,10 +15,12 @@ import Button from "@mui/material/Button";
 import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 
 import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 function ActiveWeddingEventCard({ repli, guests }) {
-	const params = useParams();
-	const wedding_id = params.id;
+    const dispatch = useDispatch()
+    const params = useParams();
+	const wedding_id = Number(params.id);
 	const [expanded, setExpanded] = useState(false);
 	const [addGuests, setAddGuests] = useState(false);
 	const checked = {
@@ -27,29 +29,30 @@ function ActiveWeddingEventCard({ repli, guests }) {
 		guests: "",
 	};
 	const [selected, setSelected] = useState(checked);
+    const allGuests = guests.map((guest) => guest.id);
 	const invited = repli.guests.map((guest) => guest.guest_id);
 	const notInvited = guests.filter((pal) => !invited.includes(pal.id));
 
 	const handleDeleteClick = (id) => () => {
-		console.log(id);
+        let data = {
+			event_id: repli.event_id,
+			wedding_id: wedding_id,
+			guest_id: Number(id),
+		};
+        dispatch({ type: "DELETE_GUEST_FROM_EVENT", payload:data});
 	};
 	const handleAddClick = (id) => {
-        console.log(id);
-		if (selected.wait) {
-			setSelected({ ...selected, once: true });
-			setSelected({ ...selected, wait: false });
-			// try {
-			// } catch (error) {
-			// } finally {
-			//    setSelected({ ...selected, once: true });
-			// 	setSelected({ ...selected, wait: false });
-			// }
+        let cache = id
+        if (cache.length > 0) {
+		    setSelected({ ...selected, once: true, wait:false, guests: id });
 		} else {
-			setSelected({ ...selected, guests: id });
+			setSelected(checked);
 		}
+
 	};
 	const saveSelection = (guest_ids) => {
-		let data = [];
+
+        let data = [];
 		for (let i = 0; i < guest_ids.length; i++) {
 			let save = {
 				event_id: repli.event_id,
@@ -61,8 +64,9 @@ function ActiveWeddingEventCard({ repli, guests }) {
 				data.push(save);
 			}
 		}
-		console.log(data);
-		setSelected(checked);
+        dispatch({type:'ADD_GUESTS_TO_EVENT', payload:data})
+
+        setSelected(checked);
 		setAddGuests(!addGuests);
 	};
 
@@ -81,7 +85,7 @@ function ActiveWeddingEventCard({ repli, guests }) {
 		{
 			field: "actions",
 			type: "actions",
-			headerName: "Actions",
+			headerName: "Remove",
 			width: 150,
 			cellClassName: "actions",
 			getActions: ({ id }) => {
@@ -122,17 +126,16 @@ function ActiveWeddingEventCard({ repli, guests }) {
 			<Card elevation={4}>
 				<CardContent>
 					<Grid container spacing={1}>
-						<Grid item md={3}>
-							<Typography variant="h6">
+						<Grid item md={4}>
+							<Typography>
 								{repli.event_name}
 							</Typography>
 							<Typography variant="caption">
 								{repli.event_date}
 							</Typography>
 						</Grid>
-						<Grid item md={9}>
+						<Grid item md={8}>
 							<Typography
-								variant="h6"
 								align="center"
 							>{`Replis`}</Typography>
 							<div
@@ -166,12 +169,9 @@ function ActiveWeddingEventCard({ repli, guests }) {
 									columns={remainingColumns}
 									rowSelection
 									checkboxSelection
-									// onRowClick={(e) => console.log(e)}
 									onRowSelectionModelChange={(e) => {
-										// handleAddClick(e),
-                                        console.log(e);
+										handleAddClick(e);
 									}}
-                                    onCellClick={(e)=>{console.log(e.id)}}
 									disableColumnMenu
 									disableDensitySelector
 									hideFooter
@@ -186,7 +186,7 @@ function ActiveWeddingEventCard({ repli, guests }) {
 									hideFooter
 								/>
 							)}
-							{selected.guests.length > 0 && (
+							{!selected.wait && (
 								<Button
 									sx={{ mt: 2 }}
 									variant="outlined"
@@ -198,7 +198,6 @@ function ActiveWeddingEventCard({ repli, guests }) {
 								</Button>
 							)}
 						</div>
-						{/* <ActiveWeddingEventGuests invitedGuests={repli.guests} /> */}
 					</CardContent>
 				</Collapse>
 				<CardActions onClick={() => setExpanded(!expanded)}>
@@ -214,11 +213,6 @@ function ActiveWeddingEventCard({ repli, guests }) {
 						</IconButton>
 					)}
 				</CardActions>
-
-				{/* <ActiveWeddingCardCollapse
-				expanded={expanded}
-				invitedGuests={repli.guests}
-			/> */}
 			</Card>
 		</>
 	);

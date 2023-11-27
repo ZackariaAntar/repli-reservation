@@ -1,19 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import Grid from "@mui/material/Grid";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import AddIcon from "@mui/icons-material/Add";
+
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import Collapse from "@mui/material/Collapse";
 
 //////////////////Guest List Form Component/////////////////////
 
-function GuestListForm() {
+function GuestListForm({ details }) {
+	// hooks for form TextField and dispatch and history for navigation and dispatch to redux store
+	// may need to update the naming convention for the hooks depending on how we want to handle the data
+	const tf = { mb: 2 };
+	const btn = { p: 1.5, width: "51%", mb: 2 };
 
-    // const activeWedding = useSelector((store) => store.activeWeddingDetails);
-    const activeWedding = useSelector((store) => store.allMyWeddings[0]); // only using for testing
-    const relationships = useSelector((store)=>store.relationships)
-
-    // hooks for form inputs and dispatch and history for navigation and dispatch to redux store
-    // may need to update the naming convention for the hooks depending on how we want to handle the data
-    const guestData = {
-        wedding_title: activeWedding.wedding_title,
+	const guestData = {
+		wedding_title: details.wedding_title,
 		first_name: "",
 		last_name: "",
 		username: "",
@@ -25,12 +41,12 @@ function GuestListForm() {
 		state: "",
 		zip: "",
 		relationship: "",
-		wedding_id: activeWedding.id,
+		wedding_id: details.id,
 		spouse_association: "",
-		can_plus_one: '',
+		can_plus_one: "",
 	};
-    const dummy = {
-		wedding_title: activeWedding.wedding_title,
+	const dummy = {
+		wedding_title: details.wedding_title,
 		first_name: "Pooh",
 		last_name: "Bear",
 		username: "pooh@bear.com",
@@ -42,317 +58,362 @@ function GuestListForm() {
 		state: "MN",
 		zip: "55407",
 		relationship: 1,
-		wedding_id: activeWedding.id,
-		spouse_association: activeWedding.spouse_1,
+		wedding_id: details.id,
+		spouse_association: details.spouse_1,
 		can_plus_one: true,
 	};
-    const [guestInfo, setGuestInfo] = useState(guestData);
-    const [switchName, setSwitchName] = useState('')
-    const history = useHistory();
-    const dispatch = useDispatch();
+	const [guestInfo, setGuestInfo] = useState(guestData);
+	const [switchName, setSwitchName] = useState("");
+	const relationships = useSelector((store) => store.relationships);
+	const dispatch = useDispatch();
 
-    const addToList = (e) => {
-        e.preventDefault();
-        dispatch({
+	const [expanded, setExpanded] = useState(false);
+
+
+	const addToList = (e) => {
+		e.preventDefault();
+		dispatch({
 			type: "VALIDATE_GUEST_INVITATION",
 			payload: guestInfo,
 		});
-        setGuestInfo(guestData)
-    };
+		setGuestInfo(guestData);
+	};
 
-
-    return (
-		<>
-			<h2
-				onClick={() => {
-					setGuestInfo(dummy);
+	return (
+		<form onSubmit={addToList}>
+			<Button
+			variant="outlined"
+			sx={btn}
+			onClick={()=>setExpanded(!expanded)}
+			>
+				{expanded ? 'Close' : 'Add Guests' }
+			</Button>
+			<Collapse
+				in={expanded}
+				timeout="auto"
+				unmountOnExit
+				sx={{
+					display: "flex",
+					flexDirection: "column",
+					justifyContent: "center",
+					alignItems: "center",
 				}}
 			>
-				Guest List Form
-			</h2>
-			{/* The h2 above can be deleted once we have a page header established */}
-			<form onSubmit={addToList}>
-				<h3>Personal Information</h3>
-				<input
-					value={guestInfo.first_name}
-					id="first_name"
-					placeholder="First Name *"
-					required
-					onChange={(e) =>
-						setGuestInfo({
-							...guestInfo,
-							first_name: e.target.value,
-						})
-					}
-					onBlur={() => setSwitchName(guestInfo.first_name)}
-				/>
+				<Typography variant="h6">Guest Details</Typography>
+				<Grid container spacing={1}>
+					<Grid item xs={12} md={6}>
+						<TextField
+							sx={tf}
+							fullWidth
+							value={guestInfo.first_name}
+							id="first_name"
+							label="First Name"
+							required
+							onChange={(e) =>
+								setGuestInfo({
+									...guestInfo,
+									first_name: e.target.value,
+								})
+							}
+							onBlur={() => setSwitchName(guestInfo.first_name)}
+						/>
 
-				<br />
+						<TextField
+							sx={tf}
+							fullWidth
+							value={guestInfo.username}
+							id="username"
+							label="E-mail"
+							required
+							onChange={(e) =>
+								setGuestInfo({
+									...guestInfo,
+									username: e.target.value,
+								})
+							}
+						/>
+						<TextField
+							sx={tf}
+							fullWidth
+							value={guestInfo.street_address}
+							id="street_address"
+							label="Street Address"
+							onChange={(e) =>
+								setGuestInfo({
+									...guestInfo,
+									street_address: e.target.value,
+								})
+							}
+						/>
+						<TextField
+							sx={tf}
+							fullWidth
+							value={guestInfo.city}
+							id="city"
+							label="City"
+							onChange={(e) =>
+								setGuestInfo({
+									...guestInfo,
+									city: e.target.value,
+								})
+							}
+						/>
+						<TextField
+							sx={tf}
+							fullWidth
+							value={guestInfo.zip}
+							id="zip"
+							label="Zip"
+							onChange={(e) =>
+								setGuestInfo({
+									...guestInfo,
+									zip: e.target.value,
+								})
+							}
+						/>
+					</Grid>
 
-				<input
-					value={guestInfo.last_name}
-					id="last_name"
-					placeholder="Last Name *"
-					required
-					onChange={(e) =>
-						setGuestInfo({
-							...guestInfo,
-							last_name: e.target.value,
-						})
-					}
-				/>
+					<Grid item xs={12} md={6}>
+						<TextField
+							sx={tf}
+							fullWidth
+							value={guestInfo.last_name}
+							id="last_name"
+							label="Last Name"
+							required
+							onChange={(e) =>
+								setGuestInfo({
+									...guestInfo,
+									last_name: e.target.value,
+								})
+							}
+						/>
+						<TextField
+							sx={tf}
+							fullWidth
+							value={guestInfo.phone_number}
+							id="phone_number"
+							label="Phone Number"
+							onChange={(e) =>
+								setGuestInfo({
+									...guestInfo,
+									phone_number: e.target.value,
+								})
+							}
+						/>
 
-				<br />
+						<TextField
+							sx={tf}
+							fullWidth
+							value={guestInfo.unit}
+							id="unit"
+							label="Unit/Apt #"
+							onChange={(e) =>
+								setGuestInfo({
+									...guestInfo,
+									unit: e.target.value,
+								})
+							}
+						/>
 
-				<h3>Contact Information</h3>
-				<input
-					value={guestInfo.username}
-					id="username"
-					placeholder="E-mail (used as login)*"
-					required
-					onChange={(e) =>
-						setGuestInfo({ ...guestInfo, username: e.target.value })
-					}
-				/>
+						<FormControl fullWidth sx={{ mb: 2 }}>
+							<InputLabel id="demo-simple-select-label">
+								{`Select a State`}
+							</InputLabel>
 
-				<br />
+							<Select
+								defaultValue="Select a state"
+								value={guestInfo.state}
+								id="state"
+								label={`Select a State`}
+								onChange={(e) =>
+									setGuestInfo({
+										...guestInfo,
+										state: e.target.value,
+									})
+								}
+								MenuProps={{
+									anchorOrigin: {
+										vertical: "bottom",
+										horizontal: "center",
+									},
+									transformOrigin: {
+										vertical: "top",
+										horizontal: "center",
+									},
+									getContentAnchorEl: null,
+									PaperProps: {
+										style: {
+											maxHeight: 250, // Adjust this value as needed
+											overflow: "auto",
+										},
+									},
+								}}
+							>
+								<MenuItem disabled value="">
+									<em>Select a State</em>
+								</MenuItem>
+								<MenuItem value="AL">Alabama</MenuItem>
+								<MenuItem value="AK">Alaska</MenuItem>
+								<MenuItem value="AZ">Arizona</MenuItem>
+								<MenuItem value="AR">Arkansas</MenuItem>
+								<MenuItem value="CA">California</MenuItem>
+								<MenuItem value="CO">Colorado</MenuItem>
+								<MenuItem value="CT">Connecticut</MenuItem>
+								<MenuItem value="DE">Delaware</MenuItem>
+								<MenuItem value="DC">
+									District Of Columbia
+								</MenuItem>
+								<MenuItem value="FL">Florida</MenuItem>
+								<MenuItem value="GA">Georgia</MenuItem>
+								<MenuItem value="HI">Hawaii</MenuItem>
+								<MenuItem value="ID">Idaho</MenuItem>
+								<MenuItem value="IL">Illinois</MenuItem>
+								<MenuItem value="IN">Indiana</MenuItem>
+								<MenuItem value="IA">Iowa</MenuItem>
+								<MenuItem value="KS">Kansas</MenuItem>
+								<MenuItem value="KY">Kentucky</MenuItem>
+								<MenuItem value="LA">Louisiana</MenuItem>
+								<MenuItem value="ME">Maine</MenuItem>
+								<MenuItem value="MD">Maryland</MenuItem>
+								<MenuItem value="MA">Massachusetts</MenuItem>
+								<MenuItem value="MI">Michigan</MenuItem>
+								<MenuItem value="MN">Minnesota</MenuItem>
+								<MenuItem value="MS">Mississippi</MenuItem>
+								<MenuItem value="MO">Missouri</MenuItem>
+								<MenuItem value="MT">Montana</MenuItem>
+								<MenuItem value="NE">Nebraska</MenuItem>
+								<MenuItem value="NV">Nevada</MenuItem>
+								<MenuItem value="NH">New Hampshire</MenuItem>
+								<MenuItem value="NJ">New Jersey</MenuItem>
+								<MenuItem value="NM">New Mexico</MenuItem>
+								<MenuItem value="NY">New York</MenuItem>
+								<MenuItem value="NC">North Carolina</MenuItem>
+								<MenuItem value="ND">North Dakota</MenuItem>
+								<MenuItem value="OH">Ohio</MenuItem>
+								<MenuItem value="OK">Oklahoma</MenuItem>
+								<MenuItem value="OR">Oregon</MenuItem>
+								<MenuItem value="PA">Pennsylvania</MenuItem>
+								<MenuItem value="RI">Rhode Island</MenuItem>
+								<MenuItem value="SC">South Carolina</MenuItem>
+								<MenuItem value="SD">South Dakota</MenuItem>
+								<MenuItem value="TN">Tennessee</MenuItem>
+								<MenuItem value="TX">Texas</MenuItem>
+								<MenuItem value="UT">Utah</MenuItem>
+								<MenuItem value="VT">Vermont</MenuItem>
+								<MenuItem value="VA">Virginia</MenuItem>
+								<MenuItem value="WA">Washington</MenuItem>
+								<MenuItem value="WV">West Virginia</MenuItem>
+								<MenuItem value="WI">Wisconsin</MenuItem>
+								<MenuItem value="WY">Wyoming</MenuItem>
+							</Select>
+						</FormControl>
+					</Grid>
+					<Grid item md={12}>
+						<Typography mb variant="h6">
+							Additional Information
+						</Typography>
+						<FormControl sx={{ mb: 1 }}>
+							<FormLabel id="allow-plus-one">
+								{switchName
+									? `Does ${switchName} get a plus one?`
+									: `Does this guest get a plus one?`}
+							</FormLabel>
+							<RadioGroup
+								row
+								aria-labelledby="allow-plus-one"
+								name="can-plus-one"
+								onChange={(e) =>
+									setGuestInfo({
+										...guestInfo,
+										can_plus_one: e.target.value,
+									})
+								}
+							>
+								<FormControlLabel
+									value={true}
+									control={<Radio />}
+									label="Yes"
+								/>
+								<FormControlLabel
+									value={false}
+									control={<Radio />}
+									label="No"
+								/>
+							</RadioGroup>
+						</FormControl>
 
-				<input
-					value={guestInfo.phone_number}
-					id="phone_number"
-					placeholder="Phone Number"
-					onChange={(e) =>
-						setGuestInfo({
-							...guestInfo,
-							phone_number: e.target.value,
-						})
-					}
-				/>
+						<FormControl fullWidth sx={{ mb: 2 }}>
+							<InputLabel id="spouse_association">
+								{switchName
+									? `Who is ${switchName} is associated with...`
+									: `Who is this guest is associated with...`}
+							</InputLabel>
 
-				<br />
+							<Select
+								value={guestInfo.spouse_association}
+								id="spouse_association"
+								label={
+									switchName
+										? `Who is ${switchName} is associated with...`
+										: `Who is this guest is associated with...`
+								}
+								onChange={(e) =>
+									setGuestInfo({
+										...guestInfo,
+										spouse_association: e.target.value,
+									})
+								}
+							>
+								<MenuItem value={details.spouse_1}>
+									Guest of {details.spouse_1}
+								</MenuItem>
+								<MenuItem value={details.spouse_2}>
+									Guest of {details.spouse_2}
+								</MenuItem>
+							</Select>
+						</FormControl>
 
-				<input
-					value={guestInfo.street_address}
-					id="street_address"
-					placeholder="Street Address"
-					onChange={(e) =>
-						setGuestInfo({
-							...guestInfo,
-							street_address: e.target.value,
-						})
-					}
-				/>
+						<FormControl fullWidth sx={{ mb: 2 }}>
+							<InputLabel>
+								{`Relationship to ${guestInfo.spouse_association}...`}
+							</InputLabel>
 
-				<br />
-
-				<input
-					value={guestInfo.unit}
-					id="unit"
-					placeholder="Unit/Apt #"
-					onChange={(e) =>
-						setGuestInfo({ ...guestInfo, unit: e.target.value })
-					}
-				/>
-
-				<br />
-
-				<input
-					value={guestInfo.city}
-					id="city"
-					placeholder="City"
-					onChange={(e) =>
-						setGuestInfo({ ...guestInfo, city: e.target.value })
-					}
-				/>
-
-				<br />
-
-				<select
-					value={guestInfo.state}
-					id="state"
-					onChange={(e) =>
-						setGuestInfo({ ...guestInfo, state: e.target.value })
-					}
-				>
-					<option
-						value="Select a State"
-						disable="true"
-						selected
-						hidden
+							<Select
+								value={guestInfo.relationship}
+								id="relationship"
+								label={`Relationship to ${guestInfo.spouse_association}...`}
+								onChange={(e) =>
+									setGuestInfo({
+										...guestInfo,
+										relationship: e.target.value,
+									})
+								}
+							>
+								{relationships.map((relation) => (
+									<MenuItem
+										key={relation.id}
+										value={relation.id}
+									>
+										{guestInfo.spouse_association}'s{" "}
+										{relation.category}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					</Grid>
+					<Button
+						sx={{ mt: 1, p:1.5 }}
+						fullWidth
+						variant="contained"
+						type="submit"
 					>
-						Select a State
-					</option>
-					<option value="AL">Alabama</option>
-					<option value="AK">Alaska</option>
-					<option value="AZ">Arizona</option>
-					<option value="AR">Arkansas</option>
-					<option value="CA">California</option>
-					<option value="CO">Colorado</option>
-					<option value="CT">Connecticut</option>
-					<option value="DE">Delaware</option>
-					<option value="DC">District Of Columbia</option>
-					<option value="FL">Florida</option>
-					<option value="GA">Georgia</option>
-					<option value="HI">Hawaii</option>
-					<option value="ID">Idaho</option>
-					<option value="IL">Illinois</option>
-					<option value="IN">Indiana</option>
-					<option value="IA">Iowa</option>
-					<option value="KS">Kansas</option>
-					<option value="KY">Kentucky</option>
-					<option value="LA">Louisiana</option>
-					<option value="ME">Maine</option>
-					<option value="MD">Maryland</option>
-					<option value="MA">Massachusetts</option>
-					<option value="MI">Michigan</option>
-					<option value="MN">Minnesota</option>
-					<option value="MS">Mississippi</option>
-					<option value="MO">Missouri</option>
-					<option value="MT">Montana</option>
-					<option value="NE">Nebraska</option>
-					<option value="NV">Nevada</option>
-					<option value="NH">New Hampshire</option>
-					<option value="NJ">New Jersey</option>
-					<option value="NM">New Mexico</option>
-					<option value="NY">New York</option>
-					<option value="NC">North Carolina</option>
-					<option value="ND">North Dakota</option>
-					<option value="OH">Ohio</option>
-					<option value="OK">Oklahoma</option>
-					<option value="OR">Oregon</option>
-					<option value="PA">Pennsylvania</option>
-					<option value="RI">Rhode Island</option>
-					<option value="SC">South Carolina</option>
-					<option value="SD">South Dakota</option>
-					<option value="TN">Tennessee</option>
-					<option value="TX">Texas</option>
-					<option value="UT">Utah</option>
-					<option value="VT">Vermont</option>
-					<option value="VA">Virginia</option>
-					<option value="WA">Washington</option>
-					<option value="WV">West Virginia</option>
-					<option value="WI">Wisconsin</option>
-					<option value="WY">Wyoming</option>
-				</select>
-
-				<input
-					value={guestInfo.zip}
-					id="zip"
-					placeholder="Zip"
-					onChange={(e) =>
-						setGuestInfo({ ...guestInfo, zip: e.target.value })
-					}
-				/>
-
-				<br />
-				<div>
-					<p>Does this guest get a plus one?</p>
-
-					<label htmlFor="can_plus_one">
-						Yes
-						<input
-							type="radio"
-							value={guestInfo.can_plus_one}
-							id="can_plus_one"
-							name="can_plus_one"
-							checked={guestInfo.can_plus_one === true}
-							onChange={(e) =>
-								setGuestInfo({
-									...guestInfo,
-									can_plus_one: true,
-								})
-							}
-						/>
-					</label>
-
-					<label htmlFor="cannot_plus_one">
-						{" "}
-						No{" "}
-						<input
-							type="radio"
-							value={guestInfo.can_plus_one}
-							id="cannot_plus_one"
-							name="cannot_plus_one"
-							checked={guestInfo.can_plus_one === false}
-							onChange={(e) =>
-								setGuestInfo({
-									...guestInfo,
-									can_plus_one: false,
-								})
-							}
-						/>
-					</label>
-				</div>
-
-				<h3>Other Information</h3>
-				{/* Figure out nice looking UX/UI conditional rendering for inline drop downs to avoid parsing pre dispatch to accomodate DB and query logic*/}
-				<select
-					value={guestInfo.spouse_association}
-					id="spouse_association"
-					onChange={(e) =>
-						setGuestInfo({
-							...guestInfo,
-							spouse_association: e.target.value,
-						})
-					}
-				>
-					{switchName ? (
-						<option value="" disable="true" selected hidden>
-							Who is {switchName} is associated with...
-						</option>
-					) : (
-						<option value="" disable="true" selected hidden>
-							Who is this guest is associated with...
-						</option>
-					)}
-					<option value={activeWedding.spouse_1}>
-						Guest of {activeWedding.spouse_1}
-					</option>
-					<option value={activeWedding.spouse_2}>
-						Guest of {activeWedding.spouse_2}
-					</option>
-				</select>
-
-				<select
-					value={guestInfo.relationship}
-					id="relationship"
-					onChange={(e) =>
-						setGuestInfo({
-							...guestInfo,
-							relationship: e.target.value,
-						})
-					}
-				>
-					<option value="" disable="true" selected hidden>
-						Relationship to {guestInfo.spouse_association}...
-					</option>
-					{relationships.map((relation) => (
-						<option key={relation.id} value={relation.id}>
-							{guestInfo.spouse_association}'s {relation.category}
-						</option>
-					))}
-					{/* <option value={"family"}>
-						{guestInfo.spouse_association}'s Family
-					</option>
-					<option value="friend">
-						{guestInfo.spouse_association}'s Friend
-					</option>
-					<option value="fam friend">
-						{guestInfo.spouse_association}'s Family Friend
-					</option>
-					<option value="wedding party">
-						{guestInfo.spouse_association}'s Wedding Party
-					</option> */}
-				</select>
-
-				<br />
-
-				<button type="submit">Save and Add Another</button>
-				<button>Save and View Guest List</button>
-				<button>Save and Exit</button>
-			</form>
-		</>
+						Add To Guestlist
+					</Button>
+				</Grid>
+			</Collapse>
+		</form>
 	);
-};
+}
 
 export default GuestListForm;
