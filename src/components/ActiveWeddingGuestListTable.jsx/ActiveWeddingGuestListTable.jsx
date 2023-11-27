@@ -19,7 +19,7 @@ function ActiveWeddingGuestListTable({ guests}) {
 	const [expanded, setExpanded] = useState(false);
 
 
-	const btn = { p: 1.5, width: "51%", mb: 2 };
+	const btn = { p: 1.5, width: "51%", mb: 2, ml: 25 };
 
 	return (
 		<>

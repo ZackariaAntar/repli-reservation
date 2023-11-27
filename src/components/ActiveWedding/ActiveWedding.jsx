@@ -54,7 +54,10 @@ function ActiveWedding() {
 	// - Add/edit announcement form
 
 	return (
-		<Container maxWidth="lg">
+		<Container
+			maxWidth="lg"
+			// sx={{display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}
+		>
 			<Grid container spacing={1}>
 				<Grid item xs={12} sm={12} md={12}>
 					{details.map((info) => (
@@ -79,10 +82,12 @@ function ActiveWedding() {
 							</Typography>
 						</div>
 					))}
+				</Grid>
+				<Grid item xs={12} sm={12} md={12}>
 					<Button
 						variant="outlined"
 						onClick={() => setEditWedding(!editWedding)}
-						sx={{ p: 1.5, width: "25%", mb: 2 }}
+						sx={{ p: 1.5, width: "51%", mb: 2, ml:25 }}
 					>
 						edit wedding details
 					</Button>
@@ -116,9 +121,6 @@ function ActiveWedding() {
 					<ActiveWeddingGuestListTable guests={guests} />
 				</Grid>
 				<Grid item xs={12} sm={12} md={12}>
-					<ActiveWeddingEventsBulletin events={events} />
-				</Grid>
-				<Grid item xs={12} sm={12} md={12}>
 					<Button
 						startIcon={
 							expanded ? (
@@ -128,7 +130,7 @@ function ActiveWedding() {
 							)
 						}
 						variant="outlined"
-						sx={{ p: 1.25, width: "51%", mb: 2 }}
+						sx={{ p: 1.25, width: "51%", mb: 2, ml: 25 }}
 						onClick={() => setExpanded(!expanded)}
 					>
 						{expanded ? "Close" : "Manage RSVPs"}
@@ -161,6 +163,9 @@ function ActiveWedding() {
 							))}
 						</Grid>
 					</Collapse>
+				</Grid>
+				<Grid item xs={12} sm={12} md={12}>
+					<ActiveWeddingEventsBulletin events={events} />
 				</Grid>
 
 				<Grid item xs={12} sm={12} md={12}>
