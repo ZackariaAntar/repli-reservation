@@ -132,11 +132,9 @@ SELECT
 
 	const wedding_id = req.params.id;
 	pool.query(queryText, [wedding_id])
-		.then(
-			(result) =>
-			{console.log("Guests queried for", result.rows),
-			res.send(result.rows)}
-		)
+		.then((result) => {
+			res.send(result.rows);
+		})
 		.catch((err) => {
 			console.log(
 				`Failed to ${queryText}, $1 used in query is: ${wedding_id}`,

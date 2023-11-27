@@ -6,6 +6,7 @@ import weddingPlanningSaga from './wedding.planning.saga';
 import dashboardDataSaga from './dashboard.data.saga';
 import rsvpSaga from './rsvp.saga';
 import invitationSaga from './invititation.saga'
+import actionsSaga from './active.wedding.actions.saga';
 
 // rootSaga is the primary saga.
 // It bundles up all of the other sagas so our project can use them.
@@ -22,7 +23,9 @@ export default function* rootSaga() {
     weddingPlanningSaga(),
     dashboardDataSaga(),
     rsvpSaga(),
-    invitationSaga()
+    invitationSaga(),
+    actionsSaga(),
+
 
   ]);
 }

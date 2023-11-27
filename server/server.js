@@ -12,6 +12,8 @@ const userRouter = require('./routes/user.router');
 const guestInfoRouter = require('./routes/guest.info.router')
 const weddingRouter = require('./routes/wedding.router')
 
+
+const actionsRouter = require('./routes/actions.router');
 // Body parser middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -28,6 +30,8 @@ app.use('/api/user', userRouter);
 app.use('/api/guest_info', guestInfoRouter);
 app.use('/api/wedding', weddingRouter);
 
+
+app.use('/api/actions', actionsRouter)
 // Serve static files
 app.use(express.static('build'));
 

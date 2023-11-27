@@ -15,6 +15,7 @@ import Collapse from "@mui/material/Collapse"
 import Typography from "@mui/material/Typography";
 
 function AddEventForm({wedding_id }) {
+	const dispatch = useDispatch()
 	const[expanded, setExpanded] = useState(false);
 	const btn = { p: 1.5, width: "51%", mb: 2 };
 	const eventDetails = {
@@ -34,7 +35,8 @@ function AddEventForm({wedding_id }) {
 	const [event, setEvent] = useState(eventDetails);
 	const postEvent = (e) => {
 		e.preventDefault();
-		alert("CONNECT AddEventForm TO SAGA AND SERVER");
+		dispatch({type:'ADD_NEW_EVENT',  payload:event})
+		setExpanded(!expanded)
 	};
 	return (
 			<form
