@@ -8,7 +8,8 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
 import Collapse from "@mui/material/Collapse";
-
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -21,6 +22,7 @@ import AddAnnouncementForm from "../AddAnnouncementForm/AddAnnouncementForm";
 import ActiveWeddingEventCard from "../ActiveWeddingEventCard/ActiveWeddingEventCard";
 import GuestListForm from "../GuestListForm/GuestListForm";
 import ActiveWeddingGuestListTable from "../ActiveWeddingGuestListTable.jsx/ActiveWeddingGuestListTable";
+import ActiveWeddingEventsBulletin from "../ActiveWeddingEventsBulletin/ActiveWeddingEventsBulletin";
 
 function ActiveWedding() {
 	const dispatch = useDispatch();
@@ -34,11 +36,8 @@ function ActiveWedding() {
 	const posts = useSelector((store) => store.activeWeddingPosts);
 	const RSVPs = useSelector((store) => store.activeWeddingReplis);
 
-
 	const [editWedding, setEditWedding] = useState(false);
-	const [addEvent, setAddEvent] = useState(false);
-	const [editEvent, setEditEvent] = useState(false);
-	const [addAnnouncement, setAddAnnouncement] = useState(false);
+	const [expanded, setExpanded] = useState(false);
 
 	useEffect(() => {
 		dispatch({ type: "GET_ACTIVE_WEDDING_DETAILS", payload: wedding_id });
@@ -115,104 +114,53 @@ function ActiveWedding() {
 			<Grid container spacing={1}>
 				<Grid item xs={12} sm={12} md={12}>
 					<ActiveWeddingGuestListTable guests={guests} />
-					{/* <h2>Our Guest List</h2>
-					<Grid container spacing={1}>
-						{guests.map((guest) => (
-							<Grid item key={guest.id} xs={12} sm={6} md={3}>
-								<div>
-									<p> {guest.id} </p>
-									<p> user_id: {guest.user_id}</p>
-									<p> first_name: {guest.first_name}</p>
-									<p> last_name: {guest.last_name}</p>
-									<p> phone_number: {guest.phone_number}</p>
-									<p>
-										{" "}
-										street_address: {guest.street_address}
-									</p>
-									<p> unit: {guest.unit}</p>
-									<p> city: {guest.city}</p>
-									<p> state: {guest.state}</p>
-									<p> zip: {guest.zip}</p>
-									<p> allergies: {guest.allergies}</p>
-									<p>
-										{" "}
-										accommodations: {guest.accommodations}
-									</p>
-									<p> contact_email: {guest.contact_email}</p>
-									<p> spouse_party: {guest.spouse_party}</p>
-									<p>
-										relationship_to_spouse:
-										{guest.relationship_to_spouse}
-									</p>
-									<p>
-										{" "}
-										guest_meal_choice:{" "}
-										{guest.guest_meal_choice}
-									</p>
-									<p>
-										can_plus_one:{" "}
-										{guest.can_plus_one ? `Yes` : `No`}
-									</p>
-									<p> plus_one_id: {guest.plus_one_id}</p>
-									<p>
-										{" "}
-										plus_one_first_name:{" "}
-										{guest.plus_one_first_name}
-									</p>
-									<p>
-										{" "}
-										plus_one_last_name:{" "}
-										{guest.plus_one_last_name}
-									</p>
-									<p>
-										{" "}
-										plus_one_meal_choice:{" "}
-										{guest.plus_one_meal_choice}
-									</p>
-									<p>
-										{" "}
-										plus_one_notes: {guest.plus_one_notes}
-									</p>
-								</div>
-							</Grid>
-						))}
-					</Grid> */}
 				</Grid>
-				<Grid item xs={12} sm={12} md={4}>
-					<h4>EVENTS</h4>
-					{/* <Grid container spacing={1}>
-						{events.map((event) => (
-							<Grid item key={event.id} xs={12} sm={6} md={3}>
-							<div key={event.id}>
-							<p>{event.wedding_id}</p>
-							<h4>{event.event_name}</h4>
-							<p>
-							{event.event_broadcast
-								? "Guests can see"
-								: "Guests can't see"}
-								</p>
-								<p>{event.event_street_address}</p>
-								<p>{event.event_city}</p>
-								<p>{event.event_state}</p>
-								<p>{event.event_zip}</p>
-								<p>{event.event_maps_url}</p>
-								<p>{event.event_date}</p>
-								<p>{event.event_start_time}</p>
-								<p>{event.event_end_time}</p>
-								<Button
-								onClick={() => setEditEvent(!editEvent)}
+				<Grid item xs={12} sm={12} md={12}>
+					<ActiveWeddingEventsBulletin events={events} />
+				</Grid>
+				<Grid item xs={12} sm={12} md={12}>
+					<Button
+						startIcon={
+							expanded ? (
+								<KeyboardArrowUpIcon />
+							) : (
+								<KeyboardArrowDownIcon />
+							)
+						}
+						variant="outlined"
+						sx={{ p: 1.25, width: "51%", mb: 2 }}
+						onClick={() => setExpanded(!expanded)}
+					>
+						{expanded ? "Close" : "Manage RSVPs"}
+					</Button>
+					<Collapse
+						in={expanded}
+						timeout="auto"
+						unmountOnExit
+						sx={{
+							display: "flex",
+							flexDirection: "column",
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+					>
+						<Grid container spacing={1}>
+							{RSVPs.map((repli) => (
+								<Grid
+									item
+									key={repli.event_id}
+									xs={12}
+									sm={6}
+									md={6}
 								>
-								Edit event
-								</Button>
-								</div>
-								<EditEventForm
-								editEvent={editEvent}
-								setEditEvent={setEditEvent}
-								event={event}
-								/>
+									<ActiveWeddingEventCard
+										repli={repli}
+										guests={guests}
+									/>
 								</Grid>
-								))}
-							</Grid> */}
+							))}
+						</Grid>
+					</Collapse>
 				</Grid>
 
 				<Grid item xs={12} sm={12} md={12}>
@@ -231,26 +179,6 @@ function ActiveWedding() {
 									<p>{post.creator_last_name}</p>
 									{/* <p>{post.event_id}</p> */}
 								</div>
-							</Grid>
-						))}
-					</Grid>
-				</Grid>
-
-				<Grid item xs={12} sm={12} md={12}>
-					<h2>RSVPs</h2>
-					<Grid container spacing={1}>
-						{RSVPs.map((repli) => (
-							<Grid
-								item
-								key={repli.event_id}
-								xs={12}
-								sm={6}
-								md={6}
-							>
-								<ActiveWeddingEventCard
-									repli={repli}
-									guests={guests}
-								/>
 							</Grid>
 						))}
 					</Grid>
