@@ -58,7 +58,7 @@ router.post("/event", rejectUnauthenticated, (req, res) => {
 });
 router.post("/announcement", rejectUnauthenticated, (req, res) => {
 	const queryText = `
-    INSERT INTO announcements(creator_id,wedding_id,event_id,announcement)
+    INSERT INTO wedding_announcements(creator_id,wedding_id,event_id,announcement)
     VALUES($1,$2,$3,$4)
     ;`;
 	const {creator_id,wedding_id,event_id,announcement} = req.body;

@@ -21,21 +21,26 @@ function AddAnnouncementForm({
 
 
 	const postDetails = {
+		creator_id:user.id,
 		wedding_id: wedding_id,
+		event_id:'',
 		announcement: "",
 		creator_first_name: user.first_name,
 		creator_last_name: user.last_name,
 		event_name: "",
-		event_date: "",
 	};
+
+;
 
 	const [announcement, setAnnouncement] = useState(postDetails);
 	const [expanded, setExpanded] = useState(false);
 
 	const postAnnouncement = (e) => {
 		e.preventDefault();
-		alert("CONNECT AddAnnouncementForm TO SAGA AND SERVER");
-		// dispatch({type:'', payload:''})
+		console.log(announcement);
+		dispatch({type:'ADD_NEW_ANNOUNCEMENT', payload:announcement})
+		setExpanded(!expanded)
+		setAnnouncement(postDetails)
 	};
 	return (
 		<form
@@ -79,7 +84,7 @@ function AddAnnouncementForm({
 							setAnnouncement({
 								...announcement,
 								event_name: e.target.value,
-								event_date: choice.props.date,
+								event_id: choice.props.event_id,
 							})
 						}
 						label="Choose an event..."
@@ -90,7 +95,7 @@ function AddAnnouncementForm({
 						{events.map((event) => (
 							<MenuItem
 								key={event.id}
-								date={event.event_date}
+								event_id={event.id}
 								value={event.event_name}
 							>
 								{event.event_name}
@@ -107,11 +112,12 @@ function AddAnnouncementForm({
 					fullWidth
 					label={announcement.event_name ? `What would you like to share about the ${announcement.event_name}?`: `What would you like to share?`}
 					value={announcement.announcement}
-					onChange={(e) =>
+					onChange={(e) =>{
 						setAnnouncement({
 							...announcement,
 							announcement: e.target.value,
 						})
+					}
 					}
 					InputLabelProps={{
 						shrink: true,
@@ -132,18 +138,6 @@ function AddAnnouncementForm({
 				</Box>
 			</Collapse>
 		</form>
-
-		// <Dialog
-		// 	fullWidth
-		// 	open={addAnnouncement}
-		// 	onClose={() => setAddAnnouncement(!addAnnouncement)}
-		// 	sx={{
-		// 		p: 1,
-		// 		m: 1,
-		// 	}}
-		// >
-
-		// </Dialog>
 	);
 }
 

@@ -113,42 +113,6 @@ function ActiveWedding() {
 				</Grid>
 			</Grid>
 			<Grid container spacing={1}>
-				<Grid item xs={12} sm={12} md={4}>
-					{/* <Grid container spacing={1}>
-						{events.map((event) => (
-							<Grid item key={event.id} xs={12} sm={6} md={3}>
-							<div key={event.id}>
-							<p>{event.wedding_id}</p>
-							<h4>{event.event_name}</h4>
-							<p>
-							{event.event_broadcast
-								? "Guests can see"
-								: "Guests can't see"}
-								</p>
-								<p>{event.event_street_address}</p>
-								<p>{event.event_city}</p>
-								<p>{event.event_state}</p>
-								<p>{event.event_zip}</p>
-								<p>{event.event_maps_url}</p>
-								<p>{event.event_date}</p>
-								<p>{event.event_start_time}</p>
-								<p>{event.event_end_time}</p>
-								<Button
-								onClick={() => setEditEvent(!editEvent)}
-								>
-								Edit event
-								</Button>
-								</div>
-								<EditEventForm
-								editEvent={editEvent}
-								setEditEvent={setEditEvent}
-								event={event}
-								/>
-								</Grid>
-								))}
-							</Grid> */}
-				</Grid>
-
 				<Grid item xs={12} sm={12} md={12}>
 					<ActiveWeddingGuestListTable guests={guests} />
 					{/* <h2>Our Guest List</h2>
@@ -214,6 +178,43 @@ function ActiveWedding() {
 						))}
 					</Grid> */}
 				</Grid>
+				<Grid item xs={12} sm={12} md={4}>
+					<h4>EVENTS</h4>
+					{/* <Grid container spacing={1}>
+						{events.map((event) => (
+							<Grid item key={event.id} xs={12} sm={6} md={3}>
+							<div key={event.id}>
+							<p>{event.wedding_id}</p>
+							<h4>{event.event_name}</h4>
+							<p>
+							{event.event_broadcast
+								? "Guests can see"
+								: "Guests can't see"}
+								</p>
+								<p>{event.event_street_address}</p>
+								<p>{event.event_city}</p>
+								<p>{event.event_state}</p>
+								<p>{event.event_zip}</p>
+								<p>{event.event_maps_url}</p>
+								<p>{event.event_date}</p>
+								<p>{event.event_start_time}</p>
+								<p>{event.event_end_time}</p>
+								<Button
+								onClick={() => setEditEvent(!editEvent)}
+								>
+								Edit event
+								</Button>
+								</div>
+								<EditEventForm
+								editEvent={editEvent}
+								setEditEvent={setEditEvent}
+								event={event}
+								/>
+								</Grid>
+								))}
+							</Grid> */}
+				</Grid>
+
 				<Grid item xs={12} sm={12} md={12}>
 					<h2>Announcements</h2>
 					<Grid container spacing={1}>
