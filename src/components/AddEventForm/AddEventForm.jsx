@@ -32,7 +32,6 @@ function AddEventForm({wedding_id }) {
 	};
 
 	const [event, setEvent] = useState(eventDetails);
-	console.log(event.event_broadcast);
 	const postEvent = (e) => {
 		e.preventDefault();
 		alert("CONNECT AddEventForm TO SAGA AND SERVER");
