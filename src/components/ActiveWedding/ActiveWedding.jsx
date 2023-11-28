@@ -122,7 +122,12 @@ function ActiveWedding() {
 				<Grid item xs={12} sm={12} md={4}>
 					<AddEventForm wedding_id={wedding_id} />
 				</Grid>
-				<Grid item xs={12} sm={12} md={4}>
+				<Grid
+					item
+					xs={12}
+					sm={12}
+					md={4}
+				>
 					{posts && (
 						<AddAnnouncementForm
 							events={events}

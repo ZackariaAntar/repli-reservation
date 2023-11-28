@@ -10,6 +10,8 @@ import TableCell from "@mui/material/TableCell";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+
 
 import { useState } from "react";
 
@@ -19,10 +21,19 @@ function ActiveWeddingGuestListTable({ guests}) {
 	const [expanded, setExpanded] = useState(false);
 
 
-	const btn = { p: 1.5, width: "51%", mb: 2, ml: 25 };
+	const btn = { p: 1.5, width: "51%", mb: 2};
 
 	return (
-		<>
+		<Container
+			maxWidth="lg"
+			sx={{
+				display: "flex",
+				flexDirection: "column",
+				justifyContent: "center",
+				alignItems: "center",
+				mb: 2,
+			}}
+		>
 			<Button
 				startIcon={
 					expanded ? (
@@ -46,28 +57,109 @@ function ActiveWeddingGuestListTable({ guests}) {
 					flexDirection: "column",
 					justifyContent: "center",
 					alignItems: "center",
+					width: "105%",
 				}}
 			>
 				<TableContainer component={Paper}>
-					<Table sx={{ minWidth: 650 }} aria-label="simple table">
-						<TableHead>
+					<Table aria-label="simple table">
+						<TableHead sx={{ color: "orange" }}>
 							<TableRow>
-								<TableCell>Name</TableCell>
-								<TableCell align="left">Phone Number</TableCell>
-								<TableCell align="left">Email</TableCell>
-								<TableCell align="left">Allergies</TableCell>
-								<TableCell align="left">
+								<TableCell
+									colSpan={2}
+									sx={{
+										paddingRight: 12,
+										fontWeight: "bold",
+									}}
+								>
+									Name
+								</TableCell>
+								<TableCell
+									sx={{
+										fontWeight: "bold",
+									}}
+									align="left"
+								>
+									Phone Number
+								</TableCell>
+								<TableCell
+									sx={{
+										fontWeight: "bold",
+									}}
+									align="left"
+								>
+									Email
+								</TableCell>
+								<TableCell
+									sx={{
+										fontWeight: "bold",
+									}}
+									align="left"
+								>
+									Allergies
+								</TableCell>
+								<TableCell
+									colSpan={2}
+									sx={{ paddingRight: 5, fontWeight: "bold" }}
+									align="left"
+								>
 									Accommodations
 								</TableCell>
-								<TableCell align="left">Meal Choice</TableCell>
-								<TableCell align="left">Spouse Party</TableCell>
-								<TableCell align="left">Realtionship</TableCell>
-								<TableCell align="left">Plus One</TableCell>
-								<TableCell align="left">Name</TableCell>
-								<TableCell align="left">
+								<TableCell
+									sx={{
+										fontWeight: "bold",
+									}}
+									align="left"
+								>
+									Meal Choice
+								</TableCell>
+								<TableCell
+									sx={{
+										fontWeight: "bold",
+									}}
+									align="left"
+								>
+									Spouse Party
+								</TableCell>
+								<TableCell
+									sx={{
+										fontWeight: "bold",
+									}}
+									align="left"
+								>
+									Realtionship
+								</TableCell>
+								<TableCell
+									sx={{
+										fontWeight: "bold",
+									}}
+									align="left"
+								>
+									Plus One
+								</TableCell>
+								<TableCell
+									sx={{
+										fontWeight: "bold",
+									}}
+									align="left"
+								>
+									Name
+								</TableCell>
+								<TableCell
+									sx={{
+										fontWeight: "bold",
+									}}
+									align="left"
+								>
 									Additional Information
 								</TableCell>
-								<TableCell align="left">Meal Choice</TableCell>
+								<TableCell
+									sx={{
+										fontWeight: "bold",
+									}}
+									align="left"
+								>
+									Meal Choice
+								</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
@@ -81,7 +173,7 @@ function ActiveWeddingGuestListTable({ guests}) {
 					</Table>
 				</TableContainer>
 			</Collapse>
-		</>
+		</Container>
 	);
 }
 
