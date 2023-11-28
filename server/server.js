@@ -11,6 +11,7 @@ const passport = require('./strategies/user.strategy');
 const userRouter = require('./routes/user.router');
 const guestInfoRouter = require('./routes/guest.info.router')
 const weddingRouter = require('./routes/wedding.router')
+const rsvpRouter = require('./routes/rsvp.router')
 
 
 const actionsRouter = require('./routes/actions.router');
@@ -29,6 +30,7 @@ app.use(passport.session());
 app.use('/api/user', userRouter);
 app.use('/api/guest_info', guestInfoRouter);
 app.use('/api/wedding', weddingRouter);
+app.use('/api/rsvp', rsvpRouter);
 
 
 app.use('/api/actions', actionsRouter)
