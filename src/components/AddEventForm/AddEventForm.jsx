@@ -11,10 +11,20 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import Collapse from "@mui/material/Collapse";
+import Typography from "@mui/material/Typography";
+import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 
-function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
+import dayjs from "dayjs";
 
-
+function AddEventForm({ wedding_id }) {
+	const dispatch = useDispatch();
+	const [expanded, setExpanded] = useState(false);
+	const btn = { p: 1.5, width: "51%", mb: 2 };
+	const today = dayjs()
 	const eventDetails = {
 		wedding_id: wedding_id,
 		event_broadcast: true,
@@ -24,41 +34,54 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 		event_state: "",
 		event_zip: "",
 		event_maps_url: "",
-		event_date: "",
+		event_date: today,
 		event_start_time: "",
 		event_end_time: "",
 	};
 
 	const [event, setEvent] = useState(eventDetails);
-	console.log(event.event_broadcast);
 	const postEvent = (e) => {
 		e.preventDefault();
-		alert("CONNECT AddEventForm TO SAGA AND SERVER");
+		console.log(event);
+		dispatch({ type: "ADD_NEW_EVENT", payload: event });
+		setEvent(eventDetails)
+		setExpanded(!expanded);
 	};
 	return (
-		<Dialog open={addEvent} onClose={() => setAddEvent(!addEvent)}>
-			<form
-				method="POST"
-				onSubmit={postEvent}
-				style={{
+		<form
+			method="POST"
+			onSubmit={postEvent}
+			// style={{
+			// 	display: "flex",
+			// 	flexDirection: "column",
+			// 	justifyContent: "center",
+			// 	alignItems: "center",
+			// 	padding: 10,
+			// 	marginRight: 45,
+			// 	marginLeft: 25,
+			// 	marginBottom: 5,
+			// }}
+		>
+			<Button
+				variant="outlined"
+				sx={btn}
+				onClick={() => setExpanded(!expanded)}
+			>
+				{expanded ? "Close" : "Add Event"}
+			</Button>
+			<Collapse
+				in={expanded}
+				timeout="auto"
+				unmountOnExit
+				sx={{
 					display: "flex",
 					flexDirection: "column",
 					justifyContent: "center",
 					alignItems: "center",
-					padding: 10,
-					marginRight: 45,
-					marginLeft: 25,
-					marginBottom: 5,
 				}}
 			>
-				<Grid
-					container
-					spacing={1}
-					sx={{
-						mx: 1,
-						mt: 3,
-					}}
-				>
+				<Typography variant="h6"> Event Details</Typography>
+				<Grid container spacing={1}>
 					<Grid item xs={12} sm={6} md={8}>
 						<FormControl>
 							<FormLabel id="radio-buttons-group-label">
@@ -68,7 +91,11 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 								aria-labelledby="radio-buttons-group-label"
 								defaultValue={true}
 								name="radio-buttons-group"
-                                sx={{display:'flex', flexDirection:'row', mb:1.25}}
+								sx={{
+									display: "flex",
+									flexDirection: "row",
+									mb: 1.25,
+								}}
 							>
 								<FormControlLabel
 									value={true}
@@ -107,7 +134,7 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 						<TextField
 							fullWidth
 							label="Event Name"
-							sx={{ mb: 2 }}
+							// sx={{ mb: 1 }}
 							value={event.event_name}
 							onChange={(e) =>
 								setEvent({
@@ -115,34 +142,53 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 									event_name: e.target.value,
 								})
 							}
-							InputLabelProps={{
-								shrink: true,
-								fontSize: "2rem",
-							}}
+							// InputLabelProps={{
+							// 	shrink: true,
+							// 	fontSize: "2rem",
+							// }}
 						/>
 					</Grid>
-					<Grid item xs={12} sm={6} md={3}>
-						<TextField
-							label="Date"
-							sx={{ mb: 2 }}
-							value={event.event_date}
-							onChange={(e) =>
-								setEvent({
-									...event,
-									event_date: e.target.value,
-								})
-							}
-							InputLabelProps={{
-								shrink: true,
-								fontSize: "2rem",
-							}}
-						/>
+					<Grid item xs={12} sm={12} md={12}>
+						<LocalizationProvider dateAdapter={AdapterDayjs}>
+							<StaticDatePicker
+								disablePast
+								defaultValue={dayjs()}
+								// value={event.event_date}
+								onChange={(newValue) => {
+									setEvent({
+										...event,
+										event_date: `${newValue.$M}-${newValue.$D}-${newValue.$y}`,
+									});
+								}}
+								slotProps={{
+									actionBar: {
+										actions: [],
+									},
+								}}
+							/>
+						</LocalizationProvider>
 					</Grid>
-					<Grid item xs={12} sm={6} md={3}>
-						<TextField
+					<Grid item xs={12} sm={6} md={6}>
+						<LocalizationProvider dateAdapter={AdapterDayjs}>
+							<TimePicker
+								noValidate
+								label="Start Time"
+								// value={event.event_start_time}
+								onChange={(newValue) => {
+									setEvent({
+										...event,
+										event_start_time: `${newValue.$H}:${newValue.$m}`,
+									});
+								}}
+								timeSteps={{ hours: 1, minutes: 10 }}
+								inputProps={{ readOnly: true }}
+							/>
+						</LocalizationProvider>
+
+						{/* <TextField
+							fullWidth
 							label="Start Time"
 							type="time"
-                            step="15"
 							sx={{ mb: 2 }}
 							value={event.event_start_time}
 							onChange={(e) =>
@@ -155,10 +201,26 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 								shrink: true,
 								fontSize: "2rem",
 							}}
-						/>
+						/> */}
 					</Grid>
-					<Grid item xs={12} sm={6} md={3}>
-						<TextField
+					<Grid item xs={12} sm={6} md={6}>
+						<LocalizationProvider dateAdapter={AdapterDayjs}>
+							<TimePicker
+								label="End Time"
+								timeSteps={{ hours: 1, minutes: 10 }}
+								onChange={(newValue) => {
+									setEvent({
+										...event,
+										event_end_time: `${newValue.$H}:${newValue.$m}`,
+									});
+								}}
+
+								inputProps={{ readOnly: true }}
+							/>
+						</LocalizationProvider>
+
+						{/* <TextField
+							fullWidth
 							label="End Time"
 							type="time"
 							sx={{ mb: 2 }}
@@ -173,7 +235,7 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 								shrink: true,
 								fontSize: "2rem",
 							}}
-						/>
+						/> */}
 					</Grid>
 					<Grid item xs={12} sm={6} md={12}>
 						<TextField
@@ -187,10 +249,6 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 									event_street_address: e.target.value,
 								})
 							}
-							InputLabelProps={{
-								shrink: true,
-								fontSize: "2rem",
-							}}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={6} md={4}>
@@ -204,10 +262,6 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 									event_city: e.target.value,
 								})
 							}
-							InputLabelProps={{
-								shrink: true,
-								fontSize: "2rem",
-							}}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={6} md={4}>
@@ -221,10 +275,6 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 									event_state: e.target.value,
 								})
 							}
-							InputLabelProps={{
-								shrink: true,
-								fontSize: "2rem",
-							}}
 						/>
 					</Grid>
 					<Grid item xs={12} sm={6} md={4}>
@@ -238,13 +288,9 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 									event_zip: e.target.value,
 								})
 							}
-							InputLabelProps={{
-								shrink: true,
-								fontSize: "2rem",
-							}}
 						/>
 					</Grid>
-					<Grid item xs={12} sm={6} md={6}>
+					{/* <Grid item xs={12} sm={6} md={6}>
 						<TextField
 							label="Map"
 							sx={{ mb: 2 }}
@@ -260,7 +306,7 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 								fontSize: "2rem",
 							}}
 						/>
-					</Grid>
+					</Grid> */}
 					<Grid item xs={12} sm={6} md={6}>
 						<Button
 							type="submit"
@@ -272,8 +318,8 @@ function AddEventForm({ addEvent, setAddEvent, wedding_id }) {
 						</Button>
 					</Grid>
 				</Grid>
-			</form>
-		</Dialog>
+			</Collapse>
+		</form>
 	);
 }
 

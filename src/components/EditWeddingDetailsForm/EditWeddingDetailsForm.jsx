@@ -14,10 +14,9 @@ import dayjs from "dayjs";
 function EditWeddingDetailsForm({ editWedding, setEditWedding, details }) {
 	const dispatch = useDispatch();
 	const confirmEdits = (e) => {
-        e.preventDefault()
-        alert("CONNECT EDIT WEDDING DETAILS FORM TO A SAGA AND SERVER ROUTE");
-        console.log('CONNECT ME TO A SAGA AND SERVER ROUTE');
-		// dispatch({type:'', payload:updatedDetails})
+		e.preventDefault();
+		dispatch({type:'UPDATE_WEDDING_DETAILS', payload:updatedDetails})
+		setEditWedding(!editWedding);
 	};
 	const [updatedDetails, setUpdatedDetails] = useState(details[0]);
 
@@ -83,34 +82,6 @@ function EditWeddingDetailsForm({ editWedding, setEditWedding, details }) {
 							setUpdatedDetails({
 								...updatedDetails,
 								wedding_blurb: e.target.value,
-							})
-						}
-						InputLabelProps={{ shrink: true }}
-					></TextField>
-
-					{/* <FormLabel>Spouse Name</FormLabel> */}
-					<TextField
-						label="Spouse Name"
-						sx={{ mb: 2 }}
-						value={updatedDetails.spouse_1}
-						onChange={(e) =>
-							setUpdatedDetails({
-								...updatedDetails,
-								spouse_1: e.target.value,
-							})
-						}
-						InputLabelProps={{ shrink: true }}
-					></TextField>
-
-					{/* <FormLabel>Spouse Name</FormLabel> */}
-					<TextField
-						label="Spouse Name"
-						sx={{ mb: 2 }}
-						value={updatedDetails.spouse_2}
-						onChange={(e) =>
-							setUpdatedDetails({
-								...updatedDetails,
-								spouse_2: e.target.value,
 							})
 						}
 						InputLabelProps={{ shrink: true }}

@@ -2,7 +2,15 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
+import Collapse from "@mui/material/Collapse";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
@@ -11,6 +19,10 @@ import AddEventForm from "../AddEventForm/AddEventForm";
 import EditEventForm from "../EditEventForm/EditEventForm";
 import AddGuestToEventForm from "../AddGuestToEventForm/AddGuestToEventForm";
 import AddAnnouncementForm from "../AddAnnouncementForm/AddAnnouncementForm";
+import ActiveWeddingEventCard from "../ActiveWeddingEventCard/ActiveWeddingEventCard";
+import GuestListForm from "../GuestListForm/GuestListForm";
+import ActiveWeddingGuestListTable from "../ActiveWeddingGuestListTable.jsx/ActiveWeddingGuestListTable";
+import ActiveWeddingEventsBulletin from "../ActiveWeddingEventsBulletin/ActiveWeddingEventsBulletin";
 
 function ActiveWedding() {
 	const dispatch = useDispatch();
@@ -25,15 +37,13 @@ function ActiveWedding() {
 	const RSVPs = useSelector((store) => store.activeWeddingReplis);
 
 	const [editWedding, setEditWedding] = useState(false);
-	const [addEvent, setAddEvent] = useState(false);
-	const [editEvent, setEditEvent] = useState(false);
-    const [addGuests, setAddGuests] = useState(false);
-	const [addAnnouncement, setAddAnnouncement] = useState(false);
-
+	const [expanded, setExpanded] = useState(false);
 
 	useEffect(() => {
 		dispatch({ type: "GET_ACTIVE_WEDDING_DETAILS", payload: wedding_id });
 	}, []);
+
+	const btn = { p: 1.5, width: "25%", mb: 2 };
 
 	// TODO: Create and source in components for:
 	// - Connect edit wedding form to saga and server
@@ -44,100 +54,126 @@ function ActiveWedding() {
 	// - Add/edit announcement form
 
 	return (
-		<Container maxWidth="lg">
-			<Button component={Link} to="/user">
-				return to dashboard
-			</Button>
-			<Grid container spacing={2}>
+		<Container
+			maxWidth="lg"
+			// sx={{display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}
+		>
+			<Grid container spacing={1}>
 				<Grid item xs={12} sm={12} md={12}>
-					<h5>WEDDING DETAILS</h5>
 					{details.map((info) => (
 						<div key={info.id}>
-							<p>{info.wedding_title}</p>
-							<p>{info.wedding_blurb}</p>
-							<p>{info.wedding_date}</p>
-							<p>{info.spouse_1}</p>
-							<p>{info.spouse_2}</p>
-							<Button
-								onClick={() => setEditWedding(!editWedding)}
+							<Typography
+								align="center"
+								sx={{ fontSize: "4rem" }}
 							>
-								edit wedding details
-							</Button>
-							{details[0] && (
-								<EditWeddingDetailsForm
-									editWedding={editWedding}
-									setEditWedding={setEditWedding}
-									details={details}
-								/>
-							)}
+								{info.wedding_title}
+							</Typography>
+							<Typography
+								align="center"
+								sx={{ fontSize: "3rem" }}
+							>
+								{info.wedding_date}
+							</Typography>
+							<Typography
+								align="center"
+								sx={{ fontSize: "1rem" }}
+							>
+								{info.wedding_blurb}
+							</Typography>
 						</div>
 					))}
 				</Grid>
 				<Grid item xs={12} sm={12} md={12}>
-					<h2>Wedding Events</h2>
-					<Button onClick={() => setAddEvent(!addEvent)}>
-						Add an event
-					</Button>
-					<AddEventForm
-						addEvent={addEvent}
-						setAddEvent={setAddEvent}
-						wedding_id={wedding_id}
-					/>
-
-					<Grid container spacing={1}>
-						{events.map((event) => (
-							<Grid item xs={12} sm={6} md={3}>
-								<div key={event.id}>
-									{/* <p>{event.wedding_id}</p> */}
-									<h4>{event.event_name}</h4>
-									<p>
-										{event.event_broadcast
-											? "Guests can see"
-											: "Guests can't see"}
-									</p>
-									<p>{event.event_street_address}</p>
-									<p>{event.event_city}</p>
-									<p>{event.event_state}</p>
-									<p>{event.event_zip}</p>
-									<p>{event.event_maps_url}</p>
-									<p>{event.event_date}</p>
-									<p>{event.event_start_time}</p>
-									<p>{event.event_end_time}</p>
-									<Button
-										onClick={() => setEditEvent(!editEvent)}
-									>
-										Edit event
-									</Button>
-								</div>
-								<EditEventForm
-									editEvent={editEvent}
-									setEditEvent={setEditEvent}
-									event={event}
-								/>
-							</Grid>
-						))}
-					</Grid>
-				</Grid>
-
-				<Grid item xs={12} sm={12} md={12}>
-					<h2>Announcements</h2>
 					<Button
-						onClick={() => setAddAnnouncement(!addAnnouncement)}
+						variant="outlined"
+						onClick={() => setEditWedding(!editWedding)}
+						sx={{ p: 1.5, width: "51%", mb: 2, ml:25 }}
 					>
-						Add an announcement
+						edit wedding details
 					</Button>
+					{details[0] && (
+						<EditWeddingDetailsForm
+							editWedding={editWedding}
+							setEditWedding={setEditWedding}
+							details={details}
+						/>
+					)}
+				</Grid>
+			</Grid>
+			<Grid container spacing={1} sx={{}}>
+				<Grid item xs={12} sm={12} md={4}>
+					{details[0] && <GuestListForm details={details[0]} />}
+				</Grid>
+				<Grid item xs={12} sm={12} md={4}>
+					<AddEventForm wedding_id={wedding_id} />
+				</Grid>
+				<Grid item xs={12} sm={12} md={4}>
 					{posts && (
 						<AddAnnouncementForm
-							addAnnouncement={addAnnouncement}
-							setAddAnnouncement={setAddAnnouncement}
 							events={events}
 							wedding_id={wedding_id}
 						/>
 					)}
+				</Grid>
+			</Grid>
+			<Grid container spacing={1}>
+				<Grid item xs={12} sm={12} md={12}>
+					<ActiveWeddingGuestListTable guests={guests} />
+				</Grid>
+				<Grid item xs={12} sm={12} md={12}>
+					<Button
+						startIcon={
+							expanded ? (
+								<KeyboardArrowUpIcon />
+							) : (
+								<KeyboardArrowDownIcon />
+							)
+						}
+						variant="outlined"
+						sx={{ p: 1.25, width: "51%", mb: 2, ml: 25 }}
+						onClick={() => setExpanded(!expanded)}
+					>
+						{expanded ? "Close" : "Manage RSVPs"}
+					</Button>
+					<Collapse
+						in={expanded}
+						timeout="auto"
+						unmountOnExit
+						sx={{
+							display: "flex",
+							flexDirection: "column",
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+					>
+						<Grid container spacing={1}>
+							{RSVPs.map((repli) => (
+								<Grid
+									item
+									key={repli.event_id}
+									xs={12}
+									sm={6}
+									md={6}
+								>
+									<ActiveWeddingEventCard
+										repli={repli}
+										guests={guests}
+									/>
+								</Grid>
+							))}
+						</Grid>
+					</Collapse>
+				</Grid>
+				<Grid item xs={12} sm={12} md={12}>
+					<ActiveWeddingEventsBulletin events={events} />
+				</Grid>
+
+				<Grid item xs={12} sm={12} md={12}>
+					<h2>Announcements</h2>
 					<Grid container spacing={1}>
 						{posts.map((post) => (
-							<Grid item xs={12} sm={6} md={3}>
-								<div key={post.id}>
+							<Grid item key={post.id} xs={12} sm={6} md={3}>
+								<div>
 									{/* <p> {post.id} </p> */}
 									<h4>
 										{post.event_name} <br />{" "}
@@ -154,144 +190,12 @@ function ActiveWedding() {
 				</Grid>
 
 				<Grid item xs={12} sm={12} md={12}>
-					<h2>Guest List</h2>
-					<Button onClick={() => setAddGuests(!addGuests)}>
-						Manage guest list
-					</Button>
-					{guests && (
-						<AddGuestToEventForm
-							addGuests={addGuests}
-							setAddGuests={setAddGuests}
-							wedding_id={wedding_id}
-							events={events}
-							guests={guests}
-							RSVPs={RSVPs}
-						/>
-					)}
-					<Grid container spacing={1}>
-						{guests.map((guest) => (
-							<Grid item xs={12} sm={6} md={3}>
-								<div key={guest.id}>
-									<p> {guest.id} </p>
-									<p> user_id: {guest.user_id}</p>
-									<p> first_name: {guest.first_name}</p>
-									<p> last_name: {guest.last_name}</p>
-									<p> phone_number: {guest.phone_number}</p>
-									<p>
-										{" "}
-										street_address: {guest.street_address}
-									</p>
-									<p> unit: {guest.unit}</p>
-									<p> city: {guest.city}</p>
-									<p> state: {guest.state}</p>
-									<p> zip: {guest.zip}</p>
-									<p> allergies: {guest.allergies}</p>
-									<p>
-										{" "}
-										accommodations: {guest.accommodations}
-									</p>
-									<p> contact_email: {guest.contact_email}</p>
-									<p> spouse_party: {guest.spouse_party}</p>
-									<p>
-										relationship_to_spouse:
-										{guest.relationship_to_spouse}
-									</p>
-									<p>
-										{" "}
-										guest_meal_choice:{" "}
-										{guest.guest_meal_choice}
-									</p>
-									<p>
-										can_plus_one:{" "}
-										{guest.can_plus_one ? `Yes` : `No`}
-									</p>
-									<p> plus_one_id: {guest.plus_one_id}</p>
-									<p>
-										{" "}
-										plus_one_first_name:{" "}
-										{guest.plus_one_first_name}
-									</p>
-									<p>
-										{" "}
-										plus_one_last_name:{" "}
-										{guest.plus_one_last_name}
-									</p>
-									<p>
-										{" "}
-										plus_one_meal_choice:{" "}
-										{guest.plus_one_meal_choice}
-									</p>
-									<p>
-										{" "}
-										plus_one_notes: {guest.plus_one_notes}
-									</p>
-									<Button>edit guest</Button>
-								</div>
-							</Grid>
-						))}
-					</Grid>
-				</Grid>
-
-				<Grid item xs={12} sm={12} md={12}>
-					<h2>RSVPs</h2>
-					<Button>Manage rsvps</Button>
-					<Grid container spacing={1}>
-						{RSVPs.map((repli) => (
-							<Grid item xs={12} sm={6} md={3}>
-								<div key={repli.event_id}>
-									<h5>
-										{repli.event_name} - {repli.event_date}
-									</h5>
-									<p>
-										<span>
-											Attending: {repli.num_attending}
-										</span>{" "}
-										<span>
-											Pending: {repli.num_pending}
-										</span>{" "}
-										<span>
-											Declined: {repli.num_declined}
-										</span>
-									</p>
-									<p></p>
-									{repli.guests.map((guest) => (
-										<p key={guest.guest_id}>
-											{guest.plus_one_first_name ? (
-												<span>
-													Guest:{" "}
-													{guest.guest_first_name}{" "}
-													{guest.guest_last_name}
-													<br />
-													Plus one:{" "}
-													{
-														guest.plus_one_first_name
-													}{" "}
-													{guest.plus_one_last_name}{" "}
-												</span>
-											) : (
-												<span>
-													Guest:{" "}
-													{guest.guest_first_name}{" "}
-													{guest.guest_last_name}
-												</span>
-											)}
-											{"  "} Status: {"  "}
-											{guest.status}
-										</p>
-									))}
-								</div>
-							</Grid>
-						))}
-					</Grid>
-				</Grid>
-
-				<Grid item xs={12} sm={12} md={12}>
 					<h2>Meals</h2>
 					<Button>Manage meals</Button>
 					<Grid container spacing={1}>
 						{meals.map((meal) => (
-							<Grid item xs={12} sm={6} md={3}>
-								<div key={meal.id}>
+							<Grid item key={meal.id} xs={12} sm={6} md={3}>
+								<div>
 									{/* <p> {meal.id} </p> */}
 									<h3>{meal.meal_name}</h3>
 									<p>{meal.meal_description}</p>
