@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import Grid from "@mui/material/Grid";
 import Collapse from "@mui/material/Collapse";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -45,6 +46,10 @@ function ActiveWedding() {
 	}, []);
 
 	const btn = { p: 1.5, width: "25%", mb: 2 };
+
+	const handleDeleteClick = (id) => () => {
+		dispatch({ type: "DELETE_MEAL", payload: {id, wedding_id}});
+	};
 
 	// TODO: Create and source in components for:
 	// - Connect edit wedding form to saga and server
@@ -200,6 +205,9 @@ function ActiveWedding() {
 									{/* <p> {meal.id} </p> */}
 									<h3>{meal.meal_name}</h3>
 									<p>{meal.meal_description}</p>
+									<DeleteIcon 
+									sx={{ color: "#DC2700" }}
+									onClick={handleDeleteClick(meal.id)} />
 								</div>
 							</Grid>
 						))}

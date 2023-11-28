@@ -1,23 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import AddIcon from "@mui/icons-material/Add";
-
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormLabel from "@mui/material/FormLabel";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
 import Collapse from "@mui/material/Collapse";
 
 //////////////////Guest List Form Component/////////////////////
@@ -29,7 +14,7 @@ function MealForm({ details }) {
   const btn = { p: 1.5, width: "51%", mb: 2 };
 
   const mealData = {
-    wedding_id: details.wedding_id,
+    wedding_id: details.id,
     meal_name: "",
     meal_description: "",
   };
