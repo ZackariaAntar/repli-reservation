@@ -44,6 +44,13 @@ function ActiveWedding() {
 	}, []);
 
 	const btn = { p: 1.5, width: "25%", mb: 2 };
+	const gctn = {
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "center",
+		alignItems: "center",
+		mb: 2,
+	};
 
 	// TODO: Create and source in components for:
 	// - Connect edit wedding form to saga and server
@@ -57,8 +64,15 @@ function ActiveWedding() {
 		<Container
 			maxWidth="lg"
 			// sx={{display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}
+			sx={{ border: "1px solid lime" }}
 		>
-			<Grid container spacing={1}>
+			<Grid
+				container
+				spacing={1}
+				sx={gctn}
+
+				// sx={{ border: "1px solid orange" }}
+			>
 				<Grid item xs={12} sm={12} md={12}>
 					{details.map((info) => (
 						<div key={info.id}>
@@ -85,9 +99,10 @@ function ActiveWedding() {
 				</Grid>
 				<Grid item xs={12} sm={12} md={12}>
 					<Button
+						fullWidth
 						variant="outlined"
 						onClick={() => setEditWedding(!editWedding)}
-						sx={{ p: 1.5, width: "51%", mb: 2, ml:25 }}
+						sx={{ p: 1.5, mb: 2 }}
 					>
 						edit wedding details
 					</Button>
@@ -100,7 +115,7 @@ function ActiveWedding() {
 					)}
 				</Grid>
 			</Grid>
-			<Grid container spacing={1} sx={{}}>
+			<Grid container spacing={1} sx={{ mb: 2 }}>
 				<Grid item xs={12} sm={12} md={4}>
 					{details[0] && <GuestListForm details={details[0]} />}
 				</Grid>

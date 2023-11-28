@@ -24,7 +24,7 @@ function AddEventForm({ wedding_id }) {
 	const dispatch = useDispatch();
 	const [expanded, setExpanded] = useState(false);
 	const btn = { p: 1.5, width: "51%", mb: 2 };
-	const today = dayjs()
+	const today = dayjs();
 	const eventDetails = {
 		wedding_id: wedding_id,
 		event_broadcast: true,
@@ -44,23 +44,20 @@ function AddEventForm({ wedding_id }) {
 		e.preventDefault();
 		console.log(event);
 		dispatch({ type: "ADD_NEW_EVENT", payload: event });
-		setEvent(eventDetails)
+		setEvent(eventDetails);
 		setExpanded(!expanded);
 	};
 	return (
 		<form
 			method="POST"
 			onSubmit={postEvent}
-			// style={{
-			// 	display: "flex",
-			// 	flexDirection: "column",
-			// 	justifyContent: "center",
-			// 	alignItems: "center",
-			// 	padding: 10,
-			// 	marginRight: 45,
-			// 	marginLeft: 25,
-			// 	marginBottom: 5,
-			// }}
+			style={{
+				display: "flex",
+				flexDirection: "column",
+				justifyContent: "center",
+				alignItems: "center",
+				mb: 2,
+			}}
 		>
 			<Button
 				variant="outlined"
@@ -214,7 +211,6 @@ function AddEventForm({ wedding_id }) {
 										event_end_time: `${newValue.$H}:${newValue.$m}`,
 									});
 								}}
-
 								inputProps={{ readOnly: true }}
 							/>
 						</LocalizationProvider>

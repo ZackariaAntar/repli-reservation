@@ -26,7 +26,7 @@ function GuestListForm({ details }) {
 	// hooks for form TextField and dispatch and history for navigation and dispatch to redux store
 	// may need to update the naming convention for the hooks depending on how we want to handle the data
 	const tf = { mb: 2 };
-	const btn = { p: 1.5, width: "51%", mb: 2 };
+	const btn = { p: 1.5, width: "51%",alignSelf:'center', mb: 2 };
 
 	const guestData = {
 		wedding_title: details.wedding_title,
@@ -80,13 +80,21 @@ function GuestListForm({ details }) {
 	};
 
 	return (
-		<form onSubmit={addToList}>
+		<form
+			onSubmit={addToList}
+			style={{
+				display: "flex",
+				flexDirection: "column",
+				justifyContent: "center",
+				alignItems: "center",
+			}}
+		>
 			<Button
-			variant="outlined"
-			sx={btn}
-			onClick={()=>setExpanded(!expanded)}
+				variant="outlined"
+				sx={btn}
+				onClick={() => setExpanded(!expanded)}
 			>
-				{expanded ? 'Close' : 'Add Guests' }
+				{expanded ? "Close" : "Add Guests"}
 			</Button>
 			<Collapse
 				in={expanded}
@@ -403,7 +411,7 @@ function GuestListForm({ details }) {
 						</FormControl>
 					</Grid>
 					<Button
-						sx={{ mt: 1, p:1.5 }}
+						sx={{ mt: 1, p: 1.5 }}
 						fullWidth
 						variant="contained"
 						type="submit"
