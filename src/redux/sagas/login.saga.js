@@ -27,7 +27,6 @@ function* loginUser(action) {
       // if user isn't in the database or
       // if the username and password don't match in the database
       yield put({ type: 'LOGIN_FAILED' });
-      yield put({ type: 'CLEAR_LOGIN_ERROR' });
     } else if(error.response.status === 449){
        yield put({type:'SET_CHANGE_PASSWORD', payload:{change:true}})
     }
