@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Collapse from "@mui/material/Collapse";
+import Typography  from "@mui/material/Typography";
 
 //////////////////Guest List Form Component/////////////////////
 
@@ -18,6 +19,12 @@ function MealForm({ details }) {
     meal_name: "",
     meal_description: "",
   };
+
+  const dummy = {
+    wedding_id: details.id,
+    meal_name: "Vegan Bowl",
+    meal_description: "A delicious bowl of vegetables and grains with a flavorful sauce."
+  }
 
   const [mealInfo, setMealInfo] = useState(mealData);
   const dispatch = useDispatch();
@@ -53,6 +60,7 @@ function MealForm({ details }) {
           alignItems: "center",
         }}
       >
+        <Typography variant="h6" onClick={() => {setMealInfo(dummy)}}>Meal Details</Typography>
         <Grid container spacing={1}>
           <Grid item xs={12} md={6}>
             <TextField
