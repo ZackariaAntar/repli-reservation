@@ -96,8 +96,18 @@ router.post("/meal", rejectUnauthenticated, (req, res) => {
 			);
 			res.sendStatus(500);
 		});
-	// POST route code here
 });
+
+router.delete("/meal/:id", rejectUnauthenticated, (req, res) => {
+	const queryText = `
+	DELETE FROM meal_options WHERE id = $1;`;
+	pool.query(queryText, [req.params.id])
+	.then(() => res.sendStatus(200))
+	.catch((err) => {
+		console.log('Failed to delete meal', err)
+	})
+})
+
 router.post("/update/wedding", rejectUnauthenticated, (req, res) => {
     console.log('/actions/update/wedding', req.body);
 	const queryText = `
