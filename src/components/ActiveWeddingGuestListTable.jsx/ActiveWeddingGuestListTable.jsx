@@ -13,16 +13,20 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 
 
+
 import { useState } from "react";
 
 import ActiveWeddingGuestsTableRow from "./ActiveWeddingGuestsTableRow";
+import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 function ActiveWeddingGuestListTable({ guests}) {
 	const [expanded, setExpanded] = useState(false);
-
-
+	const params = useParams()
+	const wedding_id = params.id
 	const btn = { p: 1.5, width: "51%", mb: 2};
 
+	const dispatch = useDispatch();
 	return (
 		<Container
 			maxWidth="lg"
@@ -60,10 +64,25 @@ function ActiveWeddingGuestListTable({ guests}) {
 					width: "105%",
 				}}
 			>
+				<Button
+					variant="contained"
+					sx={{ p: 1.5, width: "25%", mb: 2 }}
+					onClick={() => dispatch({ type: "SEND_WEDDING_INVITES", payload: {wedding_id: wedding_id} })}
+				>
+					Send invites
+				</Button>
+
 				<TableContainer component={Paper}>
 					<Table aria-label="simple table">
 						<TableHead>
 							<TableRow>
+								<TableCell
+									sx={{
+										fontWeight: "bold",
+									}}
+								>
+									Invite Sent
+								</TableCell>
 								<TableCell
 									colSpan={2}
 									sx={{

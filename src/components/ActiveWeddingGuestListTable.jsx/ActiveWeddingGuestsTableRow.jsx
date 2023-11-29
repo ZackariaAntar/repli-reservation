@@ -5,6 +5,7 @@ function ActiveWeddingGuestsTableRow({ guest }) {
 	return (
 		<>
 			<TableRow key={guest.id}>
+				<TableCell>{guest.invite_sent ? "✅" : "❌"}</TableCell>
 				<TableCell colSpan={2} align="left">
 					{`${guest.first_name} ${guest.last_name}`}
 				</TableCell>

@@ -55,12 +55,29 @@ function* updateWeddingDetailsSaga(action) {
 		console.log("Error with updateWeddingDetailsSaga:", error);
 	}
 }
+function* sendWeddingInvitesSaga(action) {
+	console.log(
+		"Arrived at sendWeddingInvitesSaga() on actionsSaga.\n action.payload:",
+		action.payload
+	);
+	console.log(
+
+		action.payload.wedding_id
+	);
+	try {
+		yield axios.post("/api/email/send_email", action.payload);
+		yield put({ type: "GET_ACTIVE_WEDDING_GUESTS", payload: action.payload.wedding_id});
+	} catch (error) {
+		console.log("Error with sendWeddingInvitesSaga:", error);
+	}
+}
 
 function* actionsSaga() {
 	yield takeLatest("ADD_NEW_EVENT", addNewEventSaga);
 	yield takeLatest("ADD_NEW_ANNOUNCEMENT", addNewAnnouncementSaga);
 	yield takeLatest("ADD_NEW_MEAL", addNewMealSaga);
 	yield takeLatest("UPDATE_WEDDING_DETAILS", updateWeddingDetailsSaga);
+	yield takeLatest("SEND_WEDDING_INVITES", sendWeddingInvitesSaga);
 }
 
 export default actionsSaga;

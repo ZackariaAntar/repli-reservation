@@ -33,7 +33,7 @@ app.use('/api/user', userRouter);
 app.use('/api/guest_info', guestInfoRouter);
 app.use('/api/wedding', weddingRouter);
 app.use('/api/rsvp', rsvpRouter);
-app.use("/email", emailRouter);
+app.use("/api/email", emailRouter);
 
 
 app.use('/api/actions', actionsRouter)
