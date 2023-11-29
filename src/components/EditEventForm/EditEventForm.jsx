@@ -37,7 +37,7 @@ function EditEventForm({ event }) {
 		return `${year}/${month}/${day}`;
 	};
 
-	console.log(event.event_date);
+	// console.log(event.event_date);
 	// reformat(event.event_date)
 
 	const [mmdd, setMmdd] = useState(reformat(event.event_date));
