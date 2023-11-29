@@ -47,14 +47,14 @@ function GuestListForm({ details }) {
 	};
 	const dummy = {
 		wedding_title: details.wedding_title,
-		first_name: "Pooh",
-		last_name: "Bear",
-		username: "pooh@bear.com",
+		first_name: "Ernie",
+		last_name: "Brown",
+		username: "ernie@example.com",
 		password: "",
-		phone_number: "12345678",
+		phone_number: "612-555-2222",
 		street_address: "123 Memory Lane",
 		unit: "",
-		city: "MPLS",
+		city: "Minneapolis",
 		state: "MN",
 		zip: "55407",
 		relationship: 1,
@@ -107,7 +107,7 @@ function GuestListForm({ details }) {
 					alignItems: "center",
 				}}
 			>
-				<Typography variant="h6">Guest Details</Typography>
+				<Typography variant="h6" onClick={() => {setGuestInfo(dummy)}}>Guest Details</Typography>
 				<Grid container spacing={1}>
 					<Grid item xs={12} md={6}>
 						<TextField

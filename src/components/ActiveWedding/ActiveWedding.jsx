@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import Grid from "@mui/material/Grid";
 import Collapse from "@mui/material/Collapse";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -20,6 +21,7 @@ import AddGuestToEventForm from "../AddGuestToEventForm/AddGuestToEventForm";
 import AddAnnouncementForm from "../AddAnnouncementForm/AddAnnouncementForm";
 import ActiveWeddingEventCard from "../ActiveWeddingEventCard/ActiveWeddingEventCard";
 import GuestListForm from "../GuestListForm/GuestListForm";
+import MealForm from "../MealForm/MealForm";
 import ActiveWeddingGuestListTable from "../ActiveWeddingGuestListTable.jsx/ActiveWeddingGuestListTable";
 import ActiveWeddingEventsBulletin from "../ActiveWeddingEventsBulletin/ActiveWeddingEventsBulletin";
 import ActiveWeddingAnnouncements from "../ActiveWeddingAnnouncements/ActiveWeddingAnnouncements";
@@ -50,6 +52,10 @@ function ActiveWedding() {
 		justifyContent: "center",
 		alignItems: "center",
 		mb: 4,
+	};
+
+	const handleDeleteClick = (id) => () => {
+		dispatch({ type: "DELETE_MEAL", payload: {id, wedding_id}});
 	};
 
 	// TODO: Create and source in components for:
@@ -219,7 +225,7 @@ function ActiveWedding() {
 
 				<Grid item xs={12} sm={12} md={12}>
 					<h2>Meals</h2>
-					<Button>Manage meals</Button>
+					{details[0] && <MealForm details={details[0]} />}
 					<Grid container spacing={1}>
 						{meals.map((meal) => (
 							<Grid item key={meal.id} xs={12} sm={6} md={3}>
@@ -227,6 +233,9 @@ function ActiveWedding() {
 									{/* <p> {meal.id} </p> */}
 									<h3>{meal.meal_name}</h3>
 									<p>{meal.meal_description}</p>
+									<DeleteIcon 
+									sx={{ color: "#DC2700" }}
+									onClick={handleDeleteClick(meal.id)} />
 								</div>
 							</Grid>
 						))}

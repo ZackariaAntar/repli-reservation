@@ -39,6 +39,20 @@ function AddEventForm({ wedding_id }) {
 		event_end_time: "",
 	};
 
+	const dummy = {
+		wedding_id: wedding_id,
+		event_broadcast: true,
+		event_name: "Family Pictures",
+		event_street_address: "5252 Berry Lane",
+		event_city: "Minneapolis",
+		event_state: "MN",
+		event_zip: "55555",
+		event_maps_url: "",
+		event_date: today,
+		event_start_time: "1:00pm",
+		event_end_time: "2:00pm",
+	}
+
 	const [event, setEvent] = useState(eventDetails);
 	const postEvent = (e) => {
 		e.preventDefault();
@@ -58,7 +72,6 @@ function AddEventForm({ wedding_id }) {
 				alignItems: "center",
 				mb: 2,
 			}}
-		>
 			<Button
 				variant="outlined"
 				sx={btn}
@@ -77,7 +90,7 @@ function AddEventForm({ wedding_id }) {
 					alignItems: "center",
 				}}
 			>
-				<Typography variant="h6"> Event Details</Typography>
+				<Typography variant="h6" onClick={() => {setEvent(dummy)}}> Event Details</Typography>
 				<Grid container spacing={1}>
 					<Grid item xs={12} sm={6} md={8}>
 						<FormControl>

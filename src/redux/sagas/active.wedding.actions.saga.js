@@ -50,6 +50,15 @@ function* addNewMealSaga(action) {
 		console.log("Error with addNewMealSaga():", error);
 	}
 }
+
+function* deleteMeal(action) {
+	try {
+		yield axios.delete(`/api/actions/meal/${action.payload.id}`);
+		yield put({ type: "GET_ACTIVE_WEDDING_MEALS", payload: action.payload.wedding_id });
+	} catch (error) {
+		console.log("Error with deleting meal", error);
+	}
+}
 function* updateWeddingDetailsSaga(action) {
 	console.log(
 		"Arrived at updateWeddingDetailsSaga() on actionsSaga.\n action.payload:",
@@ -91,6 +100,7 @@ function* actionsSaga() {
 	yield takeLatest("ADD_NEW_EVENT", addNewEventSaga);
 	yield takeLatest("ADD_NEW_ANNOUNCEMENT", addNewAnnouncementSaga);
 	yield takeLatest("ADD_NEW_MEAL", addNewMealSaga);
+	yield takeLatest("DELETE_MEAL", deleteMeal);
 	yield takeLatest("UPDATE_WEDDING_DETAILS", updateWeddingDetailsSaga);
 	yield takeLatest("SEND_INVITES", sendInvitesSaga);
 }
