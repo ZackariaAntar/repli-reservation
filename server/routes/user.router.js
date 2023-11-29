@@ -124,14 +124,15 @@ router.post("/invited_guest", async (req, res, next) => {
 
 	const username = req.body.username;
 	const password = encryptLib.encryptPassword(req.body.password); // TODO: figure out if we need to leave this unencrypted for emailing purposes.
+	const temp_pass = req.body.password
 
 	console.log("new guest:", req.body);
 
-	const authData = [username, password, true];
+	const authData = [username, password, true, temp_pass];
 
 	const createUserQuery = `
-  INSERT INTO "user" (username, password, is_temp)
-  VALUES ($1, $2, $3) RETURNING id;
+  INSERT INTO "user" (username, password, is_temp, temp_pass)
+  VALUES ($1, $2, $3, $4) RETURNING id;
   `;
 
 	const addDetailsQuery = `
@@ -212,7 +213,6 @@ router.post('/existing_guest', (req,res)=>{
 	})
 });
 
-
 router.post("/change_password", (req, res) => {
 	console.log('ARRIVED ON /CHANGE_PASSWORD');
 	const { username, oldPassword, newPassword } = req.body;
@@ -229,7 +229,7 @@ router.post("/change_password", (req, res) => {
 				const encryptedNewPassword =
 					encryptLib.encryptPassword(newPassword);
 				pool.query(
-					'UPDATE "user" SET password = $1, is_temp = false WHERE id = $2',
+					`UPDATE "user" SET password = $1, is_temp = false, temp_pass='' WHERE id = $2`,
 					[encryptedNewPassword, user.id]
 				)
 					.then(() => {

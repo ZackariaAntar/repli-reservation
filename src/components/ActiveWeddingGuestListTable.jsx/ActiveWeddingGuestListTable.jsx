@@ -62,7 +62,7 @@ function ActiveWeddingGuestListTable({ guests}) {
 			>
 				<TableContainer component={Paper}>
 					<Table aria-label="simple table">
-						<TableHead sx={{ color: "orange" }}>
+						<TableHead>
 							<TableRow>
 								<TableCell
 									colSpan={2}
