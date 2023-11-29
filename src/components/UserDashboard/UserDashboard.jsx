@@ -175,7 +175,7 @@ function UserDashboard() {
       </Dialog>
 
       <Container>
-        {myWeddings.length > 0 && <h4>My weddings</h4>}
+        {myWeddings.length > 0 && <h4>My Weddings</h4>}
         <Grid container spacing={1}>
           {myWeddings &&
             myWeddings.map((wedding) => (
