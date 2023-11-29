@@ -1,12 +1,23 @@
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
+import { useSelector } from "react-redux";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function ActiveWeddingGuestsTableRow({ guest }) {
+	const loading = useSelector((store) => store.loadingEmails);
 	return (
 		<>
 			<TableRow key={guest.id}>
-				<TableCell>{guest.invite_sent ? "✅" : "❌"}</TableCell>
-				<TableCell colSpan={2} align="left">
+				{loading ? (
+					<TableCell>
+						<CircularProgress />
+					</TableCell>
+				) : (
+					<TableCell align="left">
+						{guest.invite_sent ? "✅" : "❌"}
+					</TableCell>
+				)}
+				<TableCell align="left">
 					{`${guest.first_name} ${guest.last_name}`}
 				</TableCell>
 				<TableCell align="left">{guest.phone_number}</TableCell>

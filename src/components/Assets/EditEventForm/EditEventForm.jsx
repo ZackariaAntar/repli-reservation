@@ -96,7 +96,7 @@ function EditEventForm({ event }) {
 					container
 					spacing={1}
 					sx={{
-						mx: 1,
+						// mx: 1,
 						mt: 3,
 					}}
 				>
@@ -210,7 +210,9 @@ function EditEventForm({ event }) {
 							}}
 						/> */}
 					</Grid>
-					<Grid item xs={12} sm={6} md={6}>
+					<Grid item xs={6} sm={6} md={6}
+					sx={{mb:2}}
+					>
 						<LocalizationProvider dateAdapter={AdapterDayjs}>
 							<TimePicker
 								noValidate
@@ -245,7 +247,7 @@ function EditEventForm({ event }) {
 							}}
 						/> */}
 					</Grid>
-					<Grid item xs={12} sm={6} md={6}>
+					<Grid item xs={6} sm={6} md={6}>
 						<LocalizationProvider dateAdapter={AdapterDayjs}>
 							<TimePicker
 								label={`End ${changeEvent.event_end_time}`}
@@ -289,13 +291,13 @@ function EditEventForm({ event }) {
 									event_street_address: e.target.value,
 								})
 							}
-							InputLabelProps={{
-								shrink: true,
-								fontSize: "2rem",
-							}}
+							// InputLabelProps={{
+							// 	shrink: true,
+							// 	fontSize: "2rem",
+							// }}
 						/>
 					</Grid>
-					<Grid item xs={12} sm={6} md={4}>
+					<Grid item xs={6} sm={6} md={4}>
 						<TextField
 							label="City"
 							sx={{ mb: 2 }}
@@ -306,13 +308,13 @@ function EditEventForm({ event }) {
 									event_city: e.target.value,
 								})
 							}
-							InputLabelProps={{
-								shrink: true,
-								fontSize: "2rem",
-							}}
+							// InputLabelProps={{
+							// 	shrink: true,
+							// 	fontSize: "2rem",
+							// }}
 						/>
 					</Grid>
-					<Grid item xs={12} sm={6} md={4}>
+					<Grid item xs={6} sm={6} md={4}>
 						<TextField
 							label="State"
 							sx={{ mb: 2 }}
@@ -323,13 +325,13 @@ function EditEventForm({ event }) {
 									event_state: e.target.value,
 								})
 							}
-							InputLabelProps={{
-								shrink: true,
-								fontSize: "2rem",
-							}}
+							// InputLabelProps={{
+							// 	shrink: true,
+							// 	fontSize: "2rem",
+							// }}
 						/>
 					</Grid>
-					<Grid item xs={12} sm={6} md={4}>
+					<Grid item xs={6} sm={6} md={4}>
 						<TextField
 							label="Zip"
 							sx={{ mb: 2 }}

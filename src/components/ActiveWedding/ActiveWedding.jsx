@@ -16,7 +16,7 @@ import { useParams } from "react-router-dom";
 
 import EditWeddingDetailsForm from "../EditWeddingDetailsForm/EditWeddingDetailsForm";
 import AddEventForm from "../AddEventForm/AddEventForm";
-import EditEventForm from "../EditEventForm/EditEventForm";
+import EditEventForm from "../Assets/EditEventForm/EditEventForm";
 import AddGuestToEventForm from "../AddGuestToEventForm/AddGuestToEventForm";
 import AddAnnouncementForm from "../AddAnnouncementForm/AddAnnouncementForm";
 import ActiveWeddingEventCard from "../ActiveWeddingEventCard/ActiveWeddingEventCard";

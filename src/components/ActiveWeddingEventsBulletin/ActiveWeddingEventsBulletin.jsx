@@ -4,7 +4,6 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Collapse from "@mui/material/Collapse";
-import Container from "@mui/material/Container";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useState } from "react";
@@ -13,19 +12,10 @@ import EditEventForm from "../EditEventForm/EditEventForm";
 
 function ActiveWeddingEventsBulletin({ events }) {
 	const [expanded, setExpanded] = useState(false);
-	const btn = { p: 1.5, width: "51%", mb: 2 };
+	const btn = { p: 1.5, width: "51%", mb: 2, ml: 25 };
 
 	return (
-		<Container
-			maxWidth="lg"
-			sx={{
-				display: "flex",
-				flexDirection: "column",
-				justifyContent: "center",
-				alignItems: "center",
-				mb: 2,
-			}}
-		>
+		<>
 			<Button
 				startIcon={
 					expanded ? (
@@ -63,7 +53,7 @@ function ActiveWeddingEventsBulletin({ events }) {
 									<Typography>
 										{`${event.event_start_time} - ${event.event_end_time}`}
 									</Typography>
-									<br />
+                                    <br />
 									<Typography>
 										{event.event_street_address}
 									</Typography>
@@ -85,7 +75,7 @@ function ActiveWeddingEventsBulletin({ events }) {
 					))}
 				</Grid>
 			</Collapse>
-		</Container>
+		</>
 	);
 }
 export default ActiveWeddingEventsBulletin;

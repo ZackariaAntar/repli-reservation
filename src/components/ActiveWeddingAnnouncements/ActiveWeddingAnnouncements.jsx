@@ -16,7 +16,7 @@ import Grid from "@mui/material/Grid";
 import { useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
-function ActiveWeddingAnnouncements({posts}) {
+function ActiveWeddingAnnouncements({ posts }) {
 	const [expanded, setExpanded] = useState(false);
 	const btn = { p: 1.5, width: "51%", mb: 2 };
 
@@ -64,18 +64,16 @@ function ActiveWeddingAnnouncements({posts}) {
 									<Typography sx={{ fontSize: "1.5rem" }}>
 										{post.event_name}
 									</Typography>
-									<Typography variant="caption">{post.event_date}</Typography>
+									<Typography variant="caption">
+										{post.event_date}
+									</Typography>
 								</CardContent>
 								<CardContent>
-
-										<Typography>
-											{post.announcement}
-										</Typography>
-                                        <br />
-										<Typography>
-											{`- ${post.creator_first_name} ${post.creator_last_name}`}
-										</Typography>
-
+									<Typography>{post.announcement}</Typography>
+									<br />
+									<Typography>
+										{`- ${post.creator_first_name} ${post.creator_last_name}`}
+									</Typography>
 								</CardContent>
 							</Card>
 							{/* <div>

@@ -2,6 +2,7 @@ const express = require("express");
 const nodemailer = require("nodemailer");
 const router = express.Router();
 const pool = require("../modules/pool");
+require("dotenv").config();
 const {
 	rejectUnauthenticated,
 } = require("../modules/authentication-middleware");
@@ -10,15 +11,17 @@ let transporter = nodemailer.createTransport({
 	service: "gmail",
 	pool: true,
 	auth: {
-		user: "antarzack@gmail.com", // replace with your email address
-		pass: "yolo ruhm tjas hnow", // replace with your client ID
+		user: `${process.env.EMAIL}`,
+		pass: `${process.env.PASSWORD}`
 	},
 });
 
 router.post("/send_email", rejectUnauthenticated, async (req, res) => {
 	const client = await pool.connect();
-	console.log(req.body);
+	console.log('EMAIL ROUTER');
+	console.log('req',req.body);
 	const { wedding_id } = req.body;
+	console.log(wedding_id);
 	const getEmailsQuery = `
     SELECT guest_list_junction.id AS j_id, guest_list_junction.invite_sent, "user".username, "user".temp_pass, wedding.wedding_blurb, to_char(wedding.wedding_date, 'Month DD, YYYY') AS wedding_date, wedding.spouse_1, wedding.spouse_2
     FROM guest_list_junction
@@ -34,14 +37,13 @@ router.post("/send_email", rejectUnauthenticated, async (req, res) => {
 
 	try {
 		await client.query("BEGIN");
-
 		const get_emails = await client.query(getEmailsQuery, [wedding_id]);
 		const allEmails = get_emails.rows;
-		// console.log(allEmails);
+		// console.log(get_emails.rows);
 
 		const sendAllEmails = allEmails.map(async (email) => {
 			let mailOptions = {
-				from: "antarzack@gmail.com",
+				from: process.env.EMAIL,
 				to: `replireservation@gmail.com`,
 				subject: `You're invited to ${email.spouse_1} and ${email.spouse_2}'s wedding`,
 				text: `
@@ -54,53 +56,27 @@ router.post("/send_email", rejectUnauthenticated, async (req, res) => {
 		        `,
 			};
 
-			return new Promise(async (resolve, reject) => {
-				 transporter.sendMail(mailOptions, async (err, data) => {
+			return new Promise((resolve, reject) => {
+				transporter.sendMail(mailOptions, async (err, data) => {
 					if (err) {
 						console.log("== Message Failed ==", err);
 						reject(err);
 					} else {
-                        try {
-                            await client.query(updateInvitedStatus, [email.j_id]);
-                            console.log("== Message Sent ==", data.response);
-                            resolve();
-                        } catch (error) {
-                            console.log(error);
-                        }
-
+						try {
+							await client.query(updateInvitedStatus, [
+								email.j_id,
+							]);
+							console.log("== Message Sent ==", data.response);
+							resolve();
+						} catch (error) {
+							console.log(error);
+						}
 					}
 				});
 			});
 		});
-		// const updateStatus = await allEmails.map(async(email) => {
-		//     console.log(email);
-		//     return new Promise((resolve, reject)=>{
-		//         client.query(updateInvitedStatus, [email.jId], (err, res) => {
-		//        if (err) {
-		//           console.log("== Failed to update status ==", err);
-		//           reject(err);
-		//        } else {
-		//           resolve();
-		//        })
-		//     })})
 
-		// const updateStatus = allEmails.map(async (email) => {
-		// 	return new Promise((resolve, reject) => {
-		// 		client.query(updateInvitedStatus, [email.jId], (err, res) => {
-		// 			if (err) {
-		// 				console.log("== Failed to update status ==", err);
-		// 				reject(err);
-		// 			} else {
-		// 				console.log("== Updated status ==", res);
-		// 				resolve();
-		// 			}
-		// 		});
-		// 	});
-		// });
-
-		// await Promise.all(updateStatus);
 		await Promise.all(sendAllEmails);
-		// await Promise.all(updateStatus);
 		await client.query("COMMIT");
 		res.sendStatus(201);
 	} catch (error) {
