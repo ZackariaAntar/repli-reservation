@@ -17,7 +17,6 @@ import { useParams } from "react-router-dom";
 
 import EditWeddingDetailsForm from "../EditWeddingDetailsForm/EditWeddingDetailsForm";
 import AddEventForm from "../AddEventForm/AddEventForm";
-import EditEventForm from "../EditEventForm/EditEventForm";
 import AddGuestToEventForm from "../AddGuestToEventForm/AddGuestToEventForm";
 import AddAnnouncementForm from "../AddAnnouncementForm/AddAnnouncementForm";
 import ActiveWeddingEventCard from "../ActiveWeddingEventCard/ActiveWeddingEventCard";
@@ -25,6 +24,7 @@ import GuestListForm from "../GuestListForm/GuestListForm";
 import MealForm from "../MealForm/MealForm";
 import ActiveWeddingGuestListTable from "../ActiveWeddingGuestListTable.jsx/ActiveWeddingGuestListTable";
 import ActiveWeddingEventsBulletin from "../ActiveWeddingEventsBulletin/ActiveWeddingEventsBulletin";
+import ActiveWeddingAnnouncements from "../ActiveWeddingAnnouncements/ActiveWeddingAnnouncements";
 
 function ActiveWedding() {
 	const dispatch = useDispatch();
@@ -46,6 +46,13 @@ function ActiveWedding() {
 	}, []);
 
 	const btn = { p: 1.5, width: "25%", mb: 2 };
+	const gctn = {
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "center",
+		alignItems: "center",
+		mb: 4,
+	};
 
 	const handleDeleteClick = (id) => () => {
 		dispatch({ type: "DELETE_MEAL", payload: {id, wedding_id}});
@@ -63,9 +70,16 @@ function ActiveWedding() {
 		<Container
 			maxWidth="lg"
 			// sx={{display:'flex', flexDirection:'column', justifyContent:'center', alignItems:'center'}}
+			sx={{ border: "1px solid lime" }}
 		>
-			<Grid container spacing={1}>
-				<Grid item xs={12} sm={12} md={12}>
+			<Grid
+				container
+				spacing={1}
+				sx={gctn}
+
+				// sx={{ border: "1px solid orange" }}
+			>
+				<Grid item xs={12} sm={12} md={12} sx={{ mb: 3 }}>
 					{details.map((info) => (
 						<div key={info.id}>
 							<Typography
@@ -76,13 +90,13 @@ function ActiveWedding() {
 							</Typography>
 							<Typography
 								align="center"
-								sx={{ fontSize: "3rem" }}
+								sx={{ fontSize: "3rem", mb: 3 }}
 							>
 								{info.wedding_date}
 							</Typography>
 							<Typography
 								align="center"
-								sx={{ fontSize: "1rem" }}
+								sx={{ fontSize: "1rem", mb: 1 }}
 							>
 								{info.wedding_blurb}
 							</Typography>
@@ -91,9 +105,10 @@ function ActiveWedding() {
 				</Grid>
 				<Grid item xs={12} sm={12} md={12}>
 					<Button
+						fullWidth
 						variant="outlined"
 						onClick={() => setEditWedding(!editWedding)}
-						sx={{ p: 1.5, width: "51%", mb: 2, ml:25 }}
+						sx={{ p: 1.5, mb: 2 }}
 					>
 						edit wedding details
 					</Button>
@@ -106,7 +121,7 @@ function ActiveWedding() {
 					)}
 				</Grid>
 			</Grid>
-			<Grid container spacing={1} sx={{}}>
+			<Grid container spacing={1} sx={{ mb: 8 }}>
 				<Grid item xs={12} sm={12} md={4}>
 					{details[0] && <GuestListForm details={details[0]} />}
 				</Grid>
@@ -126,7 +141,19 @@ function ActiveWedding() {
 				<Grid item xs={12} sm={12} md={12}>
 					<ActiveWeddingGuestListTable guests={guests} />
 				</Grid>
-				<Grid item xs={12} sm={12} md={12}>
+				<Grid
+					item
+					xs={12}
+					sm={12}
+					md={12}
+					sx={{
+						display: "flex",
+						flexDirection: "column",
+						justifyContent: "center",
+						alignItems: "center",
+						mb: 2,
+					}}
+				>
 					<Button
 						startIcon={
 							expanded ? (
@@ -136,7 +163,7 @@ function ActiveWedding() {
 							)
 						}
 						variant="outlined"
-						sx={{ p: 1.25, width: "51%", mb: 2, ml: 25 }}
+						sx={{ p: 1.25, width: "49%", mb: 2 }}
 						onClick={() => setExpanded(!expanded)}
 					>
 						{expanded ? "Close" : "Manage RSVPs"}
@@ -175,12 +202,13 @@ function ActiveWedding() {
 				</Grid>
 
 				<Grid item xs={12} sm={12} md={12}>
-					<h2>Announcements</h2>
-					<Grid container spacing={1}>
+					<ActiveWeddingAnnouncements posts={posts}/>
+					{/* <h2>Announcements</h2> */}
+					{/* <Grid container spacing={1}>
 						{posts.map((post) => (
 							<Grid item key={post.id} xs={12} sm={6} md={3}>
 								<div>
-									{/* <p> {post.id} </p> */}
+									<p> {post.id} </p>
 									<h4>
 										{post.event_name} <br />{" "}
 										{post.event_date}
@@ -188,11 +216,11 @@ function ActiveWedding() {
 									<p>{post.announcement}</p>
 									<p>{post.creator_first_name}</p>
 									<p>{post.creator_last_name}</p>
-									{/* <p>{post.event_id}</p> */}
+									<p>{post.event_id}</p>
 								</div>
 							</Grid>
 						))}
-					</Grid>
+					</Grid> */}
 				</Grid>
 
 				<Grid item xs={12} sm={12} md={12}>

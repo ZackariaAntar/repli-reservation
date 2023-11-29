@@ -12,6 +12,7 @@ import activeWeddingReplis from './active.wedding.replis.reducer';
 import activeRsvpDetails from './active.rsvp.details.reducer';
 import relationships from './relationship.reducer';
 import changePassword from './change.password.reducer';
+import loadingEmails from './loading.emails.reducer'
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -33,7 +34,8 @@ const rootReducer = combineReducers({
 	activeWeddingReplis, // TODO: UPDATE COMMENT WITH CONTENTS
 	activeRsvpDetails,
 	relationships,
-	changePassword
+	changePassword,
+	loadingEmails
 });
 
 export default rootReducer;

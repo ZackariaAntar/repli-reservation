@@ -23,7 +23,7 @@ import dayjs from "dayjs";
 
 function EditEventForm({ event }) {
 	const [expanded, setExpanded] = useState(false);
-	const btn = { p: 1.5, width: "100%", mb: 2 };
+	const btn = { p: 1.5, width: "100%",mt:2 };
 
 	const reformat = (input) => {
 		let d = new Date(input);
@@ -37,7 +37,7 @@ function EditEventForm({ event }) {
 		return `${year}/${month}/${day}`;
 	};
 
-	console.log(event.event_date);
+	// console.log(event.event_date);
 	// reformat(event.event_date)
 
 	const [mmdd, setMmdd] = useState(reformat(event.event_date));
@@ -368,7 +368,7 @@ function EditEventForm({ event }) {
 							type="submit"
 							variant="contained"
 							fullWidth
-							// sx={{ mt: 1, height: "50px" }}
+							sx={{ p: 1.5}}
 						>
 							Update Event
 						</Button>

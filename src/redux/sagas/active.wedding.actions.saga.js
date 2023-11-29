@@ -10,7 +10,10 @@ function* addNewEventSaga(action) {
 
 	try {
 		yield axios.post("/api/actions/event", action.payload);
-		yield put({ type: "GET_ACTIVE_WEDDING_EVENTS", payload: action.payload.wedding_id });
+		yield put({
+			type: "GET_ACTIVE_WEDDING_EVENTS",
+			payload: action.payload.wedding_id,
+		});
 	} catch (error) {
 		console.log("Error with addNewEventSaga():", error);
 	}
@@ -23,7 +26,10 @@ function* addNewAnnouncementSaga(action) {
 
 	try {
 		yield axios.post("/api/actions/announcement", action.payload);
-		yield put({ type: "GET_ACTIVE_WEDDING_POSTS", payload: action.payload.wedding_id});
+		yield put({
+			type: "GET_ACTIVE_WEDDING_POSTS",
+			payload: action.payload.wedding_id,
+		});
 	} catch (error) {
 		console.log("Error with addNewAnnouncementSaga():", error);
 	}
@@ -36,7 +42,10 @@ function* addNewMealSaga(action) {
 
 	try {
 		yield axios.post("/api/actions/meal", action.payload);
-		yield put({ type: "GET_ACTIVE_WEDDING_MEALS", payload: action.payload.wedding_id });
+		yield put({
+			type: "GET_ACTIVE_WEDDING_MEALS",
+			payload: action.payload.wedding_id,
+		});
 	} catch (error) {
 		console.log("Error with addNewMealSaga():", error);
 	}
@@ -64,6 +73,28 @@ function* updateWeddingDetailsSaga(action) {
 		console.log("Error with updateWeddingDetailsSaga:", error);
 	}
 }
+function* sendInvitesSaga(action) {
+	console.log(
+		"Arrived at sendInvitesSaga() on actionsSaga.\n action.payload:",
+		action.payload
+	);
+	console.log(
+		"Arrived at sendInvitesSaga() on actionsSaga.\n action.payload:",
+		action.payload.wedding_id
+	);
+
+	try {
+		yield put({ type: "SET_LOADING_EMAILS", payload: true });
+		yield axios.post("/api/email/send_email", action.payload);
+		yield put({
+			type: "GET_ACTIVE_WEDDING_GUESTS",
+			payload: action.payload.wedding_id,
+		});
+		yield put({ type: "SET_LOADING_EMAILS", payload: false });
+	} catch (error) {
+		console.log("Error with sendInvitesSaga:", error);
+	}
+}
 
 function* actionsSaga() {
 	yield takeLatest("ADD_NEW_EVENT", addNewEventSaga);
@@ -71,6 +102,7 @@ function* actionsSaga() {
 	yield takeLatest("ADD_NEW_MEAL", addNewMealSaga);
 	yield takeLatest("DELETE_MEAL", deleteMeal);
 	yield takeLatest("UPDATE_WEDDING_DETAILS", updateWeddingDetailsSaga);
+	yield takeLatest("SEND_INVITES", sendInvitesSaga);
 }
 
 export default actionsSaga;

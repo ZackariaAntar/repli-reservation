@@ -119,6 +119,7 @@ SELECT
 	guest_list_junction.spouse_association AS spouse_party,
 	relationship.category AS relationship_to_spouse,
 	guest_list_junction.can_plus_one,
+	guest_list_junction.invite_sent,
 	(SELECT meal_options.meal_name FROM meal_options WHERE meal_options.id = guest_list_junction.meal_id) AS guest_meal_choice,
 	(SELECT plus_one.first_name FROM plus_one WHERE plus_one.id = guest_list_junction.plus_one_id) AS plus_one_first_name,
 	(SELECT plus_one.last_name FROM plus_one WHERE plus_one.id = guest_list_junction.plus_one_id) AS plus_one_last_name,

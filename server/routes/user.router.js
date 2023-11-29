@@ -15,10 +15,10 @@ router.get("/", rejectUnauthenticated, (req, res) => {
 	res.send(req.user);
 });
 
-router.get("/check_existing_users/:wedding_id/:username", (req, res)=>{
-const { wedding_id, username } = req.params;
+router.get("/check_existing_users/:wedding_id/:username", (req, res) => {
+	const { wedding_id, username } = req.params;
 
-	console.log('req.params', req.params);
+	console.log("req.params", req.params);
 	console.log(typeof wedding_id);
 	console.log(typeof username);
 
@@ -28,18 +28,15 @@ const { wedding_id, username } = req.params;
 	WHERE "user".username = $1;
 	`;
 	pool.query(queryText, [username])
-	.then((result)=>{
-		console.log('result.rows', result.rows);
-		res.send(result.rows)
-
-	}).catch((err)=>{
-		res.sendStatus(500);
-		console.log("error on /check_for_duplicates", err);
-
-	})
+		.then((result) => {
+			console.log("result.rows", result.rows);
+			res.send(result.rows);
+		})
+		.catch((err) => {
+			res.sendStatus(500);
+			console.log("error on /check_for_duplicates", err);
+		});
 });
-
-
 
 // Handles POST request with new user data
 // async post to guest_info table after user create profile for themselves
@@ -124,14 +121,15 @@ router.post("/invited_guest", async (req, res, next) => {
 
 	const username = req.body.username;
 	const password = encryptLib.encryptPassword(req.body.password); // TODO: figure out if we need to leave this unencrypted for emailing purposes.
+	const temp_pass = req.body.password;
 
 	console.log("new guest:", req.body);
 
-	const authData = [username, password, true];
+	const authData = [username, password, true, temp_pass];
 
 	const createUserQuery = `
-  INSERT INTO "user" (username, password, is_temp)
-  VALUES ($1, $2, $3) RETURNING id;
+  INSERT INTO "user" (username, password, is_temp, temp_pass)
+  VALUES ($1, $2, $3, $4) RETURNING id;
   `;
 
 	const addDetailsQuery = `
@@ -186,8 +184,14 @@ router.post("/invited_guest", async (req, res, next) => {
 	}
 });
 
-router.post('/existing_guest', (req,res)=>{
-	const {wedding_id, guest_id, relationship, spouse_association, can_plus_one} = req.body
+router.post("/existing_guest", (req, res) => {
+	const {
+		wedding_id,
+		guest_id,
+		relationship,
+		spouse_association,
+		can_plus_one,
+	} = req.body;
 
 	const assignRelationshipQuery = `
 	INSERT INTO guest_list_junction(wedding_id, guest_id, relationship, spouse_association, can_plus_one)
@@ -202,19 +206,18 @@ router.post('/existing_guest', (req,res)=>{
 		can_plus_one,
 	];
 
-
-	pool.query(assignRelationshipQuery, guestInfo )
-	.then((result)=>{
-		res.sendStatus(201)
-	}).catch((err)=>{
-		console.log('ERROR WITH POST ON /existing_guest', err);
-		res.sendStatus(500)
-	})
+	pool.query(assignRelationshipQuery, guestInfo)
+		.then((result) => {
+			res.sendStatus(201);
+		})
+		.catch((err) => {
+			console.log("ERROR WITH POST ON /existing_guest", err);
+			res.sendStatus(500);
+		});
 });
 
-
 router.post("/change_password", (req, res) => {
-	console.log('ARRIVED ON /CHANGE_PASSWORD');
+	console.log("ARRIVED ON /CHANGE_PASSWORD");
 	const { username, oldPassword, newPassword } = req.body;
 	pool.query('SELECT * FROM "user" WHERE username = $1', [username])
 		.then((result) => {
@@ -229,7 +232,7 @@ router.post("/change_password", (req, res) => {
 				const encryptedNewPassword =
 					encryptLib.encryptPassword(newPassword);
 				pool.query(
-					'UPDATE "user" SET password = $1, is_temp = false WHERE id = $2',
+					'UPDATE "user" SET password = $1, is_temp = false, temp_pass="" WHERE id = $2',
 					[encryptedNewPassword, user.id]
 				)
 					.then(() => {
@@ -256,7 +259,9 @@ router.post("/change_password", (req, res) => {
 // this middleware will send a 404 if not successful
 router.post("/login", userStrategy.authenticate("local"), (req, res) => {
 	if (req.user.is_temp) {
-		console.log("USER LOGIN ATTEMPTED WITH TEMPORARY PASSWORD, REDIRECTING THEM TO CHANGE THEIR PASSWORD");
+		console.log(
+			"USER LOGIN ATTEMPTED WITH TEMPORARY PASSWORD, REDIRECTING THEM TO CHANGE THEIR PASSWORD"
+		);
 		res.sendStatus(449);
 	} else {
 		res.sendStatus(200);
